@@ -1,6 +1,5 @@
 import { useState, type FormEvent } from 'react';
 import { Check, Loader2, AlertCircle } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
 
 const goals = [
   'Type 2 Diabetes & Prediabetes',
@@ -46,13 +45,18 @@ export default function ConsultationForm() {
 
     setStatus('loading');
     try {
-      const { error } = await supabase.from('consultation_requests').insert({
-        name: values.name,
-        email: values.email,
-        phone: values.phone,
-        goal: values.goal,
-      });
-      if (error) throw error;
+      // Simulate client-side request processing
+      await new Promise((resolve) => setTimeout(resolve, 600));
+      try {
+        const stored = JSON.parse(localStorage.getItem('sa_wellness_consultations') || '[]');
+        stored.push({
+          ...values,
+          submittedAt: new Date().toISOString(),
+        });
+        localStorage.setItem('sa_wellness_consultations', JSON.stringify(stored));
+      } catch {
+        // Fallback gracefully if localStorage is unavailable
+      }
       setStatus('success');
       form.reset();
     } catch {

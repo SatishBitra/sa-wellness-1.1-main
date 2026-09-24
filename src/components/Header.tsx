@@ -40,14 +40,15 @@ export default function Header() {
       }`}
     >
       <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
-        <div className={`flex items-center justify-between transition-all duration-300 ${scrolled ? 'h-[68px]' : 'h-[80px]'}`}>
-          <a href="#top" className="flex items-center gap-2.5 group" aria-label="SA Wellness home">
-            <span className="flex items-center justify-center w-9 h-9 rounded-lg bg-brand-deep text-surface-white font-display font-600 text-[15px] tracking-tight transition-transform group-hover:scale-105">
-              SA
-            </span>
-            <span className="font-display font-600 text-ink text-[17px] tracking-tight">
-              Wellness
-            </span>
+        <div className={`flex items-center justify-between transition-all duration-300 ${scrolled ? 'h-[74px]' : 'h-[88px]'}`}>
+          <a href="#top" className="flex items-center group py-1" aria-label="SA Wellness home">
+            <img
+              src="/assets/fIBPHwmodHYgCtu5q2ugcSwxTb0.png"
+              alt="SA Wellness"
+              className="h-12 sm:h-14 lg:h-[58px] w-auto object-contain transition-transform duration-200 group-hover:scale-[1.03]"
+              width={232}
+              height={120}
+            />
           </a>
 
           <nav className="hidden lg:flex items-center gap-9" aria-label="Primary">

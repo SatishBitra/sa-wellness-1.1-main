@@ -92,14 +92,31 @@ export default function HealthReality() {
   return (
     <section className="py-20 lg:py-30 bg-surface-secondary">
       <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
-        <div ref={headerRef} className="reveal max-w-3xl">
-          <span className="text-eyebrow text-brand-deep uppercase">The South Asian Health Reality</span>
-          <h2 className="mt-4 font-display font-600 text-ink text-[28px] sm:text-[36px] lg:text-[44px] leading-[1.15] tracking-tight text-balance">
-            Your risk isn't always reflected by the number on the scale.
-          </h2>
-          <p className="mt-5 text-ink-secondary text-[16px] leading-[1.65] max-w-2xl">
-            South Asians face elevated cardiometabolic risks — often at lower body weights than other populations. Understanding these differences is the first step toward protecting your long-term health.
-          </p>
+        {/* Section Header: Two-Column Split with Space-Between */}
+        <div
+          ref={headerRef}
+          className="reveal flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 lg:gap-14 mb-12 lg:mb-16"
+        >
+          {/* Left Column: Eyebrow Badge & Title Stack */}
+          <div className="max-w-2xl">
+            <span className="text-eyebrow text-brand-deep uppercase">
+              The South Asian Health Reality
+            </span>
+
+            <h2 className="mt-4 font-display font-600 text-ink text-[32px] sm:text-[40px] lg:text-[46px] leading-[1.12] tracking-tight text-balance">
+              Your risk isn't always <br />
+              <span className="bg-gradient-to-r from-brand-deep via-brand-primary to-brand-light bg-clip-text text-transparent">
+                Reflected on the scale.
+              </span>
+            </h2>
+          </div>
+
+          {/* Right Column: Description Stack */}
+          <div className="lg:max-w-md">
+            <p className="text-[15px] sm:text-[16px] text-ink-secondary leading-[1.65] text-left lg:text-right">
+              South Asians face elevated cardiometabolic risks — often at lower body weights than other populations. Understanding these differences is the first step toward protecting your long-term health.
+            </p>
+          </div>
         </div>
 
         {/* Responsive Grid with 4 Modern Photographic Cards */}

@@ -1,16 +1,5 @@
-import { useState } from 'react';
-import {
-  Activity,
-  Gauge,
-  Apple,
-  Sun,
-  Heart,
-  CircleDot,
-  HeartPulse,
-  Sparkles,
-  ArrowRight,
-  type LucideIcon,
-} from 'lucide-react';
+import { useRef, useState, useEffect } from 'react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useReveal } from '@/hooks/useReveal';
 import { useSmoothScroll } from '@/hooks/useSmoothScroll';
 
@@ -18,340 +7,549 @@ interface HealthConcern {
   id: string;
   num: string;
   title: string;
-  shortTitle: string;
-  description: string;
-  icon: LucideIcon;
-  angle: number; // degrees: 0, 45, 90, 135, 180, 225, 270, 315
   category: string;
+  description: string;
+  renderIllustration: () => JSX.Element;
 }
 
-const bowlImage =
-  'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=800&fit=crop';
-
+// Isometric SVGs designed specifically for SA Wellness with architectural line-art aesthetic
 const concerns: HealthConcern[] = [
   {
     id: 't2d',
     num: '01',
     title: 'Type 2 Diabetes & Prediabetes',
-    shortTitle: 'Type 2 Diabetes',
+    category: 'Metabolic Health',
     description:
       'Personalized macro balancing, glycemic sequencing, and carbohydrate timing to stabilize blood sugar without eliminating traditional staples.',
-    icon: Activity,
-    angle: 0, // Top (12 o'clock)
-    category: 'Metabolic Health',
+    renderIllustration: () => (
+      <svg
+        viewBox="0 0 320 220"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-full h-full max-h-[190px] drop-shadow-sm select-none"
+      >
+        {/* Isometric Axis Reference Lines */}
+        <line x1="30" y1="180" x2="290" y2="40" stroke="#314A3A" strokeOpacity="0.18" strokeDasharray="4 4" />
+        <line x1="40" y1="60" x2="280" y2="180" stroke="#314A3A" strokeOpacity="0.12" strokeDasharray="4 4" />
+        <line x1="160" y1="20" x2="160" y2="200" stroke="#314A3A" strokeOpacity="0.10" strokeDasharray="4 4" />
+
+        {/* Back Plane: Macro Glycemic sequencing */}
+        <path
+          d="M160 55 L230 95 L160 135 L90 95 Z"
+          fill="#E7EFEA"
+          fillOpacity="0.75"
+          stroke="#314A3A"
+          strokeWidth="1.5"
+          strokeLinejoin="round"
+        />
+        <path d="M160 55 L160 65 L90 105 L90 95 Z" fill="#314A3A" fillOpacity="0.12" />
+        <path d="M160 65 L230 105 L230 95 L160 55 Z" fill="#314A3A" fillOpacity="0.22" />
+
+        {/* Mid Wave Grid Plate: Continuous glucose response curve */}
+        <path
+          d="M160 85 L245 134 L160 183 L75 134 Z"
+          fill="#F5FAF6"
+          fillOpacity="0.85"
+          stroke="#5B7B68"
+          strokeWidth="1.75"
+          strokeLinejoin="round"
+        />
+        {/* Sine Wave Curve along isometric surface */}
+        <path
+          d="M95 138 Q130 115 160 135 T225 132"
+          stroke="#D97706"
+          strokeWidth="2.25"
+          strokeLinecap="round"
+          fill="none"
+        />
+        {/* Floating Glucose Molecular Node */}
+        <circle cx="160" cy="135" r="4.5" fill="#D97706" stroke="#FFFFFF" strokeWidth="1.5" />
+
+        {/* Foreground Isometric Data Tile */}
+        <path
+          d="M130 120 L160 103 L190 120 L160 137 Z"
+          fill="#FFFFFF"
+          stroke="#314A3A"
+          strokeWidth="1.5"
+          strokeLinejoin="round"
+        />
+        <line x1="145" y1="120" x2="175" y2="120" stroke="#314A3A" strokeWidth="1.5" strokeLinecap="round" />
+      </svg>
+    ),
   },
   {
     id: 'insulin',
     num: '02',
     title: 'Insulin Resistance',
-    shortTitle: 'Insulin Resistance',
+    category: 'Cellular Health',
     description:
       'Target underlying cellular resistance, reduce fasting insulin, and restore metabolic flexibility through tailored nutrition.',
-    icon: Gauge,
-    angle: 45, // Top-Right
-    category: 'Cellular Health',
+    renderIllustration: () => (
+      <svg
+        viewBox="0 0 320 220"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-full h-full max-h-[190px] drop-shadow-sm select-none"
+      >
+        {/* Isometric Axis Reference Lines */}
+        <line x1="40" y1="175" x2="280" y2="45" stroke="#314A3A" strokeOpacity="0.18" strokeDasharray="4 4" />
+        <line x1="160" y1="20" x2="160" y2="200" stroke="#314A3A" strokeOpacity="0.10" strokeDasharray="4 4" />
+
+        {/* Isometric Base Pedestal / Cellular Receptor Platform */}
+        <path
+          d="M115 140 L160 114 L205 140 L160 166 Z"
+          fill="#E7EFEA"
+          stroke="#314A3A"
+          strokeWidth="1.5"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M85 158 L160 114 L235 158 L160 200 Z"
+          fill="none"
+          stroke="#5B7B68"
+          strokeWidth="1.25"
+          strokeDasharray="2 2"
+        />
+        {/* Receptor Chamber Aperture */}
+        <ellipse cx="160" cy="140" rx="22" ry="12" fill="#FFFFFF" stroke="#314A3A" strokeWidth="1.5" />
+        <ellipse cx="160" cy="140" rx="13" ry="7" fill="#314A3A" fillOpacity="0.1" />
+
+        {/* Floating Metabolic Energy Star / Spark Receptor */}
+        <path
+          d="M160 42 C163 68 180 85 204 88 C180 91 163 108 160 134 C157 108 140 91 116 88 C140 85 157 68 160 42 Z"
+          fill="url(#sparkGrad)"
+          stroke="#314A3A"
+          strokeWidth="1.5"
+          strokeLinejoin="round"
+        />
+        {/* Radiance Beam */}
+        <line x1="160" y1="134" x2="160" y2="140" stroke="#D97706" strokeWidth="2" strokeDasharray="2 2" />
+
+        <defs>
+          <linearGradient id="sparkGrad" x1="160" y1="42" x2="160" y2="134" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#EBF4EE" />
+            <stop offset="1" stopColor="#B3CBB9" />
+          </linearGradient>
+        </defs>
+      </svg>
+    ),
   },
   {
     id: 'ibs',
     num: '03',
     title: 'IBS & Digestive Concerns',
-    shortTitle: 'IBS & Digestion',
+    category: 'Digestive Wellness',
     description:
       'Identify dietary triggers, balance the microbiome, and optimize heritage spices to resolve chronic bloating, gas, and discomfort.',
-    icon: Apple,
-    angle: 90, // Right (3 o'clock)
-    category: 'Digestive Wellness',
+    renderIllustration: () => (
+      <svg
+        viewBox="0 0 320 220"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-full h-full max-h-[190px] drop-shadow-sm select-none"
+      >
+        {/* Isometric Grid Lines */}
+        <line x1="30" y1="170" x2="290" y2="50" stroke="#314A3A" strokeOpacity="0.18" strokeDasharray="4 4" />
+        <line x1="40" y1="50" x2="280" y2="170" stroke="#314A3A" strokeOpacity="0.12" strokeDasharray="4 4" />
+
+        {/* Concentric Microbiome Balance Dial */}
+        <ellipse cx="160" cy="120" rx="72" ry="42" fill="#F4F8F5" stroke="#314A3A" strokeWidth="1.5" />
+        <ellipse cx="160" cy="120" rx="54" ry="31" fill="#FFFFFF" stroke="#5B7B68" strokeWidth="1.25" strokeDasharray="3 2" />
+        <ellipse cx="160" cy="120" rx="36" ry="21" fill="#E7EFEA" stroke="#314A3A" strokeWidth="1.5" />
+
+        {/* Botanical Equilibrium Leaf Node */}
+        <path
+          d="M160 85 C185 100 185 130 160 145 C135 130 135 100 160 85 Z"
+          fill="#314A3A"
+          fillOpacity="0.85"
+          stroke="#FFFFFF"
+          strokeWidth="1.5"
+        />
+        <line x1="160" y1="92" x2="160" y2="138" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" />
+
+        {/* Spice Nutrient Rings */}
+        <circle cx="215" cy="105" r="4.5" fill="#D97706" stroke="#FFFFFF" strokeWidth="1.5" />
+        <circle cx="105" cy="135" r="3.5" fill="#5B7B68" stroke="#FFFFFF" strokeWidth="1.5" />
+      </svg>
+    ),
   },
   {
     id: 'pcos',
     num: '04',
     title: 'PCOS & Hormonal Health',
-    shortTitle: 'PCOS & Hormones',
+    category: 'Hormonal Balance',
     description:
       'Targeted nutrition protocols for androgen regulation, regular ovulatory cycles, and hormonal insulin sensitivity.',
-    icon: Sparkles,
-    angle: 135, // Bottom-Right
-    category: 'Hormonal Balance',
+    renderIllustration: () => (
+      <svg
+        viewBox="0 0 320 220"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-full h-full max-h-[190px] drop-shadow-sm select-none"
+      >
+        {/* Isometric Diagonal Lines */}
+        <line x1="40" y1="180" x2="280" y2="40" stroke="#314A3A" strokeOpacity="0.18" strokeDasharray="4 4" />
+        <line x1="160" y1="20" x2="160" y2="200" stroke="#314A3A" strokeOpacity="0.10" strokeDasharray="4 4" />
+
+        {/* Layered Endocrine Cycle Rings in 3D Isometric Space */}
+        <ellipse cx="160" cy="145" rx="68" ry="38" fill="none" stroke="#314A3A" strokeWidth="1.5" strokeOpacity="0.3" />
+        <ellipse cx="160" cy="120" rx="60" ry="33" fill="#F4F8F5" stroke="#314A3A" strokeWidth="1.5" />
+        <ellipse cx="160" cy="95" rx="52" ry="28" fill="#FFFFFF" stroke="#5B7B68" strokeWidth="1.5" />
+
+        {/* Central Floating Nexus Diamond */}
+        <path
+          d="M160 58 L184 95 L160 132 L136 95 Z"
+          fill="#D97706"
+          fillOpacity="0.9"
+          stroke="#FFFFFF"
+          strokeWidth="1.5"
+          strokeLinejoin="round"
+        />
+        {/* Inner Facet */}
+        <path d="M160 58 L160 132" stroke="#FFFFFF" strokeWidth="1" strokeOpacity="0.6" />
+        <circle cx="210" cy="120" r="4.5" fill="#314A3A" stroke="#FFFFFF" strokeWidth="1.5" />
+        <circle cx="110" cy="120" r="4.5" fill="#5B7B68" stroke="#FFFFFF" strokeWidth="1.5" />
+      </svg>
+    ),
   },
   {
     id: 'visceral',
     num: '05',
     title: 'Abdominal & Visceral Fat',
-    shortTitle: 'Visceral Fat',
+    category: 'Body Composition',
     description:
       'Target deep visceral fat around internal organs with precision nutrition and waist-to-hip ratio management.',
-    icon: CircleDot,
-    angle: 180, // Bottom (6 o'clock)
-    category: 'Body Composition',
+    renderIllustration: () => (
+      <svg
+        viewBox="0 0 320 220"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-full h-full max-h-[190px] drop-shadow-sm select-none"
+      >
+        {/* Isometric Baseline */}
+        <line x1="40" y1="180" x2="280" y2="40" stroke="#314A3A" strokeOpacity="0.18" strokeDasharray="4 4" />
+
+        {/* Stepped Isometric Body Composition Concentric Cylinders */}
+        {/* Base Layer */}
+        <ellipse cx="160" cy="155" rx="74" ry="38" fill="#E7EFEA" stroke="#314A3A" strokeWidth="1.5" />
+        <path d="M86 155 L86 168 A74 38 0 0 0 234 168 L234 155 Z" fill="#D3E2D8" stroke="#314A3A" strokeWidth="1.5" />
+
+        {/* Mid Visceral Target Layer */}
+        <ellipse cx="160" cy="125" rx="52" ry="27" fill="#FFFFFF" stroke="#314A3A" strokeWidth="1.5" />
+        <path d="M108 125 L108 138 A52 27 0 0 0 212 138 L212 125 Z" fill="#E7EFEA" stroke="#314A3A" strokeWidth="1.5" />
+
+        {/* Top Metabolic Core */}
+        <ellipse cx="160" cy="95" rx="30" ry="16" fill="#D97706" fillOpacity="0.85" stroke="#FFFFFF" strokeWidth="1.5" />
+        <path d="M130 95 L130 108 A30 16 0 0 0 190 108 L190 95 Z" fill="#B45309" stroke="#FFFFFF" strokeWidth="1.5" />
+
+        {/* Precision Measurement Guidelines */}
+        <line x1="234" y1="70" x2="234" y2="170" stroke="#314A3A" strokeOpacity="0.3" strokeDasharray="3 3" />
+        <circle cx="234" cy="120" r="3.5" fill="#314A3A" />
+      </svg>
+    ),
   },
   {
     id: 'hypertension',
     num: '06',
     title: 'Hypertension & BP',
-    shortTitle: 'Hypertension',
+    category: 'Cardiovascular Care',
     description:
       'Evidence-based sodium-to-potassium rebalancing, endothelial support, and lifestyle approaches to manage blood pressure sustainably.',
-    icon: HeartPulse,
-    angle: 225, // Bottom-Left
-    category: 'Cardiovascular Care',
+    renderIllustration: () => (
+      <svg
+        viewBox="0 0 320 220"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-full h-full max-h-[190px] drop-shadow-sm select-none"
+      >
+        {/* Isometric Axis */}
+        <line x1="30" y1="180" x2="290" y2="40" stroke="#314A3A" strokeOpacity="0.18" strokeDasharray="4 4" />
+        <line x1="160" y1="20" x2="160" y2="200" stroke="#314A3A" strokeOpacity="0.10" strokeDasharray="4 4" />
+
+        {/* Precision 3D Circular Pressure Gauge / Dial */}
+        <ellipse cx="160" cy="115" rx="76" ry="44" fill="#F4F8F5" stroke="#314A3A" strokeWidth="1.5" />
+        {/* Gauge Rim Extrusion */}
+        <path d="M84 115 L84 127 A76 44 0 0 0 236 127 L236 115 Z" fill="#D3E2D8" stroke="#314A3A" strokeWidth="1.5" />
+
+        {/* Dial Face */}
+        <ellipse cx="160" cy="115" rx="58" ry="33" fill="#FFFFFF" stroke="#5B7B68" strokeWidth="1.25" />
+
+        {/* Radial Pressure Calibration Marks */}
+        <path
+          d="M125 105 A50 28 0 0 1 195 105"
+          stroke="#D97706"
+          strokeWidth="3"
+          strokeLinecap="round"
+          fill="none"
+        />
+
+        {/* Isometric Indicator Needle */}
+        <line x1="160" y1="115" x2="185" y2="92" stroke="#314A3A" strokeWidth="2.5" strokeLinecap="round" />
+        <circle cx="160" cy="115" r="5" fill="#314A3A" stroke="#FFFFFF" strokeWidth="1.5" />
+      </svg>
+    ),
   },
   {
     id: 'heart',
     num: '07',
     title: 'Heart Health & Plaque',
-    shortTitle: 'Heart Health',
+    category: 'Cardiovascular Care',
     description:
       'Target South Asian cardiometabolic risk factors — optimizing ApoB, lipid subfractions, and arterial inflammation naturally.',
-    icon: Heart,
-    angle: 270, // Left (9 o'clock)
-    category: 'Cardiovascular Care',
+    renderIllustration: () => (
+      <svg
+        viewBox="0 0 320 220"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-full h-full max-h-[190px] drop-shadow-sm select-none"
+      >
+        {/* Isometric Axis */}
+        <line x1="30" y1="180" x2="290" y2="40" stroke="#314A3A" strokeOpacity="0.18" strokeDasharray="4 4" />
+        <line x1="40" y1="50" x2="280" y2="170" stroke="#314A3A" strokeOpacity="0.12" strokeDasharray="4 4" />
+
+        {/* Isometric Arterial Conduit Prism */}
+        <path
+          d="M90 110 L160 70 L230 110 L160 150 Z"
+          fill="#FFFFFF"
+          stroke="#314A3A"
+          strokeWidth="1.5"
+          strokeLinejoin="round"
+        />
+        <path d="M90 110 L90 125 L160 165 L160 150 Z" fill="#E7EFEA" stroke="#314A3A" strokeWidth="1.5" />
+        <path d="M160 150 L160 165 L230 125 L230 110 Z" fill="#D3E2D8" stroke="#314A3A" strokeWidth="1.5" />
+
+        {/* Central ApoB Shield & Laminar Streamline */}
+        <path
+          d="M160 82 L185 96 L185 118 L160 132 L135 118 L135 96 Z"
+          fill="#314A3A"
+          stroke="#FFFFFF"
+          strokeWidth="1.5"
+        />
+        {/* Pulse Heartbeat Core */}
+        <path
+          d="M160 98 C160 98 167 92 171 95 C174 98 174 103 160 114 C146 103 146 98 149 95 C153 92 160 98 160 98 Z"
+          fill="#D97706"
+        />
+      </svg>
+    ),
   },
   {
     id: 'vitamind',
     num: '08',
     title: 'Vitamin D & Nutrients',
-    shortTitle: 'Vitamin D',
+    category: 'Micronutrient Health',
     description:
       'Clinical dietary strategies and co-factor pairing (K2, magnesium, healthy fats) to resolve chronic deficiencies.',
-    icon: Sun,
-    angle: 315, // Top-Left
-    category: 'Micronutrient Health',
+    renderIllustration: () => (
+      <svg
+        viewBox="0 0 320 220"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-full h-full max-h-[190px] drop-shadow-sm select-none"
+      >
+        {/* Isometric Axis */}
+        <line x1="40" y1="180" x2="280" y2="40" stroke="#314A3A" strokeOpacity="0.18" strokeDasharray="4 4" />
+        <line x1="160" y1="20" x2="160" y2="200" stroke="#314A3A" strokeOpacity="0.10" strokeDasharray="4 4" />
+
+        {/* Multi-tier Isometric Solar Spectrum Crystal */}
+        <path
+          d="M160 45 L205 75 L205 135 L160 165 L115 135 L115 75 Z"
+          fill="#F5FAF6"
+          stroke="#314A3A"
+          strokeWidth="1.5"
+          strokeLinejoin="round"
+        />
+        {/* Inner Facets */}
+        <path d="M160 45 L160 165" stroke="#5B7B68" strokeWidth="1.25" strokeDasharray="3 2" />
+        <path d="M115 75 L205 135" stroke="#314A3A" strokeWidth="1" strokeOpacity="0.25" />
+        <path d="M205 75 L115 135" stroke="#314A3A" strokeWidth="1" strokeOpacity="0.25" />
+
+        {/* Central Solar Amber Node (Vitamin D3) */}
+        <circle cx="160" cy="105" r="14" fill="#D97706" fillOpacity="0.9" stroke="#FFFFFF" strokeWidth="2" />
+        {/* Orbital Co-factors (K2, Magnesium) */}
+        <circle cx="125" cy="80" r="6" fill="#314A3A" stroke="#FFFFFF" strokeWidth="1.5" />
+        <circle cx="195" cy="130" r="5" fill="#5B7B68" stroke="#FFFFFF" strokeWidth="1.5" />
+      </svg>
+    ),
   },
 ];
 
 export default function HealthConcerns() {
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
   const headerRef = useReveal<HTMLDivElement>();
-  const closingRef = useReveal<HTMLDivElement>({ threshold: 0.3 });
-  const wheelRef = useReveal<HTMLDivElement>({ threshold: 0.1 });
+  const containerRef = useReveal<HTMLDivElement>({ threshold: 0.1 });
+  const closingRef = useReveal<HTMLDivElement>({ threshold: 0.2 });
   const { scrollTo } = useSmoothScroll();
 
-  const activeConcern = concerns.find((c) => c.id === hoveredId) || null;
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const updateScrollState = () => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+
+    const { scrollLeft, scrollWidth, clientWidth } = el;
+    const maxScroll = scrollWidth - clientWidth;
+
+    if (maxScroll <= 5) {
+      setScrollProgress(0);
+      setCanScrollLeft(false);
+      setCanScrollRight(false);
+      return;
+    }
+
+    const progress = Math.min(100, Math.max(0, (scrollLeft / maxScroll) * 100));
+    setScrollProgress(progress);
+    setCanScrollLeft(scrollLeft > 10);
+    setCanScrollRight(scrollLeft < maxScroll - 10);
+  };
+
+  useEffect(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+
+    updateScrollState();
+    el.addEventListener('scroll', updateScrollState, { passive: true });
+    window.addEventListener('resize', updateScrollState);
+
+    return () => {
+      el.removeEventListener('scroll', updateScrollState);
+      window.removeEventListener('resize', updateScrollState);
+    };
+  }, []);
+
+  const handleScroll = (direction: 'left' | 'right') => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+
+    const cardWidth = 360; // approximate card stride
+    const scrollAmount = direction === 'left' ? -cardWidth : cardWidth;
+    el.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+  };
 
   return (
-    <section id="health-concerns" className="py-20 lg:py-32 scroll-mt-20 overflow-hidden">
+    <section id="health-concerns" className="py-20 lg:py-30 scroll-mt-20 overflow-hidden bg-surface-primary">
       <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
-        {/* Section Header */}
-        <div ref={headerRef} className="reveal max-w-2xl mx-auto text-center mb-14 lg:mb-20">
-          <span className="text-eyebrow text-brand-deep uppercase">
-            Health Concerns We Support
-          </span>
-          <h2 className="mt-4 font-display font-600 text-ink text-[28px] sm:text-[36px] lg:text-[44px] leading-[1.15] tracking-tight text-balance">
-            Care designed around what you're actually dealing with.
-          </h2>
-          <p className="mt-4 text-ink-secondary text-[15px] sm:text-[16px] leading-[1.65]">
-            South Asian health challenges are deeply interconnected. Hover over any health concern below to explore our targeted clinical and nutritional approaches.
-          </p>
+        {/* Section Header: Two-Column Split with Space-Between */}
+        <div
+          ref={headerRef}
+          className="reveal flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 lg:gap-14 mb-12 lg:mb-16"
+        >
+          {/* Left Column: Eyebrow Badge & Title Stack */}
+          <div className="max-w-2xl">
+            <span className="text-eyebrow text-brand-deep uppercase">
+              Health Concerns We Support
+            </span>
+
+            <h2 className="mt-4 font-display font-600 text-ink text-[32px] sm:text-[40px] lg:text-[46px] leading-[1.12] tracking-tight text-balance">
+              Care designed around <br />
+              <span className="bg-gradient-to-r from-brand-deep via-brand-primary to-brand-light bg-clip-text text-transparent">
+                What you're actually dealing with.
+              </span>
+            </h2>
+          </div>
+
+          {/* Right Column: Description Stack */}
+          <div className="lg:max-w-md">
+            <p className="text-[15px] sm:text-[16px] text-ink-secondary leading-[1.65] text-left lg:text-right">
+              South Asian health challenges are deeply interconnected. Explore our evidence-based clinical protocols tailored to your distinct biology, genetics, and heritage foods.
+            </p>
+          </div>
         </div>
 
         {/* ============================================================== */}
-        {/* DESKTOP VIEWPORT (lg+): 8 Radial Blocks Around Center Circle    */}
+        {/* HEALTH CONCERNS CAROUSEL: Matching Screenshot Layout & Structure */}
         {/* ============================================================== */}
-        <div
-          ref={wheelRef}
-          className="reveal hidden lg:block relative w-[780px] h-[780px] xl:w-[840px] xl:h-[840px] mx-auto my-6"
-        >
-          {/* Subtle Ambient Radial Glow */}
-          <div className="absolute inset-0 rounded-full bg-brand-light/10 blur-3xl pointer-events-none" />
-
-          {/* Central Nourishing Bowl Circle */}
+        <div ref={containerRef} className="reveal relative w-full">
+          {/* Horizontal Scrollable Track */}
           <div
-            onClick={() => scrollTo('#consultation')}
-            className="group cursor-pointer absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] h-[280px] xl:w-[320px] xl:h-[320px] rounded-full p-2.5 bg-surface-white shadow-[0_12px_44px_rgba(23,32,27,0.12)] border border-[#314A3A]/20 transition-all duration-500 hover:scale-[1.02]"
+            ref={scrollContainerRef}
+            className="flex gap-5 sm:gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-none pb-4 pt-1 -mx-6 px-6 lg:-mx-10 lg:px-10"
+            style={{
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
+            }}
           >
-            <div className="relative w-full h-full rounded-full overflow-hidden border-2 border-surface-white shadow-inner">
-              <img
-                src={bowlImage}
-                alt="Nutritious wholesome grain and vegetable bowl with avocado, chickpeas, and fresh greens"
-                className="w-full h-full object-cover transition-transform duration-700 ease-editorial group-hover:scale-105"
-                loading="lazy"
-                width={640}
-                height={640}
-              />
-
-              {/* Decorative Subtle Vignette Ring */}
-              <div
-                className="absolute inset-0 rounded-full border-4 border-surface-white/60 pointer-events-none"
-                aria-hidden="true"
-              />
-
-              {/* Active Overlay when a Health Issue is Hovered */}
-              {activeConcern ? (
-                <div className="absolute inset-0 rounded-full bg-[#17201B]/85 backdrop-blur-md p-6 text-center text-surface-white flex flex-col items-center justify-center transition-all duration-300 animate-fade-in z-20">
-                  <div className="w-10 h-10 rounded-full bg-brand-primary/30 border border-white/20 flex items-center justify-center mb-2 shadow-xs">
-                    <activeConcern.icon size={20} className="text-white" />
-                  </div>
-                  <h4 className="font-display font-600 text-[16px] text-white leading-tight">
-                    {activeConcern.title}
-                  </h4>
-                  <p className="text-[12px] text-white/85 leading-snug mt-2 max-w-[200px]">
-                    {activeConcern.description}
-                  </p>
-                  <span className="mt-3 inline-flex items-center gap-1 text-[11px] font-600 text-emerald-300 group-hover:underline">
-                    <span>Schedule Consultation</span>
-                    <ArrowRight size={12} />
-                  </span>
-                </div>
-              ) : (
-                /* Default Center Badge */
-                <div className="absolute inset-0 rounded-full flex flex-col items-center justify-center p-4 z-10 pointer-events-none">
-                  <div className="px-4 py-2.5 rounded-full bg-surface-white/90 backdrop-blur-md border border-border-subtle shadow-md text-center max-w-[190px]">
-                    <span className="block text-[10px] font-600 tracking-wider uppercase text-brand-deep">
-                      Clinical Nutrition
-                    </span>
-                    <span className="block text-[13px] font-display font-600 text-ink leading-tight mt-0.5">
-                      8 Core Health Areas
-                    </span>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* 8 Radial Blocks Around the Circumference */}
-          {concerns.map((concern) => {
-            const isHovered = hoveredId === concern.id;
-            const Icon = concern.icon;
-
-            // Calculate trigonometric coordinates based on angle (0° = Top / 12 o'clock)
-            const rad = (concern.angle * Math.PI) / 180;
-            // Radius percentage from center (35% from center places them hugging the central circle)
-            const radiusPercent = 35.5;
-            const leftPercent = 50 + radiusPercent * Math.sin(rad);
-            const topPercent = 50 - radiusPercent * Math.cos(rad);
-
-            return (
+            {concerns.map((concern) => (
               <div
                 key={concern.id}
-                style={{
-                  left: `${leftPercent}%`,
-                  top: `${topPercent}%`,
-                }}
-                onMouseEnter={() => setHoveredId(concern.id)}
-                onMouseLeave={() => setHoveredId(null)}
                 onClick={() => scrollTo('#consultation')}
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && scrollTo('#consultation')}
-                className={`absolute -translate-x-1/2 -translate-y-1/2 w-[190px] xl:w-[210px] rounded-[22px] p-4 text-center cursor-pointer transition-all duration-300 ease-spring select-none ${
-                  isHovered
-                    ? 'z-30 bg-surface-white border-2 border-brand-deep/50 shadow-[0_14px_36px_rgba(23,32,27,0.14)] scale-105'
-                    : 'z-10 bg-gradient-to-b from-[#F9FAF7] to-[#EDF3EB] border border-[#314A3A]/20 shadow-[0_4px_16px_rgba(23,32,27,0.05)] hover:border-brand-primary/40'
-                }`}
-                aria-label={concern.title}
+                className="group flex-shrink-0 w-[290px] sm:w-[330px] lg:w-[360px] snap-start rounded-[24px] overflow-hidden bg-surface-white border border-border-subtle shadow-[0_4px_24px_rgba(23,32,27,0.03)] hover:shadow-[0_16px_40px_rgba(23,32,27,0.08)] hover:border-brand-primary/40 transition-all duration-300 hover:-translate-y-1.5 cursor-pointer flex flex-col"
+                aria-label={`Learn more about ${concern.title}`}
               >
-                {/* Circular Icon in Dark Forest Green */}
-                <div
-                  className={`w-10 h-10 rounded-full mx-auto flex items-center justify-center transition-all duration-300 ${
-                    isHovered
-                      ? 'bg-brand-deep text-surface-white shadow-md scale-110'
-                      : 'bg-brand-deep/90 text-surface-white'
-                  }`}
-                >
-                  <Icon size={18} />
+                {/* Top Half: Architectural Isometric Illustration */}
+                <div className="relative w-full h-[220px] sm:h-[240px] bg-gradient-to-b from-[#F2F6F3]/70 to-surface-white border-b border-border-subtle/60 flex items-center justify-center p-5 overflow-hidden transition-colors duration-300 group-hover:from-[#E9F1EC]/80">
+                  {/* Subtle Background Radial Glow */}
+                  <div className="absolute inset-0 bg-radial-gradient from-brand-light/10 via-transparent to-transparent pointer-events-none" />
+
+                  {/* Watermark Number Badge */}
+                  <span className="absolute top-4 right-4 text-[12px] font-500 text-ink-muted/50 font-mono">
+                    {concern.num}
+                  </span>
+
+                  {/* SVG Isometric Artwork */}
+                  <div className="w-full h-full flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
+                    {concern.renderIllustration()}
+                  </div>
                 </div>
 
-                {/* Main Title */}
-                <h3
-                  className={`font-display font-600 text-[13.5px] xl:text-[14.5px] leading-snug mt-2.5 transition-colors ${
-                    isHovered ? 'text-brand-deep' : 'text-ink'
-                  }`}
-                >
-                  {concern.shortTitle}
-                </h3>
+                {/* Bottom Half: Clean Typography & Content */}
+                <div className="p-6 sm:p-7 flex flex-col flex-1 justify-start">
+                  {/* Category Label */}
+                  <span className="text-[11px] font-600 uppercase tracking-wider text-brand-light block mb-2">
+                    {concern.category}
+                  </span>
 
-                {/* Description that expands smoothly when hovered */}
-                <div
-                  className={`overflow-hidden transition-all duration-300 ease-editorial ${
-                    isHovered ? 'max-h-28 opacity-100 mt-2' : 'max-h-0 opacity-0'
-                  }`}
-                >
-                  <p className="text-[11.5px] text-ink-secondary leading-snug text-pretty">
+                  {/* Concern Title */}
+                  <h3 className="font-display font-600 text-ink text-[18px] sm:text-[20px] leading-[1.3] group-hover:text-brand-deep transition-colors">
+                    {concern.title}
+                  </h3>
+
+                  {/* Clinical Description */}
+                  <p className="mt-2.5 text-[13.5px] sm:text-[14px] text-ink-secondary leading-[1.65]">
                     {concern.description}
                   </p>
                 </div>
               </div>
-            );
-          })}
-        </div>
-
-        {/* ============================================================== */}
-        {/* MOBILE & TABLET VIEWPORT (< lg): Center Plate + 8 Responsive Cards */}
-        {/* ============================================================== */}
-        <div className="lg:hidden flex flex-col gap-6">
-          {/* Centered Food Plate Showcase */}
-          <div className="relative w-[190px] h-[190px] mx-auto rounded-full p-2 bg-surface-white shadow-lg border border-[#314A3A]/20">
-            <div className="relative w-full h-full rounded-full overflow-hidden">
-              <img
-                src={bowlImage}
-                alt="Nutritious food bowl"
-                className="w-full h-full object-cover"
-                loading="lazy"
-                width={380}
-                height={380}
-              />
-              <div className="absolute inset-0 bg-black/20" />
-              <div className="absolute inset-0 flex items-center justify-center p-3 text-center">
-                <span className="px-3 py-1 rounded-full bg-surface-white/90 backdrop-blur-md text-[11px] font-600 text-brand-deep shadow-xs">
-                  8 Core Areas
-                </span>
-              </div>
-            </div>
+            ))}
           </div>
 
-          {/* 8 Cards in a 2-Column Responsive Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-            {concerns.map((concern) => {
-              const isHovered = hoveredId === concern.id;
-              const Icon = concern.icon;
+          {/* Bottom Slider Navigation & Progress Bar (matching screenshot) */}
+          <div className="flex items-center justify-between mt-10 pt-2">
+            {/* Left Circular Arrow Button */}
+            <button
+              onClick={() => handleScroll('left')}
+              disabled={!canScrollLeft}
+              aria-label="Previous health concerns"
+              className="w-11 h-11 rounded-full border border-border-subtle bg-surface-white flex items-center justify-center text-ink hover:bg-surface-secondary hover:border-ink/20 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 shadow-xs cursor-pointer"
+            >
+              <ArrowLeft size={18} />
+            </button>
 
-              return (
-                <div
-                  key={concern.id}
-                  onClick={() => setHoveredId(isHovered ? null : concern.id)}
-                  className={`rounded-2xl p-4 sm:p-5 border transition-all duration-300 cursor-pointer ${
-                    isHovered
-                      ? 'bg-surface-white border-brand-deep/40 shadow-md'
-                      : 'bg-gradient-to-b from-[#F9FAF7] to-[#EDF3EB] border-[#314A3A]/20 shadow-xs'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-brand-deep text-surface-white flex items-center justify-center shrink-0">
-                      <Icon size={17} />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <h3 className="font-display font-600 text-ink text-[14.5px] leading-tight">
-                        {concern.title}
-                      </h3>
-                      <span className="text-[11px] text-brand-deep/80 font-medium">
-                        {concern.category}
-                      </span>
-                    </div>
-                  </div>
+            {/* Middle Continuous Track & Progress Indicator */}
+            <div className="flex-1 max-w-xl mx-5 sm:mx-8 h-[3px] bg-border-subtle/80 rounded-full relative overflow-hidden">
+              <div
+                className="absolute top-0 bottom-0 bg-ink rounded-full transition-all duration-200"
+                style={{
+                  width: '28%',
+                  left: `${(scrollProgress / 100) * 72}%`,
+                }}
+              />
+            </div>
 
-                  {/* Description: Toggles on tap or hover */}
-                  <div
-                    className={`overflow-hidden transition-all duration-300 ease-editorial ${
-                      isHovered ? 'max-h-36 opacity-100 mt-3 pt-3 border-t border-border-subtle/80' : 'max-h-0 opacity-0'
-                    }`}
-                  >
-                    <p className="text-[13px] text-ink-secondary leading-relaxed">
-                      {concern.description}
-                    </p>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        scrollTo('#consultation');
-                      }}
-                      className="mt-2.5 inline-flex items-center gap-1 text-[12px] font-600 text-brand-deep hover:underline"
-                    >
-                      <span>Book Consultation</span>
-                      <ArrowRight size={13} />
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
+            {/* Right Circular Arrow Button */}
+            <button
+              onClick={() => handleScroll('right')}
+              disabled={!canScrollRight}
+              aria-label="Next health concerns"
+              className="w-11 h-11 rounded-full border border-border-subtle bg-surface-white flex items-center justify-center text-ink hover:bg-surface-secondary hover:border-ink/20 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 shadow-xs cursor-pointer"
+            >
+              <ArrowRight size={18} />
+            </button>
           </div>
         </div>
 

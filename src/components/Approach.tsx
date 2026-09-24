@@ -1,7 +1,5 @@
 import { useState, useId } from 'react';
 import {
-  Sparkles,
-  ArrowUpRight,
   Activity,
   Sliders,
   Utensils,
@@ -378,14 +376,11 @@ export default function Approach() {
         >
           {/* Left Column: Eyebrow Badge & Two-Tone Title */}
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-surface-white border border-border-subtle shadow-[0_2px_8px_rgba(23,32,27,0.03)] mb-4">
-              <Sparkles size={13} className="text-brand-deep fill-brand-deep/20" />
-              <span className="text-[11px] font-600 tracking-[0.16em] uppercase text-ink-secondary">
-                Our Methodology
-              </span>
-            </div>
+            <span className="text-eyebrow text-brand-deep uppercase">
+              Our Methodology
+            </span>
 
-            <h2 className="font-display font-600 text-ink text-[32px] sm:text-[40px] lg:text-[46px] leading-[1.12] tracking-tight text-balance">
+            <h2 className="mt-4 font-display font-600 text-ink text-[32px] sm:text-[40px] lg:text-[46px] leading-[1.12] tracking-tight text-balance">
               We’ve structured <br />
               <span className="bg-gradient-to-r from-brand-deep via-brand-primary to-brand-light bg-clip-text text-transparent">
                 Your Care Protocol.
@@ -393,24 +388,11 @@ export default function Approach() {
             </h2>
           </div>
 
-          {/* Right Column: Narrative Copy & Dark Pill CTA Button */}
-          <div className="lg:max-w-md flex flex-col items-start lg:items-end justify-between">
+          {/* Right Column: Narrative Copy */}
+          <div className="lg:max-w-md">
             <p className="text-[15px] sm:text-[16px] text-ink-secondary leading-[1.65] text-left lg:text-right">
               SA Wellness brings clarity, not restriction — uniting biomarker precision, culturally authentic nutrition, and ongoing clinician guidance into one adaptive 5-stage protocol.
             </p>
-
-            <div className="mt-5">
-              <button
-                onClick={scrollToConsultation}
-                className="group relative inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#17201B] text-surface-white text-[14px] font-500 shadow-[0_4px_16px_rgba(23,32,27,0.18)] hover:bg-brand-deep transition-all duration-300 hover:shadow-[0_6px_22px_rgba(23,32,27,0.26)] hover:-translate-y-0.5 active:translate-y-0"
-              >
-                <span>Book Consultation</span>
-                <ArrowUpRight
-                  size={15}
-                  className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                />
-              </button>
-            </div>
           </div>
         </div>
 

@@ -15,11 +15,14 @@ export default function Footer() {
       <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
         <div className="flex flex-col lg:flex-row justify-between gap-10">
           <div className="max-w-sm">
-            <div className="flex items-center gap-2.5">
-              <span className="flex items-center justify-center w-9 h-9 rounded-lg bg-brand-primary text-surface-white font-display font-600 text-[15px]">
-                SA
-              </span>
-              <span className="font-display font-600 text-surface-white text-[17px]">Wellness</span>
+            <div className="flex items-center">
+              <img
+                src="/assets/fIBPHwmodHYgCtu5q2ugcSwxTb0.png"
+                alt="SA Wellness"
+                className="h-12 sm:h-14 lg:h-[54px] w-auto object-contain brightness-0 invert opacity-95"
+                width={232}
+                height={120}
+              />
             </div>
             <p className="mt-4 text-surface-white/60 text-[14px] leading-relaxed">
               Personalized nutrition and lifestyle care for South Asians in the United States. 100% online consultations.
