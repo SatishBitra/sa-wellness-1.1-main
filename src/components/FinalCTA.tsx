@@ -37,39 +37,47 @@ export default function FinalCTA() {
       <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
         <div
           ref={containerRef}
-          className="reveal relative rounded-3xl lg:rounded-[36px] overflow-hidden min-h-[580px] sm:min-h-[640px] lg:min-h-[680px] flex flex-col justify-between p-8 sm:p-12 lg:p-16 shadow-[0_24px_64px_rgba(23,32,27,0.16)] border border-border-subtle"
+          className="reveal relative rounded-3xl lg:rounded-[36px] overflow-hidden min-h-[580px] sm:min-h-[640px] lg:min-h-[680px] flex flex-col justify-between p-8 sm:p-12 lg:p-16 shadow-[0_24px_64px_rgba(23,32,27,0.24)] border border-white/10"
         >
-          {/* Atmospheric Background Image: Sunset meadow */}
+          {/* Atmospheric Background Image: assets/ctabg-2.png */}
           <img
-            src="https://images.pexels.com/photos/1000445/pexels-photo-1000445.jpeg?auto=compress&cs=tinysrgb&w=1920&fit=crop"
-            alt="Person standing in a serene golden wildflower field at sunset, looking forward"
+            src="/assets/ctabg-2.png"
+            alt="Serene panoramic botanical morning sunlight and nature landscape"
             className="absolute inset-0 w-full h-full object-cover object-center scale-105 transition-transform duration-1000 ease-editorial hover:scale-100"
-            loading="lazy"
-            width={1920}
-            height={1080}
+            loading="eager"
+            decoding="async"
+            width={2400}
+            height={1350}
+            onError={(e) => {
+              const target = e.currentTarget;
+              if (!target.dataset.triedFallback) {
+                target.dataset.triedFallback = 'true';
+                target.src = 'assets/ctabg-2.png';
+              }
+            }}
           />
 
-          {/* Cinematic Vignette & Brand Palette Gradients */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-[#17201B]/90 pointer-events-none" />
-          <div className="absolute inset-0 bg-[#17201B]/35 mix-blend-multiply pointer-events-none" />
-          <div className="absolute inset-0 bg-radial-gradient from-transparent via-transparent to-black/45 pointer-events-none" />
+          {/* Cinematic Vignette & Brand Palette Gradients for Enhanced Legibility */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-[#17201B]/65 to-[#0F1713]/92 pointer-events-none" />
+          <div className="absolute inset-0 bg-[#17201B]/40 mix-blend-multiply pointer-events-none" />
+          <div className="absolute inset-0 bg-radial-gradient from-transparent via-[#17201B]/20 to-black/60 pointer-events-none" />
 
           {/* TOP SECTION: Two-Column Split */}
           <div className="relative z-10 flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8 lg:gap-14">
             {/* Left Stack: Heading, Supporting Text, and Key Benefits */}
             <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/12 backdrop-blur-md border border-white/25 text-white/95 text-[12px] font-500 shadow-xs mb-5">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/30 text-white text-[12px] font-500 shadow-sm mb-5">
                 <span className="w-1.5 h-1.5 rounded-full bg-accent-warm animate-pulse" />
-                <span className="tracking-wide">Personalized Nutrition &amp; Lifestyle</span>
+                <span className="tracking-wide text-white">Personalized Nutrition &amp; Lifestyle</span>
               </div>
 
               {/* Heading */}
-              <h2 className="font-display font-600 text-surface-white text-[32px] sm:text-[44px] lg:text-[52px] leading-[1.12] tracking-tight text-balance">
+              <h2 className="font-display font-600 text-white text-[32px] sm:text-[44px] lg:text-[52px] leading-[1.12] tracking-tight text-balance drop-shadow-[0_2px_12px_rgba(0,0,0,0.4)]">
                 A More Personalized Approach to Your Health Starts Here.
               </h2>
 
               {/* Supporting Text */}
-              <p className="mt-4 sm:mt-5 text-white/85 text-[16px] sm:text-[17px] leading-[1.65] max-w-xl text-pretty">
+              <p className="mt-4 sm:mt-5 text-white/90 text-[16px] sm:text-[17px] leading-[1.65] max-w-xl text-pretty drop-shadow-[0_1px_4px_rgba(0,0,0,0.3)]">
                 Understand your risks. Understand your needs. Build a plan that fits your life.
               </p>
 
@@ -78,9 +86,9 @@ export default function FinalCTA() {
                 {keyBenefits.map((benefit) => (
                   <div
                     key={benefit}
-                    className="flex items-center gap-2.5 text-[13.5px] sm:text-[14px] text-white/90 font-450"
+                    className="flex items-center gap-2.5 text-[13.5px] sm:text-[14px] text-white/95 font-500 drop-shadow-[0_1px_3px_rgba(0,0,0,0.35)]"
                   >
-                    <span className="flex items-center justify-center w-5 h-5 rounded-full bg-white/15 backdrop-blur-sm border border-white/20 text-accent-warm flex-shrink-0">
+                    <span className="flex items-center justify-center w-5 h-5 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-accent-warm flex-shrink-0 shadow-xs">
                       <Check size={12} strokeWidth={2.5} />
                     </span>
                     <span>{benefit}</span>
@@ -92,14 +100,14 @@ export default function FinalCTA() {
             {/* Right Stack: Closing Line & CTA Button */}
             <div className="lg:max-w-md flex flex-col lg:items-end justify-center self-start lg:self-center pt-2 lg:pt-8">
               {/* Closing Line */}
-              <p className="text-white/90 font-500 text-[15px] sm:text-[16px] leading-[1.5] mb-5 text-left lg:text-right">
+              <p className="text-white/95 font-500 text-[15px] sm:text-[16px] leading-[1.5] mb-5 text-left lg:text-right drop-shadow-[0_1px_4px_rgba(0,0,0,0.35)]">
                 Take the first step toward better health.
               </p>
 
               {/* CTA Button */}
               <button
                 onClick={() => scrollTo('#consultation')}
-                className="group inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-full bg-surface-white text-ink text-[13.5px] sm:text-[14px] font-600 tracking-wider uppercase hover:bg-brand-light hover:text-surface-white transition-all duration-300 shadow-xl hover:scale-[1.02] cursor-pointer"
+                className="group inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-full bg-surface-white text-ink text-[13.5px] sm:text-[14px] font-600 tracking-wider uppercase hover:bg-brand-primary hover:text-surface-white transition-all duration-300 shadow-[0_12px_28px_rgba(0,0,0,0.25)] hover:scale-[1.02] cursor-pointer"
               >
                 <span>Book a Consultation Now</span>
                 <ChevronRight
@@ -116,15 +124,15 @@ export default function FinalCTA() {
               {stats.map((stat, idx) => (
                 <div key={idx} className="flex flex-col">
                   {/* Thin horizontal dividing rule line */}
-                  <div className="w-full h-[1px] bg-white/30 mb-3.5 sm:mb-4.5" />
+                  <div className="w-full h-[1px] bg-white/35 mb-3.5 sm:mb-4.5" />
 
                   {/* Stat Metric */}
-                  <span className="font-display font-600 text-surface-white text-[28px] sm:text-[36px] lg:text-[42px] leading-tight tracking-tight tabular-nums">
+                  <span className="font-display font-600 text-white text-[28px] sm:text-[36px] lg:text-[42px] leading-tight tracking-tight tabular-nums drop-shadow-[0_2px_8px_rgba(0,0,0,0.35)]">
                     {stat.value}
                   </span>
 
                   {/* Stat Label */}
-                  <span className="mt-1 text-[11px] sm:text-[12px] font-600 tracking-wider uppercase text-white/70">
+                  <span className="mt-1 text-[11px] sm:text-[12px] font-600 tracking-wider uppercase text-white/80 drop-shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
                     {stat.label}
                   </span>
                 </div>
