@@ -2,10 +2,10 @@ import { ArrowRight, Check } from 'lucide-react';
 import { useReveal } from '@/hooks/useReveal';
 import { useSmoothScroll } from '@/hooks/useSmoothScroll';
 
-import b-1 from '../../assets/b-1.png';
-import b-2 from '../../assets/b-2.png';
-import b-3 from '../../assets/b-3.png';
-import b-4 from '../../assets/b-4.png';
+import b1 from '../../assets/b-1.png';
+import b2 from '../../assets/b-2.png';
+import b3 from '../../assets/b-3.png';
+import b4 from '../../assets/b-4.png';
 
 interface PillarCard {
   id: string;
@@ -17,22 +17,22 @@ const pillars: PillarCard[] = [
   {
     id: 'online',
     title: 'Online',
-    image: b-1,
+    image: b1,
   },
   {
     id: 'private',
     title: 'Private',
-    image: b-2,
+    image: b3,
   },
   {
     id: 'convenient',
     title: 'Convenient',
-    image: b-3,
+    image: b2,
   },
   {
     id: 'personalized',
     title: 'Personalized',
-    image: b-4,
+    image: b4,
   },
 ];
 

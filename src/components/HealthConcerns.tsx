@@ -50,48 +50,48 @@ const concerns: HealthConcern[] = [
     image: h3,
   },
   {
-    id: 'vitamind',
-    num: '04',
-    title: 'Vitamin D & Nutrients',
-    category: 'Micronutrient Health',
-    description:
-      'Clinical dietary strategies and co-factor pairing (K2, magnesium, healthy fats) to resolve chronic deficiencies and fatigue.',
-    image: h4,
-  },
-  {
-    id: 'heart',
-    num: '05',
-    title: 'Heart Health & Plaque',
-    category: 'Cardiovascular Care',
-    description:
-      'Target South Asian cardiometabolic risk factors — optimizing ApoB, lipid subfractions, and arterial inflammation naturally.',
-    image: h5,
-  },
-  {
-    id: 'visceral',
-    num: '06',
-    title: 'Abdominal & Visceral Fat',
-    category: 'Body Composition',
-    description:
-      'Target deep visceral fat around internal organs with precision nutrition and waist-to-hip ratio management.',
-    image: h6,
-  },
-  {
-    id: 'hypertension',
-    num: '07',
-    title: 'Hypertension & BP',
-    category: 'Cardiovascular Care',
-    description:
-      'Evidence-based sodium-to-potassium rebalancing, endothelial support, and lifestyle approaches to manage blood pressure sustainably.',
-    image: h7,
-  },
-  {
     id: 'pcos',
-    num: '08',
+    num: '04',
     title: 'PCOS & Hormonal Health',
     category: 'Hormonal Balance',
     description:
       'Targeted nutrition protocols for androgen regulation, regular ovulatory cycles, and hormonal insulin sensitivity.',
+    image: h4,
+  },
+  {
+    id: 'visceral',
+    num: '05',
+    title: 'Abdominal & Visceral Fat',
+    category: 'Body Composition',
+    description:
+      'Target deep visceral fat around internal organs with precision nutrition and waist-to-hip ratio management.',
+    image: h5,
+  },
+  {
+    id: 'hypertension',
+    num: '06',
+    title: 'Hypertension & BP',
+    category: 'Cardiovascular Care',
+    description:
+      'Evidence-based sodium-to-potassium rebalancing, endothelial support, and lifestyle approaches to manage blood pressure sustainably.',
+    image: h6,
+  },
+  {
+    id: 'heart',
+    num: '07',
+    title: 'Heart Health & Plaque',
+    category: 'Cardiovascular Care',
+    description:
+      'Target South Asian cardiometabolic risk factors — optimizing ApoB, lipid subfractions, and arterial inflammation naturally.',
+    image: h7,
+  },
+  {
+    id: 'vitamind',
+    num: '08',
+    title: 'Vitamin D & Nutrients',
+    category: 'Micronutrient Health',
+    description:
+      'Clinical dietary strategies and co-factor pairing (K2, magnesium, healthy fats) to resolve chronic deficiencies.',
     image: h8,
   },
 ];
@@ -215,17 +215,8 @@ export default function HealthConcerns() {
                     src={concern.image}
                     alt={concern.title}
                     className="w-full h-full object-cover object-center transition-transform duration-700 ease-editorial group-hover:scale-108"
-                    loading="eager"
+                    loading="lazy"
                     decoding="async"
-                    onError={(e) => {
-                      const target = e.currentTarget;
-                      if (!target.dataset.triedFallback) {
-                        target.dataset.triedFallback = 'true';
-                        target.src = concern.image.startsWith('/')
-                          ? concern.image.slice(1)
-                          : `/${concern.image}`;
-                      }
-                    }}
                     width={720}
                     height={480}
                   />
