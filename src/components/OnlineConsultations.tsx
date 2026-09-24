@@ -1,4 +1,4 @@
-import { ArrowRight, ShieldCheck, Video, Calendar } from 'lucide-react';
+import { ArrowRight, Check } from 'lucide-react';
 import { useReveal } from '@/hooks/useReveal';
 import { useSmoothScroll } from '@/hooks/useSmoothScroll';
 
@@ -10,23 +10,23 @@ interface PillarCard {
 
 const pillars: PillarCard[] = [
   {
-    id: 'cultural-understanding',
-    title: 'Cultural\nunderstanding',
+    id: 'online',
+    title: 'Online',
     image: 'https://images.pexels.com/photos/5409015/pexels-photo-5409015.jpeg?auto=compress&cs=tinysrgb&w=1000&fit=crop',
   },
   {
-    id: 'evidence-nutrition',
-    title: 'Evidence-based\nnutrition',
+    id: 'private',
+    title: 'Private',
     image: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=compress&cs=tinysrgb&w=1000&fit=crop',
   },
   {
-    id: 'practicality',
-    title: 'Real-life\npracticality',
+    id: 'convenient',
+    title: 'Convenient',
     image: 'https://images.pexels.com/photos/3822864/pexels-photo-3822864.jpeg?auto=compress&cs=tinysrgb&w=1000&fit=crop',
   },
   {
-    id: 'personalized-care',
-    title: 'Personalized\ncare',
+    id: 'personalized',
+    title: 'Personalized',
     image: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=compress&cs=tinysrgb&w=1000&fit=crop',
   },
 ];
@@ -50,21 +50,24 @@ export default function OnlineConsultations() {
           {/* Left Column: Eyebrow Badge & Title Stack */}
           <div className="max-w-2xl">
             <span className="text-eyebrow text-brand-deep uppercase">
-              Expert Nutrition Guidance
+              100% Online Consultations
             </span>
 
             <h2 className="mt-4 font-display font-600 text-ink text-[32px] sm:text-[40px] lg:text-[46px] leading-[1.12] tracking-tight text-balance">
-              Expert clinical care, <br />
+              Expert Nutrition Guidance, <br />
               <span className="bg-gradient-to-r from-brand-deep via-brand-primary to-brand-light bg-clip-text text-transparent">
-                Wherever you are across the U.S.
+                Wherever You Are
               </span>
             </h2>
           </div>
 
           {/* Right Column: Description Stack */}
           <div className="lg:max-w-md">
-            <p className="text-[15px] sm:text-[16px] text-ink-secondary leading-[1.65] text-left lg:text-right">
-              100% online clinical consultations for South Asians nationwide. No commute, no waiting rooms — personalized, culturally attuned care delivered directly to your home.
+            <h3 className="font-display font-600 text-ink text-[17px] sm:text-[18px] leading-snug mb-2 text-left lg:text-right">
+              100% Online Consultations for South Asians Across the U.S.
+            </h3>
+            <p className="text-[14.5px] sm:text-[15px] text-ink-secondary leading-[1.65] text-left lg:text-right">
+              Connect with the SA Wellness team from the comfort of your home. Serving South Asians across the U.S. and globally.
             </p>
           </div>
         </div>
@@ -83,13 +86,13 @@ export default function OnlineConsultations() {
               role="button"
               tabIndex={0}
               onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && scrollTo('#consultation')}
-              aria-label={`Book consultation for ${pillar.title.replace('\n', ' ')}`}
+              aria-label={`Book consultation for ${pillar.title}`}
               className="group relative rounded-[26px] overflow-hidden aspect-[4/5] sm:aspect-[3/4] lg:aspect-[4/5] cursor-pointer shadow-[0_4px_24px_rgba(23,32,27,0.06)] hover:shadow-[0_20px_48px_rgba(23,32,27,0.18)] transition-all duration-300 hover:-translate-y-1.5 focus:outline-none focus:ring-2 focus:ring-brand-primary/40 select-none bg-ink"
             >
               {/* Background Photography */}
               <img
                 src={pillar.image}
-                alt={pillar.title.replace('\n', ' ')}
+                alt={pillar.title}
                 className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 ease-editorial group-hover:scale-108"
                 loading="lazy"
                 width={800}
@@ -117,26 +120,26 @@ export default function OnlineConsultations() {
           ref={footerRef}
           className="reveal mt-12 sm:mt-16 p-6 sm:p-8 rounded-[24px] bg-surface-white border border-border-subtle shadow-sm flex flex-col md:flex-row items-center justify-between gap-6"
         >
-          <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 sm:gap-8 text-ink text-[14px] font-500">
+          <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 sm:gap-7 text-ink text-[14px] font-500">
             <div className="flex items-center gap-2">
-              <span className="flex items-center justify-center w-8 h-8 rounded-full bg-brand-primary/10 text-brand-deep">
-                <Video size={16} />
+              <span className="flex items-center justify-center w-7 h-7 rounded-full bg-brand-primary/10 text-brand-deep">
+                <Check size={14} strokeWidth={2.5} />
               </span>
-              <span>100% Online HD Telehealth</span>
+              <span>No commute.</span>
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="flex items-center justify-center w-8 h-8 rounded-full bg-brand-primary/10 text-brand-deep">
-                <ShieldCheck size={16} />
+              <span className="flex items-center justify-center w-7 h-7 rounded-full bg-brand-primary/10 text-brand-deep">
+                <Check size={14} strokeWidth={2.5} />
               </span>
-              <span>HIPAA Compliant &amp; Private</span>
+              <span>No waiting room.</span>
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="flex items-center justify-center w-8 h-8 rounded-full bg-brand-primary/10 text-brand-deep">
-                <Calendar size={16} />
+              <span className="flex items-center justify-center w-7 h-7 rounded-full bg-brand-primary/10 text-brand-deep">
+                <Check size={14} strokeWidth={2.5} />
               </span>
-              <span>Flexible Weekend &amp; Evening Slots</span>
+              <span>No need to live near a clinic.</span>
             </div>
           </div>
 
