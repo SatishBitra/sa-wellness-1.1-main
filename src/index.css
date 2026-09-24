@@ -1,0 +1,119 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-surface-primary text-ink font-sans;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+
+  ::selection {
+    @apply bg-brand-primary/20 text-ink;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }
+}
+
+@layer components {
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .reveal-scale {
+    opacity: 0;
+    transform: scale(1.04);
+    transition: opacity 1.1s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .reveal-scale.is-visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  .delay-100 { animation-delay: 100ms; }
+  .delay-200 { animation-delay: 200ms; }
+  .delay-300 { animation-delay: 300ms; }
+  .delay-400 { animation-delay: 400ms; }
+  .delay-500 { animation-delay: 500ms; }
+  .delay-700 { animation-delay: 700ms; }
+
+  .opacity-start {
+    opacity: 0;
+  }
+
+  .bg-tech-grid {
+    background-image: 
+      linear-gradient(to right, rgba(23, 32, 27, 0.025) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(23, 32, 27, 0.025) 1px, transparent 1px);
+    background-size: 36px 36px;
+    mask-image: radial-gradient(ellipse 75% 65% at 50% 25%, #000 35%, transparent 85%);
+    -webkit-mask-image: radial-gradient(ellipse 75% 65% at 50% 25%, #000 35%, transparent 85%);
+  }
+
+  .ease-spring {
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+}
+
+/* Lenis Smooth Scroll Core Rules */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal, .reveal-scale {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
