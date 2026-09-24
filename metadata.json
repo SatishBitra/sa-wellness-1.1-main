@@ -1,0 +1,8 @@
+{
+  "name": "SA Wellness",
+  "description": "SA Wellness — personalized nutrition and lifestyle care for South Asians in the U.S. 100% online consultations. Book your consultation today.",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
