@@ -78,13 +78,13 @@ export default function OnlineConsultations() {
         </div>
 
         {/* ============================================================== */}
-        {/* 4 PHOTOGRAPHIC PILLAR CARDS (Clean photographic layout)       */}
+        {/* 4 PHOTOGRAPHIC PILLAR CARDS (Mobile Stacking & Desktop Grid)   */}
         {/* ============================================================== */}
         <div
           ref={cardsRef}
-          className="reveal grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6"
+          className="reveal grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-5 lg:gap-6 relative"
         >
-          {pillars.map((pillar) => (
+          {pillars.map((pillar, index) => (
             <div
               key={pillar.id}
               onClick={() => scrollTo('#consultation')}
@@ -92,7 +92,12 @@ export default function OnlineConsultations() {
               tabIndex={0}
               onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && scrollTo('#consultation')}
               aria-label={`Book consultation for ${pillar.title}`}
-              className="group relative rounded-[26px] overflow-hidden aspect-[4/5] sm:aspect-[3/4] lg:aspect-[4/5] cursor-pointer shadow-[0_4px_24px_rgba(23,32,27,0.06)] hover:shadow-[0_20px_48px_rgba(23,32,27,0.18)] transition-all duration-300 hover:-translate-y-1.5 focus:outline-none focus:ring-2 focus:ring-brand-primary/40 select-none bg-ink"
+              style={{
+                // On mobile screens, cards stick with an incremental top offset creating a tactile stacking deck effect
+                top: `calc(80px + ${index * 24}px)`,
+                zIndex: index + 1,
+              }}
+              className="group relative rounded-[26px] overflow-hidden aspect-[4/5] sm:aspect-[3/4] lg:aspect-[4/5] cursor-pointer shadow-[0_12px_36px_rgba(23,32,27,0.12)] sm:shadow-[0_4px_24px_rgba(23,32,27,0.06)] hover:shadow-[0_20px_48px_rgba(23,32,27,0.2)] transition-all duration-300 hover:-translate-y-1.5 focus:outline-none focus:ring-2 focus:ring-brand-primary/40 select-none bg-ink sticky sm:static border border-white/10"
             >
               {/* Background Photography */}
               <img
