@@ -1,6 +1,7 @@
 import { Check, ChevronRight } from 'lucide-react';
 import { useReveal } from '@/hooks/useReveal';
 import { useSmoothScroll } from '@/hooks/useSmoothScroll';
+import ctaBgImage from '../../assets/ctabg-2.png';
 
 const keyBenefits = [
   'South Asian health expertise',
@@ -39,10 +40,10 @@ export default function FinalCTA() {
           ref={containerRef}
           className="reveal relative rounded-3xl lg:rounded-[36px] overflow-hidden min-h-[580px] sm:min-h-[640px] lg:min-h-[680px] flex flex-col justify-between p-8 sm:p-12 lg:p-16 shadow-[0_24px_64px_rgba(23,32,27,0.24)] border border-white/10"
         >
-          {/* Atmospheric Background Image: assets/ctabg-2.png */}
+          {/* Atmospheric Background Image: assets/ctabg-2.png (Majestic Banyan Tree with Sunlight Flare) */}
           <img
-            src="/assets/ctabg-2.png"
-            alt="Serene panoramic botanical morning sunlight and nature landscape"
+            src={ctaBgImage}
+            alt="Majestic banyan tree with warm sunlight streaming through the canopy"
             className="absolute inset-0 w-full h-full object-cover object-center scale-105 transition-transform duration-1000 ease-editorial hover:scale-100"
             loading="eager"
             decoding="async"
@@ -52,15 +53,14 @@ export default function FinalCTA() {
               const target = e.currentTarget;
               if (!target.dataset.triedFallback) {
                 target.dataset.triedFallback = 'true';
-                target.src = 'assets/ctabg-2.png';
+                target.src = '/assets/ctabg-2.png';
               }
             }}
           />
 
-          {/* Cinematic Vignette & Brand Palette Gradients for Enhanced Legibility */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-[#17201B]/65 to-[#0F1713]/92 pointer-events-none" />
-          <div className="absolute inset-0 bg-[#17201B]/40 mix-blend-multiply pointer-events-none" />
-          <div className="absolute inset-0 bg-radial-gradient from-transparent via-[#17201B]/20 to-black/60 pointer-events-none" />
+          {/* Cinematic Vignette & Balanced Scrim - leaves the radiant sunburst visible while ensuring high-contrast legibility */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-[#17201B]/55 to-black/45 pointer-events-none" />
+          <div className="absolute inset-0 bg-[#17201B]/25 mix-blend-multiply pointer-events-none" />
 
           {/* TOP SECTION: Two-Column Split */}
           <div className="relative z-10 flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8 lg:gap-14">

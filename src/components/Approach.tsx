@@ -11,6 +11,12 @@ import {
 import { useLenis } from 'lenis/react';
 import { useReveal } from '@/hooks/useReveal';
 
+import om1 from '../../assets/om1.png';
+import om2 from '../../assets/om2.png';
+import om3 from '../../assets/om3.png';
+import om4 from '../../assets/om4.png';
+import om5 from '../../assets/om5.png';
+
 interface Step {
   id: string;
   num: string;
@@ -31,7 +37,7 @@ const steps: Step[] = [
     description:
       'South Asian health can require a different lens. We consider factors such as family history, metabolic risk, body composition, lifestyle, and health goals rather than relying on a one-size-fits-all approach.',
     icon: Activity,
-    image: '/assets/om1.png',
+    image: om1,
   },
   {
     id: 'step-02',
@@ -41,7 +47,7 @@ const steps: Step[] = [
     description:
       "Your age, routine, goals, preferences, health concerns, and day-to-day reality are different from someone else's. Your care should be built around you.",
     icon: Sliders,
-    image: '/assets/om2.png',
+    image: om2,
   },
   {
     id: 'step-03',
@@ -51,7 +57,7 @@ const steps: Step[] = [
     description:
       "Traditional foods don't have to disappear from your life. We help you make informed choices around the foods, meals, and eating patterns that matter to you.",
     icon: Utensils,
-    image: '/assets/om3.png',
+    image: om3,
   },
   {
     id: 'step-04',
@@ -69,7 +75,7 @@ const steps: Step[] = [
       'Changing food environments',
     ],
     icon: Compass,
-    image: '/assets/om4.png',
+    image: om4,
   },
   {
     id: 'step-05',
@@ -79,7 +85,7 @@ const steps: Step[] = [
     description:
       'No extreme reset. No unrealistic rules. The goal is to create changes you can continue long after the initial consultation.',
     icon: TrendingUp,
-    image: '/assets/om5.png',
+    image: om5,
   },
 ];
 

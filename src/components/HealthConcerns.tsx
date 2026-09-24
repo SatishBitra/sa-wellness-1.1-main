@@ -3,6 +3,15 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useReveal } from '@/hooks/useReveal';
 import { useSmoothScroll } from '@/hooks/useSmoothScroll';
 
+import h1 from '../../assets/h-1.png';
+import h2 from '../../assets/h-2.png';
+import h3 from '../../assets/h-3.png';
+import h4 from '../../assets/h-4.png';
+import h5 from '../../assets/h-5.png';
+import h6 from '../../assets/h-6.png';
+import h7 from '../../assets/h-7.png';
+import h8 from '../../assets/h-8.png';
+
 interface HealthConcern {
   id: string;
   num: string;
@@ -20,7 +29,7 @@ const concerns: HealthConcern[] = [
     category: 'Metabolic Health',
     description:
       'Personalized macro balancing, glycemic sequencing, and carbohydrate timing to stabilize blood sugar without eliminating traditional staples.',
-    image: '/assets/h-1.png',
+    image: h1,
   },
   {
     id: 'insulin',
@@ -29,7 +38,7 @@ const concerns: HealthConcern[] = [
     category: 'Cellular Health',
     description:
       'Target underlying cellular resistance, reduce fasting insulin, and restore metabolic flexibility through tailored nutrition.',
-    image: '/assets/h-2.png',
+    image: h2,
   },
   {
     id: 'ibs',
@@ -38,52 +47,52 @@ const concerns: HealthConcern[] = [
     category: 'Digestive Wellness',
     description:
       'Identify dietary triggers, balance the microbiome, and optimize heritage spices to resolve chronic bloating, gas, and discomfort.',
-    image: '/assets/h-3.png',
+    image: h3,
   },
   {
-    id: 'pcos',
+    id: 'vitamind',
     num: '04',
-    title: 'PCOS & Hormonal Health',
-    category: 'Hormonal Balance',
+    title: 'Vitamin D & Nutrients',
+    category: 'Micronutrient Health',
     description:
-      'Targeted nutrition protocols for androgen regulation, regular ovulatory cycles, and hormonal insulin sensitivity.',
-    image: '/assets/h-4.png',
-  },
-  {
-    id: 'visceral',
-    num: '05',
-    title: 'Abdominal & Visceral Fat',
-    category: 'Body Composition',
-    description:
-      'Target deep visceral fat around internal organs with precision nutrition and waist-to-hip ratio management.',
-    image: '/assets/h-5.png',
-  },
-  {
-    id: 'hypertension',
-    num: '06',
-    title: 'Hypertension & BP',
-    category: 'Cardiovascular Care',
-    description:
-      'Evidence-based sodium-to-potassium rebalancing, endothelial support, and lifestyle approaches to manage blood pressure sustainably.',
-    image: '/assets/h-6.png',
+      'Clinical dietary strategies and co-factor pairing (K2, magnesium, healthy fats) to resolve chronic deficiencies and fatigue.',
+    image: h4,
   },
   {
     id: 'heart',
-    num: '07',
+    num: '05',
     title: 'Heart Health & Plaque',
     category: 'Cardiovascular Care',
     description:
       'Target South Asian cardiometabolic risk factors — optimizing ApoB, lipid subfractions, and arterial inflammation naturally.',
-    image: '/assets/h-7.png',
+    image: h5,
   },
   {
-    id: 'vitamind',
-    num: '08',
-    title: 'Vitamin D & Nutrients',
-    category: 'Micronutrient Health',
+    id: 'visceral',
+    num: '06',
+    title: 'Abdominal & Visceral Fat',
+    category: 'Body Composition',
     description:
-      'Clinical dietary strategies and co-factor pairing (K2, magnesium, healthy fats) to resolve chronic deficiencies.',
-    image: '/assets/h-8.png',
+      'Target deep visceral fat around internal organs with precision nutrition and waist-to-hip ratio management.',
+    image: h6,
+  },
+  {
+    id: 'hypertension',
+    num: '07',
+    title: 'Hypertension & BP',
+    category: 'Cardiovascular Care',
+    description:
+      'Evidence-based sodium-to-potassium rebalancing, endothelial support, and lifestyle approaches to manage blood pressure sustainably.',
+    image: h7,
+  },
+  {
+    id: 'pcos',
+    num: '08',
+    title: 'PCOS & Hormonal Health',
+    category: 'Hormonal Balance',
+    description:
+      'Targeted nutrition protocols for androgen regulation, regular ovulatory cycles, and hormonal insulin sensitivity.',
+    image: h8,
   },
 ];
 

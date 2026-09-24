@@ -11,14 +11,14 @@ interface StatItem {
 const stats: StatItem[] = [
   {
     category: 'Type 2 Diabetes',
-    stat: '2–4×',
+    stat: '2–4x',
     description: 'Higher likelihood of Type 2 Diabetes',
     image: 'https://images.pexels.com/photos/7659564/pexels-photo-7659564.jpeg?auto=compress&cs=tinysrgb&w=800&fit=crop',
     alt: 'Person focusing on metabolic health and nutrition care',
   },
   {
     category: 'Cardiovascular Health',
-    stat: '2×',
+    stat: '2x',
     description: 'Higher lifetime cardiovascular risk',
     image: 'https://images.pexels.com/photos/4386467/pexels-photo-4386467.jpeg?auto=compress&cs=tinysrgb&w=800&fit=crop',
     alt: 'Active runner supporting heart and cardiovascular wellness',
