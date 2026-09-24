@@ -71,12 +71,12 @@ function StatCard({ stat }: { stat: StatItem }) {
           {stat.category}
         </div>
 
-        {/* Bottom: Big Stat Number + Aligned Description */}
-        <div className="flex items-end gap-2.5 sm:gap-3">
-          <span className="font-display font-600 text-white text-[32px] sm:text-[34px] lg:text-[36px] xl:text-[38px] leading-none shrink-0 tracking-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
+        {/* Bottom: Big Stat Number + Aligned Description with space between */}
+        <div className="flex items-end justify-between gap-3 sm:gap-4">
+          <span className="font-display font-600 text-white text-[30px] sm:text-[34px] lg:text-[36px] xl:text-[38px] leading-none shrink-0 tracking-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
             {stat.stat}
           </span>
-          <span className="text-white/90 text-[12px] sm:text-[12.5px] lg:text-[13px] leading-[1.3] font-450 drop-shadow-[0_1px_4px_rgba(0,0,0,0.6)] flex-1 min-w-0">
+          <span className="text-white/90 text-[12px] sm:text-[12.5px] lg:text-[13px] leading-[1.35] font-450 drop-shadow-[0_1px_4px_rgba(0,0,0,0.6)] text-right flex-1 max-w-[62%]">
             {stat.description}
           </span>
         </div>

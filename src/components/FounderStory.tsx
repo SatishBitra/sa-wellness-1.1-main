@@ -45,7 +45,6 @@ export default function FounderStory() {
               <p className="font-display font-500 text-ink text-[18px] sm:text-[20px] leading-snug text-balance">
                 &ldquo;Better health shouldn't feel out of reach. It should feel possible.&rdquo;
               </p>
-              <p className="mt-2 text-ink-secondary text-[14px]">— Hena Nafis, Founder, SA Wellness</p>
             </div>
           </div>
         </div>
