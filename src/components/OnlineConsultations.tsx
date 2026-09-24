@@ -1,67 +1,152 @@
-import { Monitor, Lock, Calendar, User } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Video, Calendar } from 'lucide-react';
 import { useReveal } from '@/hooks/useReveal';
+import { useSmoothScroll } from '@/hooks/useSmoothScroll';
 
-const consultationImage = 'https://images.pexels.com/photos/7690095/pexels-photo-7690095.jpeg?auto=compress&cs=tinysrgb&w=1100&h=900&fit=crop';
+interface PillarCard {
+  id: string;
+  title: string;
+  image: string;
+}
 
-const badges = [
-  { label: 'Online', icon: Monitor },
-  { label: 'Private', icon: Lock },
-  { label: 'Convenient', icon: Calendar },
-  { label: 'Personalized', icon: User },
+const pillars: PillarCard[] = [
+  {
+    id: 'cultural-understanding',
+    title: 'Cultural\nunderstanding',
+    image: 'https://images.pexels.com/photos/5409015/pexels-photo-5409015.jpeg?auto=compress&cs=tinysrgb&w=1000&fit=crop',
+  },
+  {
+    id: 'evidence-nutrition',
+    title: 'Evidence-based\nnutrition',
+    image: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=compress&cs=tinysrgb&w=1000&fit=crop',
+  },
+  {
+    id: 'practicality',
+    title: 'Real-life\npracticality',
+    image: 'https://images.pexels.com/photos/3822864/pexels-photo-3822864.jpeg?auto=compress&cs=tinysrgb&w=1000&fit=crop',
+  },
+  {
+    id: 'personalized-care',
+    title: 'Personalized\ncare',
+    image: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=compress&cs=tinysrgb&w=1000&fit=crop',
+  },
 ];
 
 export default function OnlineConsultations() {
-  const imageRef = useReveal<HTMLDivElement>({ threshold: 0.15 });
-  const textRef = useReveal<HTMLDivElement>({ threshold: 0.2 });
+  const headerRef = useReveal<HTMLDivElement>();
+  const cardsRef = useReveal<HTMLDivElement>({ threshold: 0.1 });
+  const footerRef = useReveal<HTMLDivElement>({ threshold: 0.15 });
+  const { scrollTo } = useSmoothScroll();
 
   return (
-    <section className="py-20 lg:py-30">
+    <section id="consultations" className="py-20 lg:py-30 scroll-mt-20 bg-surface-secondary/40">
       <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
-        <div className="grid lg:grid-cols-[55fr_45fr] gap-10 lg:gap-16 items-center">
-          <div ref={imageRef} className="reveal-scale order-2 lg:order-1">
-            <div className="overflow-hidden rounded-editorial">
-              <img
-                src={consultationImage}
-                alt="A woman having a private virtual consultation from her home"
-                className="w-full h-[360px] sm:h-[460px] lg:h-[520px] object-cover"
-                loading="lazy"
-                width={1100}
-                height={520}
-              />
-            </div>
-          </div>
+        {/* ============================================================== */}
+        {/* SECTION HEADER: Two-Column Split Aligned With Our Methodology */}
+        {/* ============================================================== */}
+        <div
+          ref={headerRef}
+          className="reveal flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 lg:gap-14 mb-12 lg:mb-16"
+        >
+          {/* Left Column: Eyebrow Badge & Title Stack */}
+          <div className="max-w-2xl">
+            <span className="text-eyebrow text-brand-deep uppercase">
+              Expert Nutrition Guidance
+            </span>
 
-          <div ref={textRef} className="reveal order-1 lg:order-2">
-            <span className="text-eyebrow text-brand-deep uppercase">Expert Nutrition Guidance</span>
-            <h2 className="mt-4 font-display font-600 text-ink text-[26px] sm:text-[34px] lg:text-[40px] leading-[1.15] tracking-tight text-balance">
-              Expert Nutrition Guidance, Wherever You Are
+            <h2 className="mt-4 font-display font-600 text-ink text-[32px] sm:text-[40px] lg:text-[46px] leading-[1.12] tracking-tight text-balance">
+              Expert clinical care, <br />
+              <span className="bg-gradient-to-r from-brand-deep via-brand-primary to-brand-light bg-clip-text text-transparent">
+                Wherever you are across the U.S.
+              </span>
             </h2>
-            <p className="mt-5 text-ink-secondary text-[16px] leading-[1.65]">
-              100% Online Consultations for South Asians Across the U.S.
-            </p>
-            <p className="mt-4 text-ink-secondary text-[16px] leading-[1.65]">
-              No commute. No waiting room. No need to live near a clinic. Whether you're in New York, New Jersey, California, or anywhere in between — your consultation happens wherever you are most comfortable.
-            </p>
+          </div>
 
-            <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-4">
-              {badges.map(({ label, icon: Icon }) => (
-                <div
-                  key={label}
-                  className="flex items-center gap-2.5 px-4 py-3 rounded-xl2 border border-border-subtle bg-surface-white"
-                >
-                  <Icon size={18} className="text-brand-deep shrink-0" />
-                  <span className="text-[14px] font-500 text-ink">{label}</span>
-                </div>
-              ))}
+          {/* Right Column: Description Stack */}
+          <div className="lg:max-w-md">
+            <p className="text-[15px] sm:text-[16px] text-ink-secondary leading-[1.65] text-left lg:text-right">
+              100% online clinical consultations for South Asians nationwide. No commute, no waiting rooms — personalized, culturally attuned care delivered directly to your home.
+            </p>
+          </div>
+        </div>
+
+        {/* ============================================================== */}
+        {/* 4 PHOTOGRAPHIC PILLAR CARDS (Clean photographic layout)       */}
+        {/* ============================================================== */}
+        <div
+          ref={cardsRef}
+          className="reveal grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6"
+        >
+          {pillars.map((pillar) => (
+            <div
+              key={pillar.id}
+              onClick={() => scrollTo('#consultation')}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && scrollTo('#consultation')}
+              aria-label={`Book consultation for ${pillar.title.replace('\n', ' ')}`}
+              className="group relative rounded-[26px] overflow-hidden aspect-[4/5] sm:aspect-[3/4] lg:aspect-[4/5] cursor-pointer shadow-[0_4px_24px_rgba(23,32,27,0.06)] hover:shadow-[0_20px_48px_rgba(23,32,27,0.18)] transition-all duration-300 hover:-translate-y-1.5 focus:outline-none focus:ring-2 focus:ring-brand-primary/40 select-none bg-ink"
+            >
+              {/* Background Photography */}
+              <img
+                src={pillar.image}
+                alt={pillar.title.replace('\n', ' ')}
+                className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 ease-editorial group-hover:scale-108"
+                loading="lazy"
+                width={800}
+                height={1000}
+              />
+
+              {/* Dark Gradient Vignette for pristine white text contrast */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+              <div className="absolute inset-0 bg-[#17201B]/25 mix-blend-multiply" />
+
+              {/* Bottom Content: Clean Display Typography */}
+              <div className="absolute inset-x-0 bottom-0 p-6 sm:p-7 z-10 flex flex-col justify-end">
+                <h3 className="font-display font-600 text-surface-white text-[22px] sm:text-[24px] lg:text-[25px] leading-[1.18] tracking-tight whitespace-pre-line drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
+                  {pillar.title}
+                </h3>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* ============================================================== */}
+        {/* BOTTOM ACTION BAR: Telehealth Reassurance & Booking Trigger */}
+        {/* ============================================================== */}
+        <div
+          ref={footerRef}
+          className="reveal mt-12 sm:mt-16 p-6 sm:p-8 rounded-[24px] bg-surface-white border border-border-subtle shadow-sm flex flex-col md:flex-row items-center justify-between gap-6"
+        >
+          <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 sm:gap-8 text-ink text-[14px] font-500">
+            <div className="flex items-center gap-2">
+              <span className="flex items-center justify-center w-8 h-8 rounded-full bg-brand-primary/10 text-brand-deep">
+                <Video size={16} />
+              </span>
+              <span>100% Online HD Telehealth</span>
             </div>
 
-            <button
-              onClick={() => document.querySelector('#consultation')?.scrollIntoView({ behavior: 'smooth' })}
-              className="mt-8 inline-flex items-center justify-center px-7 py-3.5 rounded-xl bg-brand-deep text-surface-white text-[15px] font-500 hover:bg-brand-primary transition-all duration-250 ease-editorial hover:-translate-y-0.5"
-            >
-              Book a Consultation Now
-            </button>
+            <div className="flex items-center gap-2">
+              <span className="flex items-center justify-center w-8 h-8 rounded-full bg-brand-primary/10 text-brand-deep">
+                <ShieldCheck size={16} />
+              </span>
+              <span>HIPAA Compliant &amp; Private</span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="flex items-center justify-center w-8 h-8 rounded-full bg-brand-primary/10 text-brand-deep">
+                <Calendar size={16} />
+              </span>
+              <span>Flexible Weekend &amp; Evening Slots</span>
+            </div>
           </div>
+
+          <button
+            onClick={() => scrollTo('#consultation')}
+            className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-brand-deep text-surface-white text-[14px] font-600 tracking-wide hover:bg-brand-primary transition-all duration-250 shadow-md hover:shadow-lg hover:-translate-y-0.5 shrink-0 cursor-pointer"
+          >
+            <span>Book a Consultation</span>
+            <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
+          </button>
         </div>
       </div>
     </section>

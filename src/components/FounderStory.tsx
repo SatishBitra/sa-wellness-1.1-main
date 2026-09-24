@@ -1,6 +1,6 @@
 import { useReveal } from '@/hooks/useReveal';
 
-const founderImage = 'https://images.pexels.com/photos/31635316/pexels-photo-31635316.jpeg?auto=compress&cs=tinysrgb&w=900&h=1100&fit=crop';
+const founderImage = '/assets/03lyKqCdFEsXx6Kmt8oSVHMgaA.png';
 
 export default function FounderStory() {
   const leftRef = useReveal<HTMLDivElement>();

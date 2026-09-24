@@ -5,6 +5,7 @@ import {
   Utensils,
   Compass,
   TrendingUp,
+  ArrowRight,
   type LucideIcon,
 } from 'lucide-react';
 import { useLenis } from 'lenis/react';
@@ -16,6 +17,7 @@ interface Step {
   shortLabel: string;
   title: string;
   description: string;
+  bulletList?: string[];
   icon: LucideIcon;
   graphic: 'biomarker' | 'personalize' | 'nutrition' | 'lifestyle' | 'habits';
 }
@@ -24,10 +26,10 @@ const steps: Step[] = [
   {
     id: 'step-01',
     num: '01.',
-    shortLabel: 'Analyze Biology',
-    title: 'South Asian Biomarker & Risk Analysis',
+    shortLabel: 'South Asian Risks',
+    title: 'Start with South Asian Health Risks',
     description:
-      'We assess your distinct metabolic profile — evaluating visceral adiposity, lipid subfractions, fasting insulin, and HOMA-IR sensitivity rather than relying on generic population averages.',
+      'South Asian health can require a different lens. We consider factors such as family history, metabolic risk, body composition, lifestyle, and health goals rather than relying on a one-size-fits-all approach.',
     icon: Activity,
     graphic: 'biomarker',
   },
@@ -35,9 +37,9 @@ const steps: Step[] = [
     id: 'step-02',
     num: '02.',
     shortLabel: 'Personalize Plan',
-    title: 'Personalize Your Metabolic Care',
+    title: 'Personalize the Plan',
     description:
-      'No copy-paste meal plans or rigid templates. Your clinical dietitian designs a tailored care protocol shaped around your unique lab markers, daily routine, stress patterns, and family history.',
+      "Your age, routine, goals, preferences, health concerns, and day-to-day reality are different from someone else's. Your care should be built around you.",
     icon: Sliders,
     graphic: 'personalize',
   },
@@ -47,27 +49,35 @@ const steps: Step[] = [
     shortLabel: 'Work with Food',
     title: 'Work with Your Food, Not Against It',
     description:
-      'Rice, roti, dal, sabzi, and heritage spices aren’t obstacles — they are therapeutic assets. We engineer precise glycemic sequencing and macro pairing around the meals your household actually eats.',
+      "Traditional foods don't have to disappear from your life. We help you make informed choices around the foods, meals, and eating patterns that matter to you.",
     icon: Utensils,
     graphic: 'nutrition',
   },
   {
     id: 'step-04',
     num: '04.',
-    shortLabel: 'U.S. Life Fit',
+    shortLabel: 'American Life Fit',
     title: 'Make It Work in American Life',
     description:
-      'Engineered for demanding American schedules — including grocery roadmaps for Trader Joe’s, Costco, and Patel Brothers, fast-casual order guides, and dining strategies for family celebrations.',
+      'Because life in the U.S. brings its own realities: long workdays, eating out, travel, family responsibilities, social events, and changing food environments. Your nutrition strategy has to work beyond the kitchen.',
+    bulletList: [
+      'Long workdays',
+      'Eating out',
+      'Travel',
+      'Family responsibilities',
+      'Social events',
+      'Changing food environments',
+    ],
     icon: Compass,
     graphic: 'lifestyle',
   },
   {
     id: 'step-05',
     num: '05.',
-    shortLabel: 'Build Habits',
-    title: 'Build Habits That Last for Decades',
+    shortLabel: 'Habits That Last',
+    title: 'Build Habits That Last',
     description:
-      'Real health transformation is an enduring practice, not a 30-day challenge. Through regular 1-on-1 clinician check-ins, continuous chat support, and repeat biomarker validation, we build lasting resilience.',
+      'No extreme reset. No unrealistic rules. The goal is to create changes you can continue long after the initial consultation.',
     icon: TrendingUp,
     graphic: 'habits',
   },
@@ -341,7 +351,7 @@ function StepGraphic({ type }: { type: Step['graphic'] }) {
 }
 
 export default function Approach() {
-  // Step 03 (Cultural Nutrition, index 2) is active by default as the signature center card
+  // Step 03 (Work with food, index 2) is active by default as the signature center card
   const [activeStep, setActiveStep] = useState(2);
   const headerRef = useReveal<HTMLDivElement>();
   const cardsRef = useReveal<HTMLDivElement>({ threshold: 0.12 });
@@ -374,16 +384,16 @@ export default function Approach() {
           ref={headerRef}
           className="reveal flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 lg:gap-14 mb-12 lg:mb-16"
         >
-          {/* Left Column: Eyebrow Badge & Two-Tone Title */}
+          {/* Left Column: Eyebrow Badge & Title */}
           <div className="max-w-2xl">
             <span className="text-eyebrow text-brand-deep uppercase">
-              Our Methodology
+              WHAT SA WELLNESS DOES DIFFERENTLY
             </span>
 
             <h2 className="mt-4 font-display font-600 text-ink text-[32px] sm:text-[40px] lg:text-[46px] leading-[1.12] tracking-tight text-balance">
-              We’ve structured <br />
+              A More Complete Approach to <br />
               <span className="bg-gradient-to-r from-brand-deep via-brand-primary to-brand-light bg-clip-text text-transparent">
-                Your Care Protocol.
+                South Asian Health
               </span>
             </h2>
           </div>
@@ -391,7 +401,7 @@ export default function Approach() {
           {/* Right Column: Narrative Copy */}
           <div className="lg:max-w-md">
             <p className="text-[15px] sm:text-[16px] text-ink-secondary leading-[1.65] text-left lg:text-right">
-              SA Wellness brings clarity, not restriction — uniting biomarker precision, culturally authentic nutrition, and ongoing clinician guidance into one adaptive 5-stage protocol.
+              Because better health isn't just about what you eat. It is about understanding how your body, your risks, your environment, and your everyday life come together.
             </p>
           </div>
         </div>
@@ -431,6 +441,20 @@ export default function Approach() {
                     <p className="mt-2.5 text-ink-secondary text-[14px] xl:text-[14.5px] leading-[1.65]">
                       {step.description}
                     </p>
+
+                    {/* Bullet List for Step 04 */}
+                    {step.bulletList && (
+                      <div className="mt-3 flex flex-wrap gap-1.5 pt-1">
+                        {step.bulletList.map((item, i) => (
+                          <span
+                            key={i}
+                            className="inline-flex items-center text-[11.5px] font-500 text-brand-deep bg-brand-primary/10 px-2.5 py-1 rounded-full"
+                          >
+                            • {item}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               );
@@ -501,6 +525,18 @@ export default function Approach() {
                       <p className="mt-2.5 text-ink-secondary text-[13.5px] sm:text-[14px] leading-relaxed">
                         {step.description}
                       </p>
+                      {step.bulletList && (
+                        <div className="mt-3 flex flex-wrap gap-1.5 pt-1">
+                          {step.bulletList.map((item, i) => (
+                            <span
+                              key={i}
+                              className="inline-flex items-center text-[11px] font-500 text-brand-deep bg-brand-primary/10 px-2 py-0.5 rounded-full"
+                            >
+                              • {item}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
                 ) : (
@@ -523,16 +559,19 @@ export default function Approach() {
           })}
         </div>
 
-        {/* Bottom Booking Action */}
-        <div className="mt-12 lg:mt-16 text-center">
-          <p className="text-[14px] text-ink-secondary mb-4">
-            Ready to experience nutrition care tailored to your South Asian biology and lifestyle?
+        {/* ============================================================== */}
+        {/* BOTTOM SECTION: Closing Line & CTA Button                      */}
+        {/* ============================================================== */}
+        <div className="mt-14 lg:mt-20 text-center max-w-xl mx-auto">
+          <p className="text-[16px] sm:text-[18px] font-display font-500 text-ink tracking-tight mb-6">
+            Science-informed. South Asian-aware. Built for real life.
           </p>
           <button
             onClick={scrollToConsultation}
-            className="inline-flex items-center justify-center px-7 py-3.5 rounded-xl bg-brand-deep text-surface-white text-[15px] font-500 hover:bg-brand-primary transition-all duration-250 ease-editorial hover:-translate-y-0.5 shadow-sm hover:shadow-md"
+            className="group inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-full bg-brand-deep text-surface-white text-[13.5px] sm:text-[14px] font-600 tracking-wider uppercase hover:bg-brand-primary transition-all duration-250 ease-editorial hover:-translate-y-0.5 shadow-md hover:shadow-lg cursor-pointer"
           >
-            Schedule Your Clinical Consultation
+            <span>Book a Consultation Now</span>
+            <ArrowRight size={15} className="transition-transform duration-250 group-hover:translate-x-1" />
           </button>
         </div>
       </div>
