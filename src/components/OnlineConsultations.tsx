@@ -1,4 +1,4 @@
-import { ArrowRight, Check } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { useReveal } from '@/hooks/useReveal';
 import { useSmoothScroll } from '@/hooks/useSmoothScroll';
 
@@ -84,7 +84,7 @@ export default function OnlineConsultations() {
           ref={cardsRef}
           className="reveal grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-5 lg:gap-6 relative"
         >
-          {pillars.map((pillar, index) => (
+          {pillars.map((pillar) => (
             <div
               key={pillar.id}
               onClick={() => scrollTo('#consultation')}
@@ -92,12 +92,7 @@ export default function OnlineConsultations() {
               tabIndex={0}
               onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && scrollTo('#consultation')}
               aria-label={`Book consultation for ${pillar.title}`}
-              style={{
-                // On mobile screens, cards stick with an incremental top offset creating a tactile stacking deck effect
-                top: `calc(80px + ${index * 24}px)`,
-                zIndex: index + 1,
-              }}
-              className="group relative rounded-[26px] overflow-hidden aspect-[4/5] sm:aspect-[3/4] lg:aspect-[4/5] cursor-pointer shadow-[0_12px_36px_rgba(23,32,27,0.12)] sm:shadow-[0_4px_24px_rgba(23,32,27,0.06)] hover:shadow-[0_20px_48px_rgba(23,32,27,0.2)] transition-all duration-300 hover:-translate-y-1.5 focus:outline-none focus:ring-2 focus:ring-brand-primary/40 select-none bg-ink sticky sm:static border border-white/10"
+              className="group relative rounded-[26px] overflow-hidden aspect-[4/5] sm:aspect-[3/4] lg:aspect-[4/5] cursor-pointer shadow-[0_8px_24px_rgba(23,32,27,0.08)] hover:shadow-[0_20px_48px_rgba(23,32,27,0.18)] transition-all duration-300 hover:-translate-y-1.5 focus:outline-none focus:ring-2 focus:ring-brand-primary/40 select-none bg-ink border border-white/10"
             >
               {/* Background Photography */}
               <img
@@ -155,10 +150,9 @@ export default function OnlineConsultations() {
 
           <button
             onClick={() => scrollTo('#consultation')}
-            className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-brand-deep text-surface-white text-[14px] font-600 tracking-wide hover:bg-brand-primary transition-all duration-250 shadow-md hover:shadow-lg hover:-translate-y-0.5 shrink-0 cursor-pointer"
+            className="inline-flex items-center justify-center px-7 py-3.5 rounded-xl bg-brand-deep text-surface-white text-[15px] font-500 hover:bg-brand-primary transition-all duration-250 ease-editorial hover:-translate-y-0.5 shadow-xs shrink-0 cursor-pointer"
           >
-            <span>Book a Consultation</span>
-            <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
+            Book a Consultation Now
           </button>
         </div>
       </div>

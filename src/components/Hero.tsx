@@ -11,6 +11,25 @@ export default function Hero() {
       <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
         <div className="grid lg:grid-cols-[1fr_minmax(380px,440px)] gap-10 lg:gap-16 items-start">
           <div className="flex flex-col">
+            {/* Mobile Hero Visual: Displays exclusively before the text content on mobile screens (< lg) */}
+            <div className="lg:hidden mb-6 -mt-2 rounded-2xl overflow-hidden shadow-[0_8px_30px_rgba(23,32,27,0.12)] border border-border-subtle relative aspect-[16/10] sm:aspect-[2/1] bg-surface-secondary opacity-start animate-fade-in" style={{ animationDelay: '50ms', animationFillMode: 'forwards' }}>
+              <img
+                src="https://images.pexels.com/photos/9345640/pexels-photo-9345640.jpeg?auto=compress&cs=tinysrgb&w=900&fit=crop"
+                alt="South Asian woman preparing wholesome fresh food in warm kitchen"
+                className="w-full h-full object-cover object-center"
+                loading="eager"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
+              <div className="absolute bottom-3 left-3.5 right-3.5 flex items-center justify-between text-white drop-shadow-sm">
+                <span className="text-[12px] font-500 tracking-wide bg-black/40 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/20">
+                  Online Care Across the U.S.
+                </span>
+                <span className="text-[11.5px] font-600 bg-brand-deep/90 backdrop-blur-md px-2.5 py-1 rounded-full text-white">
+                  100% Virtual
+                </span>
+              </div>
+            </div>
+
             <span className="text-eyebrow text-brand-deep uppercase opacity-start animate-fade-in" style={{ animationDelay: '100ms', animationFillMode: 'forwards' }}>
               Personalized Nutrition &amp; Lifestyle Care
             </span>

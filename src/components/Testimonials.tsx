@@ -25,7 +25,7 @@ const featuredTestimonial: FeaturedTestimonial = {
   name: 'Dr. Sourav Majumdar',
   role: 'Physician',
   location: 'Palo Alto, CA',
-  image: 'https://images.pexels.com/photos/3823488/pexels-photo-3823488.jpeg?auto=compress&cs=tinysrgb&w=1200&fit=crop',
+  image: 'https://miro.medium.com/v2/resize:fit:720/format:webp/1*XHYkenPR7qdYHOcMVI-dfw.png',
   avatar: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=300&fit=crop',
 };
 

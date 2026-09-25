@@ -1,4 +1,4 @@
-import { Check, ChevronRight } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { useReveal } from '@/hooks/useReveal';
 import { useSmoothScroll } from '@/hooks/useSmoothScroll';
 import ctabg2 from '../../assets/ctabg-2.png';
@@ -108,13 +108,9 @@ export default function FinalCTA() {
               {/* CTA Button */}
               <button
                 onClick={() => scrollTo('#consultation')}
-                className="group inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-full bg-surface-white text-ink text-[13.5px] sm:text-[14px] font-600 tracking-wider uppercase hover:bg-brand-primary hover:text-surface-white transition-all duration-300 shadow-[0_12px_28px_rgba(0,0,0,0.25)] hover:scale-[1.02] cursor-pointer"
+                className="inline-flex items-center justify-center px-7 py-3.5 rounded-xl bg-surface-white text-ink text-[15px] font-500 hover:bg-brand-primary hover:text-surface-white transition-all duration-250 ease-editorial hover:-translate-y-0.5 shadow-md hover:shadow-lg cursor-pointer"
               >
-                <span>Book a Consultation Now</span>
-                <ChevronRight
-                  size={16}
-                  className="transition-transform duration-300 group-hover:translate-x-1"
-                />
+                Book a Consultation Now
               </button>
             </div>
           </div>

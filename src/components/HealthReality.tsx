@@ -27,7 +27,7 @@ const stats: StatItem[] = [
     category: 'Early-Onset Risk',
     stat: '5–10 yrs',
     description: 'Earlier metabolic disease onset',
-    image: 'https://images.pexels.com/photos/3768916/pexels-photo-3768916.jpeg?auto=compress&cs=tinysrgb&w=800&fit=crop',
+    image: 'https://miro.medium.com/v2/resize:fit:720/format:webp/1*TXWxdqEr2XtUgDL3tYlR0w.png',
     alt: 'Young adult engaging in proactive wellness lifestyle',
   },
   {
@@ -38,6 +38,30 @@ const stats: StatItem[] = [
     alt: 'Individual monitoring body composition and metabolic health',
   },
 ];
+
+function renderStatValue(value: string) {
+  // Split on en-dash or hyphen to specifically reduce the size of the hyphen symbol
+  const parts = value.split(/([–-])/);
+  if (parts.length === 1) return value;
+
+  return (
+    <>
+      {parts.map((part, index) => {
+        if (part === '–' || part === '-') {
+          return (
+            <span
+              key={index}
+              className="text-[0.5em] font-normal text-white/80 mx-0.5 inline-block align-middle -translate-y-[2px]"
+            >
+              {part}
+            </span>
+          );
+        }
+        return <span key={index}>{part}</span>;
+      })}
+    </>
+  );
+}
 
 function StatCard({ stat }: { stat: StatItem }) {
   return (
@@ -73,8 +97,8 @@ function StatCard({ stat }: { stat: StatItem }) {
 
         {/* Bottom: Big Stat Number + Aligned Description with space between */}
         <div className="flex items-end justify-between gap-3 sm:gap-4">
-          <span className="font-display font-600 text-white text-[30px] sm:text-[34px] lg:text-[36px] xl:text-[38px] leading-none shrink-0 tracking-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
-            {stat.stat}
+          <span className="font-display font-600 text-white text-[28px] sm:text-[30px] lg:text-[32px] xl:text-[34px] leading-none shrink-0 tracking-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
+            {renderStatValue(stat.stat)}
           </span>
           <span className="text-white/90 text-[12px] sm:text-[12.5px] lg:text-[13px] leading-[1.35] font-450 drop-shadow-[0_1px_4px_rgba(0,0,0,0.6)] text-right flex-1 max-w-[62%]">
             {stat.description}
