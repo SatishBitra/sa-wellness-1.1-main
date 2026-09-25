@@ -80,7 +80,7 @@ export default function Approach() {
   return (
     <section
       id="approach"
-      className="relative py-20 lg:py-30 bg-surface-secondary scroll-mt-20 overflow-hidden"
+      className="relative py-20 lg:py-30 bg-surface-secondary scroll-mt-20 overflow-x-clip sm:overflow-hidden"
     >
       {/* Feather-light background engineering grid with smooth radial fade */}
       <div className="absolute inset-0 bg-tech-grid pointer-events-none opacity-60" />
@@ -119,16 +119,20 @@ export default function Approach() {
         </div>
 
         {/* ============================================================== */}
-        {/* 5 OPEN CARDS: Simple, Compact, Always-Open Responsive Grid    */}
+        {/* 5 OPEN CARDS: Mobile Stacking Deck & Desktop Grid              */}
         {/* ============================================================== */}
         <div
           ref={cardsRef}
-          className="reveal grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 lg:gap-3.5 xl:gap-4.5 w-full items-stretch"
+          className="reveal max-sm:transform-none max-sm:flex max-sm:flex-col max-sm:gap-6 max-sm:pb-8 sm:grid sm:grid-cols-2 lg:grid-cols-5 sm:gap-4 lg:gap-3.5 xl:gap-4.5 w-full items-stretch relative sm:pb-0"
         >
-          {steps.map((step) => (
+          {steps.map((step, index) => (
             <div
               key={step.id}
-              className="group bg-surface-white rounded-2xl p-5 lg:p-4.5 xl:p-5 border border-border-subtle hover:border-brand-primary/30 shadow-[0_4px_20px_rgba(23,32,27,0.03)] hover:shadow-[0_14px_32px_rgba(23,32,27,0.07)] transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between h-full"
+              style={{
+                '--stack-top': `calc(80px + ${index * 14}px)`,
+                '--stack-z': 10 + index,
+              } as React.CSSProperties}
+              className="mobile-stack-card group bg-surface-white rounded-2xl p-5 lg:p-4.5 xl:p-5 border border-border-subtle hover:border-brand-primary/30 shadow-[0_10px_28px_rgba(23,32,27,0.08)] sm:shadow-[0_4px_20px_rgba(23,32,27,0.03)] hover:shadow-[0_14px_32px_rgba(23,32,27,0.07)] transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between h-full"
             >
               {/* Card Artwork Image Container */}
               <div className="relative w-full h-[140px] sm:h-[150px] lg:h-[130px] xl:h-[142px] rounded-xl overflow-hidden border border-brand-primary/10 shadow-xs bg-surface-secondary shrink-0">

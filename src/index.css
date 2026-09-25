@@ -33,7 +33,7 @@
 
   .reveal.is-visible {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
   }
 
   .reveal-scale {
@@ -46,6 +46,22 @@
   .reveal-scale.is-visible {
     opacity: 1;
     transform: scale(1);
+  }
+
+  @media (max-width: 639px) {
+    .mobile-stack-card {
+      position: sticky !important;
+      top: var(--stack-top, 84px) !important;
+      z-index: var(--stack-z, 10) !important;
+    }
+  }
+
+  @media (min-width: 640px) {
+    .mobile-stack-card {
+      position: relative !important;
+      top: auto !important;
+      z-index: auto !important;
+    }
   }
 }
 

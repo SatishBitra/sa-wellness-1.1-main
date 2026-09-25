@@ -43,7 +43,7 @@ export default function OnlineConsultations() {
   const { scrollTo } = useSmoothScroll();
 
   return (
-    <section id="consultations" className="py-20 lg:py-30 scroll-mt-20 bg-surface-secondary/40">
+    <section id="consultations" className="py-20 lg:py-30 scroll-mt-20 bg-surface-secondary/40 overflow-x-clip">
       <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
         {/* ============================================================== */}
         {/* SECTION HEADER: Two-Column Split Aligned With Our Methodology */}
@@ -82,9 +82,9 @@ export default function OnlineConsultations() {
         {/* ============================================================== */}
         <div
           ref={cardsRef}
-          className="reveal grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-5 lg:gap-6 relative"
+          className="reveal max-sm:transform-none max-sm:flex max-sm:flex-col max-sm:gap-6 max-sm:pb-8 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-5 lg:gap-6 relative sm:pb-0"
         >
-          {pillars.map((pillar) => (
+          {pillars.map((pillar, index) => (
             <div
               key={pillar.id}
               onClick={() => scrollTo('#consultation')}
@@ -92,7 +92,11 @@ export default function OnlineConsultations() {
               tabIndex={0}
               onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && scrollTo('#consultation')}
               aria-label={`Book consultation for ${pillar.title}`}
-              className="group relative rounded-[26px] overflow-hidden aspect-[4/5] sm:aspect-[3/4] lg:aspect-[4/5] cursor-pointer shadow-[0_8px_24px_rgba(23,32,27,0.08)] hover:shadow-[0_20px_48px_rgba(23,32,27,0.18)] transition-all duration-300 hover:-translate-y-1.5 focus:outline-none focus:ring-2 focus:ring-brand-primary/40 select-none bg-ink border border-white/10"
+              style={{
+                '--stack-top': `calc(84px + ${index * 16}px)`,
+                '--stack-z': 10 + index,
+              } as React.CSSProperties}
+              className="mobile-stack-card group relative rounded-[26px] overflow-hidden aspect-[4/5] sm:aspect-[3/4] lg:aspect-[4/5] cursor-pointer shadow-[0_12px_32px_rgba(23,32,27,0.18)] sm:shadow-[0_8px_24px_rgba(23,32,27,0.08)] hover:shadow-[0_20px_48px_rgba(23,32,27,0.18)] transition-all duration-300 hover:-translate-y-1.5 focus:outline-none focus:ring-2 focus:ring-brand-primary/40 select-none bg-ink border border-white/10"
             >
               {/* Background Photography */}
               <img
