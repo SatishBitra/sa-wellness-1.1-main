@@ -11,7 +11,7 @@ const lifestyleImages: LifestyleImage[] = [
     alt: 'South Asian woman preparing fresh traditional flatbread in warm kitchen',
   },
   {
-    src: 'https://images.pexels.com/photos/4254148/pexels-photo-4254148.jpeg?auto=compress&cs=tinysrgb&w=800&fit=crop',
+    src: 'https://miro.medium.com/v2/resize:fit:640/format:webp/1*lpAUWnkk__moyqqCd42Vfg.png',
     alt: 'South Asian couple cooking wholesome plant-rich dinner together',
   },
   {
@@ -23,7 +23,7 @@ const lifestyleImages: LifestyleImage[] = [
     alt: 'Nourishing South Asian bowl with balanced grains, legumes, and fresh greens',
   },
   {
-    src: 'https://images.pexels.com/photos/3762800/pexels-photo-3762800.jpeg?auto=compress&cs=tinysrgb&w=800&fit=crop',
+    src: 'https://miro.medium.com/v2/resize:fit:720/format:webp/1*aQWaTUhhQkRX0QHxPcRhWw.png',
     alt: 'Professional woman enjoying a calming herbal tea break at home',
   },
   {
@@ -31,7 +31,7 @@ const lifestyleImages: LifestyleImage[] = [
     alt: 'Selecting vibrant fresh organic greens and produce at market',
   },
   {
-    src: 'https://images.pexels.com/photos/3768916/pexels-photo-3768916.jpeg?auto=compress&cs=tinysrgb&w=800&fit=crop',
+    src: 'https://miro.medium.com/v2/resize:fit:640/format:webp/1*9O07CQanscChpG2pi-SnPg.png',
     alt: 'Morning wellness and active lifestyle routine in sunlit studio',
   },
   {
