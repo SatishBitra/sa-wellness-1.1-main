@@ -14,7 +14,7 @@ export default function Hero() {
             {/* Mobile Hero Visual: Displays exclusively before the text content on mobile screens (< lg) */}
             <div className="lg:hidden mb-6 -mt-2 rounded-2xl overflow-hidden shadow-[0_8px_30px_rgba(23,32,27,0.12)] border border-border-subtle relative aspect-[16/10] sm:aspect-[2/1] bg-surface-secondary opacity-start animate-fade-in" style={{ animationDelay: '50ms', animationFillMode: 'forwards' }}>
               <img
-                src="https://images.pexels.com/photos/9345640/pexels-photo-9345640.jpeg?auto=compress&cs=tinysrgb&w=900&fit=crop"
+                src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*Se59MVLGQLp5sRdzwZVFzQ.png"
                 alt="South Asian woman preparing wholesome fresh food in warm kitchen"
                 className="w-full h-full object-cover object-center"
                 loading="eager"
