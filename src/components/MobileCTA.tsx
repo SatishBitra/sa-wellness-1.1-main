@@ -31,7 +31,7 @@ export default function MobileCTA() {
       <div className="bg-surface-primary/90 backdrop-blur-md border-t border-border-subtle px-5 py-3 pb-[calc(12px+env(safe-area-inset-bottom))]">
         <button
           onClick={() => document.querySelector('#consultation')?.scrollIntoView({ behavior: 'smooth' })}
-          className="w-full inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-brand-deep text-surface-white text-[15px] font-500 hover:bg-brand-primary transition-colors cursor-pointer"
+          className="w-full inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-brand-deep text-surface-white text-[15px] font-cta font-500 hover:bg-brand-primary transition-colors cursor-pointer"
         >
           Book a Consultation
         </button>

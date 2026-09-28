@@ -1,6 +1,5 @@
 import { Check } from 'lucide-react';
 import { useReveal } from '@/hooks/useReveal';
-import { useSmoothScroll } from '@/hooks/useSmoothScroll';
 import ctabg2 from '../../assets/ctabg-2.png';
 
 const keyBenefits = [
@@ -31,10 +30,9 @@ const stats = [
 
 export default function FinalCTA() {
   const containerRef = useReveal<HTMLDivElement>({ threshold: 0.15 });
-  const { scrollTo } = useSmoothScroll();
 
   return (
-    <section className="py-16 sm:py-20 lg:py-28 bg-surface-primary">
+    <section id="consultation" className="py-16 sm:py-20 lg:py-28 bg-surface-primary scroll-mt-20">
       <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
         <div
           ref={containerRef}
@@ -107,7 +105,9 @@ export default function FinalCTA() {
 
               {/* CTA Button */}
               <button
-                onClick={() => scrollTo('#consultation')}
+                onClick={() => {
+                  window.location.href = 'mailto:hello@sawellness.com?subject=Book%20a%201-on-1%20Consultation';
+                }}
                 className="inline-flex items-center justify-center px-7 py-3.5 rounded-xl bg-surface-white text-ink text-[15px] font-500 hover:bg-sand hover:text-brand-deep transition-all duration-250 ease-editorial hover:-translate-y-0.5 shadow-md hover:shadow-lg cursor-pointer"
               >
                 Book a Consultation Now

@@ -161,7 +161,7 @@ export default function ConsultationForm() {
       <button
         type="submit"
         disabled={status === 'loading'}
-        className="mt-6 w-full inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-brand-deep text-surface-white text-[15px] font-500 hover:bg-brand-primary transition-all duration-250 ease-editorial hover:-translate-y-0.5 disabled:opacity-70 disabled:translate-y-0"
+        className="mt-6 w-full inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-brand-deep text-surface-white text-[15px] font-cta font-500 hover:bg-brand-primary transition-all duration-250 ease-editorial hover:-translate-y-0.5 disabled:opacity-70 disabled:translate-y-0 cursor-pointer"
       >
         {status === 'loading' ? (
           <>

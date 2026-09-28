@@ -133,3 +133,126 @@ html.lenis, html.lenis body {
     transform: none !important;
   }
 }
+
+/* Print Media Rules for Assessment Scorecard */
+@media print {
+  @page {
+    size: letter portrait;
+    margin: 12mm 14mm 12mm 14mm;
+  }
+
+  html, body {
+    background: #ffffff !important;
+    color: #1a1a1a !important;
+    font-size: 11pt !important;
+    line-height: 1.45 !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* Specific typography rules for print on white paper */
+  h1, h2, h3, h4, h5, h6, .font-display {
+    font-family: 'Newsreader', Georgia, 'Times New Roman', serif !important;
+    font-weight: 700 !important;
+    color: #111827 !important;
+    letter-spacing: -0.015em !important;
+  }
+
+  h1 {
+    font-size: 20pt !important;
+    line-height: 1.2 !important;
+  }
+
+  h2 {
+    font-size: 16pt !important;
+    line-height: 1.25 !important;
+  }
+
+  h3 {
+    font-size: 13pt !important;
+    line-height: 1.3 !important;
+  }
+
+  h4, h5, h6 {
+    font-size: 11pt !important;
+    line-height: 1.35 !important;
+  }
+
+  /* Highly readable body text on white paper */
+  body, p, li, span, label, input, div {
+    color: #1f2937 !important;
+  }
+
+  p, li {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
+    font-size: 10pt !important;
+    line-height: 1.5 !important;
+    letter-spacing: 0.005em !important;
+  }
+
+  .text-ink-secondary,
+  .text-ink-muted {
+    color: #374151 !important;
+  }
+
+  /* Force background colors, charts and crisp borders in print preview */
+  *,
+  *::before,
+  *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    text-shadow: none !important;
+  }
+
+  /* Hide non-essential navigation, headers, footers and action bars */
+  header,
+  footer,
+  nav,
+  button,
+  .print\:hidden,
+  .no-print {
+    display: none !important;
+  }
+
+  /* Clean up container layouts for paper output */
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  #assessment-scorecard {
+    background: #ffffff !important;
+    border: 1px solid #dcd7ce !important;
+    box-shadow: none !important;
+    padding: 16px !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 8px !important;
+  }
+
+  /* Prevent awkward page-break splits */
+  #assessment-scorecard > div,
+  .print-avoid-break {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Remove heavy box shadows that waste ink or blur */
+  .shadow-sm,
+  .shadow-md,
+  .shadow-lg,
+  .shadow-xl,
+  .shadow-2xl,
+  .shadow-xs {
+    box-shadow: none !important;
+  }
+
+  /* Ensure text is clear and readable on physical print */
+  a[href]:after {
+    content: none !important;
+  }
+}

@@ -1,17 +1,26 @@
-import { Star } from 'lucide-react';
-import ConsultationForm from './ConsultationForm';
+import { Star, ArrowRight } from 'lucide-react';
+import HeroVideo from './HeroVideo';
 import HeroImageRibbon from './HeroImageRibbon';
-import { useSmoothScroll } from '@/hooks/useSmoothScroll';
 
-export default function Hero() {
-  const { scrollTo } = useSmoothScroll();
+interface HeroProps {
+  onTakeAssessment?: () => void;
+}
+
+export default function Hero({ onTakeAssessment }: HeroProps) {
+  const handleClickAssessment = () => {
+    if (onTakeAssessment) {
+      onTakeAssessment();
+    } else {
+      window.location.hash = '#assessment';
+    }
+  };
 
   return (
     <section id="top" className="relative pt-[120px] pb-16 lg:pt-[140px] lg:pb-24 overflow-hidden">
       <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
-        <div className="grid lg:grid-cols-[1fr_minmax(380px,440px)] gap-10 lg:gap-16 items-start">
+        <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-14 items-center">
           <div className="flex flex-col">
-            {/* Mobile Hero Visual: Displays exclusively before the text content on mobile screens (< lg) */}
+            {/* Mobile Hero Visual: Displays on mobile screens (< lg) */}
             <div className="lg:hidden mb-6 -mt-2 rounded-2xl overflow-hidden shadow-[0_8px_30px_rgba(43,45,36,0.12)] border border-border-subtle relative aspect-[16/10] sm:aspect-[2/1] bg-surface-secondary opacity-start animate-fade-in" style={{ animationDelay: '50ms', animationFillMode: 'forwards' }}>
               <img
                 src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*Se59MVLGQLp5sRdzwZVFzQ.png"
@@ -34,7 +43,7 @@ export default function Hero() {
               Personalized Nutrition &amp; Lifestyle Care
             </span>
 
-            <h1 className="mt-5 font-display font-600 text-ink text-[34px] sm:text-[44px] lg:text-[52px] leading-[1.1] tracking-tight text-balance opacity-start animate-fade-up" style={{ animationDelay: '200ms', animationFillMode: 'forwards' }}>
+            <h1 className="mt-5 font-display font-600 text-ink text-[34px] sm:text-[44px] lg:text-[50px] leading-[1.1] tracking-tight text-balance opacity-start animate-fade-up" style={{ animationDelay: '200ms', animationFillMode: 'forwards' }}>
               Your South Asian Health Deserves More Than Generic Nutrition Advice.
             </h1>
 
@@ -44,10 +53,12 @@ export default function Hero() {
 
             <div className="mt-8 opacity-start animate-fade-up" style={{ animationDelay: '500ms', animationFillMode: 'forwards' }}>
               <button
-                onClick={() => scrollTo('#consultation')}
-                className="inline-flex items-center justify-center px-7 py-3.5 rounded-xl bg-brand-deep text-surface-white text-[15px] font-500 hover:bg-brand-primary transition-all duration-250 ease-editorial hover:-translate-y-0.5 shadow-xs"
+                onClick={handleClickAssessment}
+                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-brand-deep text-surface-white text-[15px] font-500 hover:bg-brand-primary transition-all duration-250 ease-editorial hover:-translate-y-0.5 shadow-xs cursor-pointer group"
+                aria-label="Take South Asian Health Risk Assessment"
               >
-                Book a Consultation Now
+                <span>Take Assessment</span>
+                <ArrowRight size={16} className="transition-transform duration-200 group-hover:translate-x-0.5" />
               </button>
             </div>
 
@@ -63,8 +74,9 @@ export default function Hero() {
             </div>
           </div>
 
-          <div id="consultation" className="scroll-mt-24 opacity-start animate-fade-up" style={{ animationDelay: '500ms', animationFillMode: 'forwards' }}>
-            <ConsultationForm />
+          {/* Right Column: High-Hierarchy Video Showcase */}
+          <div className="opacity-start animate-fade-up" style={{ animationDelay: '400ms', animationFillMode: 'forwards' }}>
+            <HeroVideo />
           </div>
         </div>
 

@@ -56,7 +56,7 @@ export default function Header() {
               <button
                 key={link.href}
                 onClick={() => handleNavClick(link.href)}
-                className="text-[14px] font-450 text-ink-secondary hover:text-ink transition-colors duration-200"
+                className="text-[14px] font-450 text-ink-secondary hover:text-ink transition-colors duration-200 cursor-pointer"
               >
                 {link.label}
               </button>
@@ -66,7 +66,7 @@ export default function Header() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => handleNavClick('#consultation')}
-              className="hidden sm:inline-flex items-center justify-center px-5 py-2.5 rounded-xl bg-brand-deep text-surface-white text-[14px] font-500 hover:bg-brand-primary transition-all duration-250 ease-editorial hover:-translate-y-0.5"
+              className="hidden sm:inline-flex items-center justify-center px-5 py-2.5 rounded-xl bg-brand-deep text-surface-white text-[14px] font-500 hover:bg-brand-primary transition-all duration-250 ease-editorial hover:-translate-y-0.5 cursor-pointer"
             >
               Book a Consultation
             </button>
@@ -84,19 +84,19 @@ export default function Header() {
 
       {open && (
         <div className="lg:hidden bg-surface-primary border-b border-border-subtle">
-          <nav className="mx-auto max-w-[1280px] px-6 py-4 flex flex-col gap-1" aria-label="Mobile">
+          <nav className="mx-auto max-w-[1280px] px-6 py-4 flex flex-col gap-1.5" aria-label="Mobile">
             {navLinks.map((link) => (
               <button
                 key={link.href}
                 onClick={() => handleNavClick(link.href)}
-                className="text-left py-3 px-2 text-[15px] font-450 text-ink-secondary hover:text-ink hover:bg-surface-secondary rounded-lg transition-colors"
+                className="text-left py-2.5 px-3 text-[15px] font-450 text-ink-secondary hover:text-ink hover:bg-surface-secondary rounded-lg transition-colors cursor-pointer"
               >
                 {link.label}
               </button>
             ))}
             <button
               onClick={() => handleNavClick('#consultation')}
-              className="mt-2 inline-flex items-center justify-center px-5 py-3 rounded-xl bg-brand-deep text-surface-white text-[15px] font-500"
+              className="mt-2 inline-flex items-center justify-center px-5 py-3 rounded-xl bg-brand-deep text-surface-white text-[15px] font-500 cursor-pointer"
             >
               Book a Consultation
             </button>
