@@ -38,12 +38,8 @@ export default {
         },
       },
       fontFamily: {
-        primary: ['"Noto Serif"', 'Georgia', 'serif'],
-        secondary: ['Inter', 'system-ui', 'sans-serif'],
-        display: ['"Noto Serif"', 'Georgia', 'serif'],
-        serif: ['"Noto Serif"', 'Georgia', 'serif'],
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        cta: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['"DM Sans"', 'Inter', 'system-ui', 'sans-serif'],
+        display: ['"DM Sans"', 'Inter', 'system-ui', 'sans-serif'],
       },
       fontSize: {
         'eyebrow': ['0.75rem', { lineHeight: '1.5', letterSpacing: '0.14em', fontWeight: '500' }],

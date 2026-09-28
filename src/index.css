@@ -151,9 +151,9 @@ html.lenis, html.lenis body {
     overflow: visible !important;
   }
 
-  /* Specific typography rules for print on white paper */
+  /* Specific typography rules for print on white paper with DM Sans */
   h1, h2, h3, h4, h5, h6, .font-display {
-    font-family: 'Newsreader', Georgia, 'Times New Roman', serif !important;
+    font-family: 'DM Sans', 'Inter', system-ui, -apple-system, sans-serif !important;
     font-weight: 700 !important;
     color: #111827 !important;
     letter-spacing: -0.015em !important;
@@ -185,7 +185,7 @@ html.lenis, html.lenis body {
   }
 
   p, li {
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
+    font-family: 'DM Sans', 'Inter', system-ui, -apple-system, sans-serif !important;
     font-size: 10pt !important;
     line-height: 1.5 !important;
     letter-spacing: 0.005em !important;
