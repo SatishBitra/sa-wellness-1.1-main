@@ -21,7 +21,7 @@ export default function FounderStory() {
                 height={600}
               />
             </div>
-            <div className="absolute -bottom-5 -right-3 sm:-right-5 bg-surface-white rounded-xl2 border border-border-subtle px-5 py-4 shadow-[0_8px_30px_rgba(23,32,27,0.08)]">
+            <div className="absolute -bottom-5 -right-3 sm:-right-5 bg-surface-white rounded-xl2 border border-border-subtle px-5 py-4 shadow-[0_8px_30px_rgba(43,45,36,0.1)]">
               <div className="font-display font-600 text-ink text-[15px]">Hena Nafis</div>
               <div className="text-ink-secondary text-[13px]">Founder, SA Wellness</div>
             </div>

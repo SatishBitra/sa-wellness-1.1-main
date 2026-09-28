@@ -165,7 +165,7 @@ export default function Testimonials() {
             {gridTestimonials.map((item, idx) => (
               <div
                 key={idx}
-                className="bg-surface-white rounded-3xl p-6 xl:p-7 border border-border-subtle/80 shadow-[0_2px_14px_rgba(23,32,27,0.03)] hover:shadow-[0_8px_26px_rgba(23,32,27,0.06)] hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
+                className="bg-surface-white rounded-3xl p-6 xl:p-7 border border-border-subtle/80 shadow-[0_2px_14px_rgba(43,45,36,0.04)] hover:shadow-[0_8px_26px_rgba(43,45,36,0.08)] hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
               >
                 {/* 5-Star Rating */}
                 <div>
@@ -177,7 +177,7 @@ export default function Testimonials() {
                       <Star
                         key={i}
                         size={15}
-                        className="fill-[#17201B] text-[#17201B]"
+                        className="fill-accent-warm text-accent-warm"
                       />
                     ))}
                   </div>

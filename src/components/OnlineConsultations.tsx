@@ -60,7 +60,7 @@ export default function OnlineConsultations() {
 
             <h2 className="mt-4 font-display font-600 text-ink text-[32px] sm:text-[40px] lg:text-[46px] leading-[1.12] tracking-tight text-balance">
               Expert Nutrition Guidance, <br />
-              <span className="bg-gradient-to-r from-brand-deep via-brand-primary to-brand-light bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-brand-deep via-brand-primary to-accent-warm bg-clip-text text-transparent">
                 Wherever You Are
               </span>
             </h2>
@@ -96,7 +96,7 @@ export default function OnlineConsultations() {
                 '--stack-top': `calc(84px + ${index * 16}px)`,
                 '--stack-z': 10 + index,
               } as React.CSSProperties}
-              className="mobile-stack-card group relative rounded-[26px] overflow-hidden aspect-[4/5] sm:aspect-[3/4] lg:aspect-[4/5] cursor-pointer shadow-[0_12px_32px_rgba(23,32,27,0.18)] sm:shadow-[0_8px_24px_rgba(23,32,27,0.08)] hover:shadow-[0_20px_48px_rgba(23,32,27,0.18)] transition-all duration-300 hover:-translate-y-1.5 focus:outline-none focus:ring-2 focus:ring-brand-primary/40 select-none bg-ink border border-white/10"
+              className="mobile-stack-card group relative rounded-[26px] overflow-hidden aspect-[4/5] sm:aspect-[3/4] lg:aspect-[4/5] cursor-pointer shadow-[0_12px_32px_rgba(43,45,36,0.18)] sm:shadow-[0_8px_24px_rgba(43,45,36,0.08)] hover:shadow-[0_20px_48px_rgba(43,45,36,0.2)] transition-all duration-300 hover:-translate-y-1.5 focus:outline-none focus:ring-2 focus:ring-brand-primary/40 select-none bg-ink border border-white/10"
             >
               {/* Background Photography */}
               <img
@@ -110,7 +110,7 @@ export default function OnlineConsultations() {
 
               {/* Dark Gradient Vignette for pristine white text contrast */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-              <div className="absolute inset-0 bg-[#17201B]/25 mix-blend-multiply" />
+              <div className="absolute inset-0 bg-[#262820]/25 mix-blend-multiply" />
 
               {/* Bottom Content: Clean Display Typography */}
               <div className="absolute inset-x-0 bottom-0 p-6 sm:p-7 z-10 flex flex-col justify-end">
@@ -130,22 +130,22 @@ export default function OnlineConsultations() {
           className="reveal mt-12 sm:mt-16 p-6 sm:p-8 rounded-[24px] bg-surface-white border border-border-subtle shadow-sm flex flex-col md:flex-row items-center justify-between gap-6"
         >
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 sm:gap-7 text-ink text-[14px] font-500">
-            <div className="flex items-center gap-2">
-              <span className="flex items-center justify-center w-7 h-7 rounded-full bg-brand-primary/10 text-brand-deep">
+            <div className="flex items-center gap-2.5">
+              <span className="flex items-center justify-center w-7 h-7 rounded-full bg-sand border border-sand-warm text-brand-deep shadow-xs">
                 <Check size={14} strokeWidth={2.5} />
               </span>
               <span>No commute.</span>
             </div>
 
-            <div className="flex items-center gap-2">
-              <span className="flex items-center justify-center w-7 h-7 rounded-full bg-brand-primary/10 text-brand-deep">
+            <div className="flex items-center gap-2.5">
+              <span className="flex items-center justify-center w-7 h-7 rounded-full bg-sand border border-sand-warm text-brand-deep shadow-xs">
                 <Check size={14} strokeWidth={2.5} />
               </span>
               <span>No waiting room.</span>
             </div>
 
-            <div className="flex items-center gap-2">
-              <span className="flex items-center justify-center w-7 h-7 rounded-full bg-brand-primary/10 text-brand-deep">
+            <div className="flex items-center gap-2.5">
+              <span className="flex items-center justify-center w-7 h-7 rounded-full bg-sand border border-sand-warm text-brand-deep shadow-xs">
                 <Check size={14} strokeWidth={2.5} />
               </span>
               <span>No need to live near a clinic.</span>

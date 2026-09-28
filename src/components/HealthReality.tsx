@@ -65,7 +65,7 @@ function renderStatValue(value: string) {
 
 function StatCard({ stat }: { stat: StatItem }) {
   return (
-    <div className="group relative h-[180px] sm:h-[195px] lg:h-[210px] rounded-2xl overflow-hidden shadow-[0_4px_20px_rgba(23,32,27,0.06)] hover:shadow-[0_10px_32px_rgba(23,32,27,0.18)] transition-all duration-300 hover:-translate-y-1">
+    <div className="group relative h-[180px] sm:h-[195px] lg:h-[210px] rounded-2xl overflow-hidden shadow-[0_4px_20px_rgba(43,45,36,0.08)] hover:shadow-[0_10px_32px_rgba(43,45,36,0.2)] transition-all duration-300 hover:-translate-y-1">
       {/* Background Image with Subtle Hover Zoom */}
       <img
         src={stat.image}
@@ -129,7 +129,7 @@ export default function HealthReality() {
 
             <h2 className="mt-4 font-display font-600 text-ink text-[32px] sm:text-[40px] lg:text-[46px] leading-[1.12] tracking-tight text-balance">
               Your risk isn't always <br />
-              <span className="bg-gradient-to-r from-brand-deep via-brand-primary to-brand-light bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-brand-deep via-brand-primary to-accent-warm bg-clip-text text-transparent">
                 Reflected on the scale.
               </span>
             </h2>

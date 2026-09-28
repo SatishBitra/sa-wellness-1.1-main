@@ -67,7 +67,7 @@ export default function ConsultationForm() {
   if (status === 'success') {
     return (
       <div className="bg-surface-white rounded-hero border border-border p-8 sm:p-10 text-center flex flex-col items-center" role="status" aria-live="polite">
-        <div className="flex items-center justify-center w-14 h-14 rounded-full bg-brand-primary/15 mb-5">
+        <div className="flex items-center justify-center w-14 h-14 rounded-full bg-sand border border-sand-warm mb-5 shadow-xs">
           <Check className="text-brand-deep" size={28} />
         </div>
         <h3 className="font-display font-600 text-ink text-xl mb-2">Thank you for reaching out</h3>
@@ -76,7 +76,7 @@ export default function ConsultationForm() {
         </p>
         <button
           onClick={() => setStatus('idle')}
-          className="mt-6 text-[14px] font-500 text-brand-deep hover:text-brand-primary transition-colors"
+          className="mt-6 text-[14px] font-500 text-brand-deep hover:text-brand-primary transition-colors cursor-pointer"
         >
           Submit another request
         </button>
@@ -88,7 +88,7 @@ export default function ConsultationForm() {
     <form
       onSubmit={handleSubmit}
       noValidate
-      className="bg-surface-white rounded-hero border border-border p-6 sm:p-8 shadow-[0_12px_40px_rgba(23,32,27,0.06)]"
+      className="bg-surface-white rounded-hero border border-border p-6 sm:p-8 shadow-[0_12px_40px_rgba(71,75,55,0.08)]"
       aria-label="Book a consultation"
     >
       <h3 className="font-display font-600 text-ink text-xl mb-1">Book a Consultation</h3>
@@ -182,23 +182,23 @@ export default function ConsultationForm() {
           width: 100%;
           padding: 12px 14px;
           border-radius: 12px;
-          border: 1px solid #E2E4DE;
-          background: #F8F7F2;
+          border: 1px solid #DFCFC0;
+          background: #FAF7F2;
           font-size: 15px;
-          color: #17201B;
+          color: #262820;
           transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
           font-family: inherit;
         }
-        .form-input::placeholder { color: #8A938C; }
+        .form-input::placeholder { color: #9C988D; }
         .form-input:focus {
           outline: none;
-          border-color: #5D735F;
+          border-color: #6B7056;
           background: #FFFFFF;
-          box-shadow: 0 0 0 3px rgba(93, 115, 95, 0.12);
+          box-shadow: 0 0 0 3px rgba(107, 112, 86, 0.16);
         }
-        .form-input:hover:not(:focus) { border-color: #DCE0D9; }
+        .form-input:hover:not(:focus) { border-color: #EAE1D5; }
         select.form-input {
-          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235F6962' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2366635B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
           background-repeat: no-repeat;
           background-position: right 14px center;
           padding-right: 40px;

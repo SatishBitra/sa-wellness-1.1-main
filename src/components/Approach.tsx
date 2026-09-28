@@ -86,7 +86,7 @@ export default function Approach() {
       <div className="absolute inset-0 bg-tech-grid pointer-events-none opacity-60" />
 
       {/* Subtle ambient central lighting */}
-      <div className="absolute top-24 left-1/2 -translate-x-1/2 w-[680px] h-[320px] bg-brand-light/10 blur-[120px] pointer-events-none rounded-full" />
+      <div className="absolute top-24 left-1/2 -translate-x-1/2 w-[680px] h-[320px] bg-sand/35 blur-[120px] pointer-events-none rounded-full" />
 
       <div className="relative mx-auto max-w-[1280px] px-6 lg:px-10">
         {/* ============================================================== */}
@@ -104,7 +104,7 @@ export default function Approach() {
 
             <h2 className="mt-4 font-display font-600 text-ink text-[32px] sm:text-[40px] lg:text-[46px] leading-[1.12] tracking-tight text-balance">
               A More Complete Approach to <br />
-              <span className="bg-gradient-to-r from-brand-deep via-brand-primary to-brand-light bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-brand-deep via-brand-primary to-accent-warm bg-clip-text text-transparent">
                 South Asian Health
               </span>
             </h2>
@@ -132,7 +132,7 @@ export default function Approach() {
                 '--stack-top': `calc(80px + ${index * 14}px)`,
                 '--stack-z': 10 + index,
               } as React.CSSProperties}
-              className="mobile-stack-card group bg-surface-white rounded-2xl p-5 lg:p-4.5 xl:p-5 border border-border-subtle hover:border-brand-primary/30 shadow-[0_10px_28px_rgba(23,32,27,0.08)] sm:shadow-[0_4px_20px_rgba(23,32,27,0.03)] hover:shadow-[0_14px_32px_rgba(23,32,27,0.07)] transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between h-full"
+              className="mobile-stack-card group bg-surface-white rounded-2xl p-5 lg:p-4.5 xl:p-5 border border-border-subtle hover:border-brand-primary/40 shadow-[0_10px_28px_rgba(43,45,36,0.08)] sm:shadow-[0_4px_20px_rgba(43,45,36,0.04)] hover:shadow-[0_14px_32px_rgba(43,45,36,0.1)] transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between h-full"
             >
               {/* Card Artwork Image Container */}
               <div className="relative w-full h-[140px] sm:h-[150px] lg:h-[130px] xl:h-[142px] rounded-xl overflow-hidden border border-brand-primary/10 shadow-xs bg-surface-secondary shrink-0">

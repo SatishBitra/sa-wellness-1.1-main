@@ -59,17 +59,17 @@ export default function FinalCTA() {
           />
 
           {/* Cinematic Vignette & Brand Palette Gradients for Enhanced Legibility */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-[#17201B]/65 to-[#0F1713]/92 pointer-events-none" />
-          <div className="absolute inset-0 bg-[#17201B]/40 mix-blend-multiply pointer-events-none" />
-          <div className="absolute inset-0 bg-radial-gradient from-transparent via-[#17201B]/20 to-black/60 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-[#262820]/75 to-[#191A14]/94 pointer-events-none" />
+          <div className="absolute inset-0 bg-[#262820]/45 mix-blend-multiply pointer-events-none" />
+          <div className="absolute inset-0 bg-radial-gradient from-transparent via-[#262820]/25 to-black/65 pointer-events-none" />
 
           {/* TOP SECTION: Two-Column Split */}
           <div className="relative z-10 flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8 lg:gap-14">
             {/* Left Stack: Heading, Supporting Text, and Key Benefits */}
             <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/30 text-white text-[12px] font-500 shadow-sm mb-5">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent-warm animate-pulse" />
-                <span className="tracking-wide text-white">Personalized Nutrition &amp; Lifestyle</span>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sand/20 backdrop-blur-md border border-sand/40 text-sand text-[12px] font-500 shadow-sm mb-5">
+                <span className="w-1.5 h-1.5 rounded-full bg-sand animate-pulse" />
+                <span className="tracking-wide text-sand font-500">Personalized Nutrition &amp; Lifestyle</span>
               </div>
 
               {/* Heading */}
@@ -89,7 +89,7 @@ export default function FinalCTA() {
                     key={benefit}
                     className="flex items-center gap-2.5 text-[13.5px] sm:text-[14px] text-white/95 font-500 drop-shadow-[0_1px_3px_rgba(0,0,0,0.35)]"
                   >
-                    <span className="flex items-center justify-center w-5 h-5 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-accent-warm flex-shrink-0 shadow-xs">
+                    <span className="flex items-center justify-center w-5 h-5 rounded-full bg-sand/25 backdrop-blur-sm border border-sand/40 text-sand flex-shrink-0 shadow-xs">
                       <Check size={12} strokeWidth={2.5} />
                     </span>
                     <span>{benefit}</span>
@@ -108,7 +108,7 @@ export default function FinalCTA() {
               {/* CTA Button */}
               <button
                 onClick={() => scrollTo('#consultation')}
-                className="inline-flex items-center justify-center px-7 py-3.5 rounded-xl bg-surface-white text-ink text-[15px] font-500 hover:bg-brand-primary hover:text-surface-white transition-all duration-250 ease-editorial hover:-translate-y-0.5 shadow-md hover:shadow-lg cursor-pointer"
+                className="inline-flex items-center justify-center px-7 py-3.5 rounded-xl bg-surface-white text-ink text-[15px] font-500 hover:bg-sand hover:text-brand-deep transition-all duration-250 ease-editorial hover:-translate-y-0.5 shadow-md hover:shadow-lg cursor-pointer"
               >
                 Book a Consultation Now
               </button>

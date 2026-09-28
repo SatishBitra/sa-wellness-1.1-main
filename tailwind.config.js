@@ -5,27 +5,36 @@ export default {
     extend: {
       colors: {
         surface: {
-          primary: '#F8F7F2',
-          secondary: '#F1F0E9',
+          primary: '#FAF7F2',     // warm beach sand linen / sunlit sand
+          secondary: '#F5EBE1',   // soft sandy peach / warm dune background
+          tertiary: '#FFE8D6',    // secondary color: warm beach sand cream / peach shell
           white: '#FFFFFF',
         },
         ink: {
-          DEFAULT: '#17201B',
-          secondary: '#5F6962',
-          muted: '#8A938C',
+          DEFAULT: '#262820',     // warm driftwood charcoal / deep coastal stone
+          secondary: '#66635B',   // warm weathered beach pebble / coastal taupe
+          muted: '#9C988D',       // soft dune grass grey / warm beach sand grey
         },
         brand: {
-          primary: '#5D735F',
-          deep: '#314A3A',
-          light: '#7B9180',
+          primary: '#6B7056',     // Primary color: herbaceous coastal olive / beach dune stone
+          deep: '#474B37',        // deep rich coastal olive driftwood for high-contrast CTAs & headings
+          light: '#8F9675',       // sun-warmed dune sage / beach coastal accent
+          soft: '#E8EBD9',        // soft wash of coastal olive
+        },
+        sand: {
+          DEFAULT: '#FFE8D6',     // Secondary color: warm beach sand / seashell peach
+          light: '#FFF5ED',       // sunlit beach pearl
+          warm: '#F5DAC4',        // golden sand shore
+          deep: '#DDBEA9',        // warm beach dune terracotta
         },
         accent: {
-          warm: '#B99668',
-          light: '#D4BC9A',
+          warm: '#CB997E',        // warm seashell terracotta / coastal sunset accent
+          sand: '#FFE8D6',        // secondary beach sand
+          light: '#DDBEA9',       // sun-baked coastal clay
         },
         border: {
-          subtle: '#DCE0D9',
-          DEFAULT: '#E2E4DE',
+          subtle: '#EAE1D5',      // warm sandy linen border
+          DEFAULT: '#DFCFC0',     // soft beach dune border
         },
       },
       fontFamily: {

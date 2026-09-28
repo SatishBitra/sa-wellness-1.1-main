@@ -51,7 +51,7 @@ function AccordionItem({ faq }: { faq: Faq }) {
         <span className="flex-1 font-display font-600 text-ink text-[16px] sm:text-[18px] leading-snug text-balance">
           {faq.question}
         </span>
-        <span className={`shrink-0 flex items-center justify-center w-8 h-8 rounded-full border border-border-subtle text-ink-secondary transition-all duration-300 ease-editorial ${open ? 'rotate-45 bg-brand-primary/10 border-brand-primary text-brand-deep' : 'group-hover:border-brand-primary group-hover:text-brand-deep'}`}>
+        <span className={`shrink-0 flex items-center justify-center w-8 h-8 rounded-full border border-border-subtle text-ink-secondary transition-all duration-300 ease-editorial ${open ? 'rotate-45 bg-sand border-sand-warm text-brand-deep shadow-xs' : 'group-hover:border-brand-primary group-hover:text-brand-deep'}`}>
           <Plus size={16} />
         </span>
       </button>

@@ -260,7 +260,7 @@ export default function HealthConcerns() {
 
             <h2 className="mt-3 sm:mt-4 font-display font-600 text-ink text-[30px] sm:text-[38px] lg:text-[44px] leading-[1.12] tracking-tight text-balance">
               Care designed around <br />
-              <span className="bg-gradient-to-r from-brand-deep via-brand-primary to-brand-light bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-brand-deep via-brand-primary to-accent-warm bg-clip-text text-transparent">
                 What you're actually dealing with.
               </span>
             </h2>
@@ -299,11 +299,11 @@ export default function HealthConcerns() {
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && scrollTo('#consultation')}
-                className="group flex-shrink-0 w-[290px] sm:w-[330px] lg:w-[350px] snap-start rounded-[24px] overflow-hidden bg-surface-white border border-border-subtle shadow-[0_4px_24px_rgba(23,32,27,0.03)] hover:shadow-[0_16px_40px_rgba(23,32,27,0.08)] hover:border-brand-primary/40 transition-all duration-300 hover:-translate-y-1.5 cursor-pointer flex flex-col"
+                className="group flex-shrink-0 w-[290px] sm:w-[330px] lg:w-[350px] snap-start rounded-[24px] overflow-hidden bg-surface-white border border-border-subtle shadow-[0_4px_24px_rgba(43,45,36,0.04)] hover:shadow-[0_16px_40px_rgba(43,45,36,0.1)] hover:border-brand-primary/40 transition-all duration-300 hover:-translate-y-1.5 cursor-pointer flex flex-col"
                 aria-label={`Learn more about ${concern.title}`}
               >
                 {/* Top Half: Photographic Card Image with Subtle Overlay */}
-                <div className="relative w-full h-[200px] sm:h-[220px] lg:h-[210px] bg-gradient-to-b from-[#F2F6F3]/70 to-surface-white border-b border-border-subtle/60 overflow-hidden">
+                <div className="relative w-full h-[200px] sm:h-[220px] lg:h-[210px] bg-gradient-to-b from-surface-secondary/70 to-surface-white border-b border-border-subtle/60 overflow-hidden">
                   {/* Watermark Number Badge */}
                   <span className="absolute top-4 right-4 z-10 text-[12px] font-600 text-ink font-mono bg-white/85 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-black/5 shadow-xs">
                     {concern.num}
@@ -327,7 +327,7 @@ export default function HealthConcerns() {
                 {/* Bottom Half: Clean Typography & Content */}
                 <div className="p-5 sm:p-6 flex flex-col flex-1 justify-start">
                   {/* Category Label */}
-                  <span className="text-[11px] font-600 uppercase tracking-wider text-brand-light block mb-2">
+                  <span className="text-[11px] font-600 uppercase tracking-wider text-brand-primary block mb-2">
                     {concern.category}
                   </span>
 

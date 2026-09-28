@@ -183,7 +183,7 @@ export default function HeroImageRibbon() {
           className="absolute inset-0 pointer-events-none z-20"
           style={{
             background:
-              'linear-gradient(to right, #FAFBF9 0%, rgba(250,251,249,0) 8%, rgba(250,251,249,0) 92%, #FAFBF9 100%)',
+              'linear-gradient(to right, #FAF7F2 0%, rgba(250,247,242,0) 8%, rgba(250,247,242,0) 92%, #FAF7F2 100%)',
           }}
           aria-hidden="true"
         />
@@ -195,7 +195,7 @@ export default function HeroImageRibbon() {
             ref={(node) => {
               cardElementsRef.current[index] = node;
             }}
-            className="absolute top-4 left-0 will-change-transform rounded-2xl overflow-hidden bg-surface-white border border-border-subtle/80 shadow-[0_10px_28px_rgba(23,32,27,0.07)] transition-shadow duration-300"
+            className="absolute top-4 left-0 will-change-transform rounded-2xl overflow-hidden bg-surface-white border border-border-subtle/80 shadow-[0_10px_28px_rgba(43,45,36,0.08)] transition-shadow duration-300"
             style={{
               width: cardWidth,
               height: cardWidth * 1.28, // ~4:5 portrait ratio
