@@ -93,7 +93,7 @@ export default function App() {
           <FinalCTA />
         </main>
         <Footer />
-        <MobileCTA />
+        <MobileCTA onTakeAssessment={navigateToAssessment} />
       </div>
     </ReactLenis>
   );

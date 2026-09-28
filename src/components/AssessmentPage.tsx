@@ -491,7 +491,7 @@ export default function AssessmentPage({ onGoHome, onBookConsultation }: Assessm
       </header>
 
       {/* Main Questionnaire Container */}
-      <main className="flex-1 py-8 sm:py-12 px-4 sm:px-6 lg:px-8 print:p-0 print:py-0 print:m-0">
+      <main className="flex-1 py-8 sm:py-12 pb-28 sm:pb-12 px-4 sm:px-6 lg:px-8 print:p-0 print:py-0 print:m-0">
         <div className="mx-auto max-w-[820px] print:max-w-none print:w-full">
           {/* Section Wise Navigation Tabs (Clickable to jump) */}
           <div className="mb-8 flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none text-[13px] font-500 print:hidden">
@@ -1654,37 +1654,65 @@ export default function AssessmentPage({ onGoHome, onBookConsultation }: Assessm
             </div>
           )}
 
-          {/* Bottom Navigation Buttons (Back / Continue) for Steps 1 through 5 */}
+          {/* Bottom Navigation Buttons (Back / Save & Next) for Steps 1 through 5 */}
           {currentStep < 6 && (
-            <div className="mt-8 flex items-center justify-between gap-4 print:hidden">
-              {currentStep > 1 ? (
-                <button
-                  type="button"
-                  onClick={handleBack}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-[14px] font-500 text-ink-secondary hover:text-ink hover:bg-surface-secondary transition-colors cursor-pointer"
-                >
-                  <ArrowLeft size={16} />
-                  <span>Back</span>
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={onGoHome}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-[14px] font-500 text-ink-secondary hover:text-ink hover:bg-surface-secondary transition-colors cursor-pointer"
-                >
-                  <Home size={16} />
-                  <span>Cancel &amp; Go Home</span>
-                </button>
-              )}
+            <div className="fixed bottom-0 inset-x-0 z-40 bg-surface-white/95 backdrop-blur-md border-t border-border-subtle px-4 py-3 pb-[calc(14px+env(safe-area-inset-bottom))] shadow-[0_-4px_24px_rgba(0,0,0,0.08)] sm:static sm:bg-transparent sm:backdrop-blur-none sm:border-0 sm:p-0 sm:shadow-none sm:mt-8 flex items-center justify-between gap-3 sm:gap-4 print:hidden">
+              {/* Back / Cancel Button */}
+              <div className="flex items-center">
+                {currentStep > 1 ? (
+                  <button
+                    type="button"
+                    onClick={handleBack}
+                    className="inline-flex items-center justify-center gap-1.5 px-3.5 sm:px-5 py-2.5 rounded-xl text-[13.5px] sm:text-[14px] font-500 text-ink-secondary hover:text-ink bg-surface-secondary/70 hover:bg-surface-secondary sm:bg-transparent border border-border-subtle sm:border-transparent active:scale-95 transition-all cursor-pointer"
+                    aria-label="Back to previous section"
+                  >
+                    <ArrowLeft size={16} />
+                    <span>Back</span>
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={onGoHome}
+                    className="inline-flex items-center justify-center gap-1.5 px-3.5 sm:px-5 py-2.5 rounded-xl text-[13px] sm:text-[14px] font-500 text-ink-secondary hover:text-ink bg-surface-secondary/70 hover:bg-surface-secondary sm:bg-transparent border border-border-subtle sm:border-transparent active:scale-95 transition-all cursor-pointer"
+                    aria-label="Cancel and go home"
+                  >
+                    <Home size={15} />
+                    <span className="hidden sm:inline">Cancel &amp; Go Home</span>
+                    <span className="sm:hidden">Cancel</span>
+                  </button>
+                )}
+              </div>
 
-              <button
-                type="button"
-                onClick={handleNext}
-                className="inline-flex items-center gap-2 px-7 py-3 rounded-xl bg-brand-deep text-white text-[14.5px] font-500 hover:bg-brand-primary transition-all duration-200 shadow-xs cursor-pointer"
-              >
-                <span>{currentStep === 5 ? 'Calculate Score & View Results' : 'Continue to Next Section'}</span>
-                <ArrowRight size={16} />
-              </button>
+              {/* Progress hierarchy context indicator on mobile */}
+              <div className="sm:hidden flex flex-col items-center text-center px-1">
+                <span className="text-[11px] font-700 text-brand-deep tracking-wider uppercase">
+                  Step {currentStep} of {sex === 'male' ? 5 : 6}
+                </span>
+                <span className="text-[10px] text-ink-secondary max-w-[110px] truncate">
+                  {stepsList.find((s) => s.num === currentStep)?.title || ''}
+                </span>
+              </div>
+
+              {/* Primary Save & Next CTA Button */}
+              <div className="flex-1 sm:flex-initial flex justify-end">
+                <button
+                  type="button"
+                  onClick={handleNext}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 sm:px-7 py-3 rounded-xl bg-brand-deep text-white text-[14px] sm:text-[14.5px] font-600 sm:font-500 hover:bg-brand-primary active:scale-[0.98] transition-all duration-200 shadow-sm cursor-pointer"
+                >
+                  <span>
+                    {currentStep === 5 ? (
+                      <>
+                        <span className="sm:hidden">Calculate Results</span>
+                        <span className="hidden sm:inline">Calculate Score &amp; View Results</span>
+                      </>
+                    ) : (
+                      'Save & Next'
+                    )}
+                  </span>
+                  <ArrowRight size={16} />
+                </button>
+              </div>
             </div>
           )}
         </div>
