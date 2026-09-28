@@ -3,9 +3,9 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useReveal } from '@/hooks/useReveal';
 import { useSmoothScroll } from '@/hooks/useSmoothScroll';
 
-import h1 from '../../assets/h-1.png';
+import h1 from '../../assets/h1.png';
 import h2 from '../../assets/h-2.png';
-import h3 from '../../assets/h-3.png';
+import h3 from '../../assets/h3.png';
 import h4 from '../../assets/h-4.png';
 import h5 from '../../assets/h-5.png';
 import h6 from '../../assets/h-6.png';

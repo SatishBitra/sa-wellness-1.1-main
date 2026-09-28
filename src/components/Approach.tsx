@@ -1,11 +1,11 @@
 import { useLenis } from 'lenis/react';
 import { useReveal } from '@/hooks/useReveal';
 
-import om1 from '../../assets/om1.png';
+import om1 from '../../assets/a1.png';
 import om2 from '../../assets/om2.png';
-import om3 from '../../assets/om3.png';
-import om4 from '../../assets/om4.png';
-import om5 from '../../assets/om5.png';
+import om3 from '../../assets/a3.png';
+import om4 from '../../assets/a4.png';
+import om5 from '../../assets/a5.png';
 
 interface Step {
   id: string;
