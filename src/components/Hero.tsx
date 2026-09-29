@@ -20,23 +20,12 @@ export default function Hero({ onTakeAssessment }: HeroProps) {
       <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
         <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-14 items-center">
           <div className="flex flex-col">
-            {/* Mobile Hero Visual: Displays on mobile screens (< lg) */}
-            <div className="lg:hidden mb-6 -mt-2 rounded-2xl overflow-hidden shadow-[0_8px_30px_rgba(43,45,36,0.12)] border border-border-subtle relative aspect-[16/10] sm:aspect-[2/1] bg-surface-secondary opacity-start animate-fade-in" style={{ animationDelay: '50ms', animationFillMode: 'forwards' }}>
-              <img
-                src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*Se59MVLGQLp5sRdzwZVFzQ.png"
-                alt="South Asian woman preparing wholesome fresh food in warm kitchen"
-                className="w-full h-full object-cover object-center"
-                loading="eager"
+            {/* Mobile Hero Video Visual: Replaced hero image placeholder with video on mobile */}
+            <div className="lg:hidden mb-6 -mt-2 opacity-start animate-fade-in" style={{ animationDelay: '50ms', animationFillMode: 'forwards' }}>
+              <HeroVideo
+                aspectRatio="aspect-[16/10] sm:aspect-[16/9] max-h-[380px]"
+                className="shadow-[0_8px_30px_rgba(43,45,36,0.12)] rounded-2xl"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
-              <div className="absolute bottom-3 left-3.5 right-3.5 flex items-center justify-between drop-shadow-sm">
-                <span className="text-[12px] font-500 tracking-wide bg-black/40 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/20 text-white">
-                  Online Care Across the U.S.
-                </span>
-                <span className="text-[11.5px] font-600 bg-sand text-brand-deep border border-sand-warm backdrop-blur-md px-2.5 py-1 rounded-full shadow-xs">
-                  100% Virtual
-                </span>
-              </div>
             </div>
 
             <span className="text-eyebrow text-brand-deep uppercase opacity-start animate-fade-in" style={{ animationDelay: '100ms', animationFillMode: 'forwards' }}>
@@ -74,8 +63,8 @@ export default function Hero({ onTakeAssessment }: HeroProps) {
             </div>
           </div>
 
-          {/* Right Column: High-Hierarchy Video Showcase */}
-          <div className="opacity-start animate-fade-up" style={{ animationDelay: '400ms', animationFillMode: 'forwards' }}>
+          {/* Right Column: High-Hierarchy Video Showcase (Desktop only, mobile renders video in top placeholder) */}
+          <div className="hidden lg:block opacity-start animate-fade-up" style={{ animationDelay: '400ms', animationFillMode: 'forwards' }}>
             <HeroVideo />
           </div>
         </div>

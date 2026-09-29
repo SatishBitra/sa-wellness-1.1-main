@@ -1,7 +1,15 @@
 import { useState, useRef } from 'react';
 import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
 
-export default function HeroVideo() {
+interface HeroVideoProps {
+  className?: string;
+  aspectRatio?: string;
+}
+
+export default function HeroVideo({
+  className = '',
+  aspectRatio = 'aspect-[4/5] sm:aspect-[9/12] lg:aspect-[9/13] max-h-[590px]',
+}: HeroVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
@@ -24,7 +32,7 @@ export default function HeroVideo() {
   };
 
   return (
-    <div className="relative w-full rounded-[26px] sm:rounded-[32px] overflow-hidden bg-surface-secondary border border-border-subtle shadow-[0_20px_50px_rgba(43,45,36,0.12)] aspect-[4/5] sm:aspect-[9/12] lg:aspect-[9/13] max-h-[590px] group select-none">
+    <div className={`relative w-full rounded-[24px] sm:rounded-[32px] overflow-hidden bg-surface-secondary border border-border-subtle shadow-[0_20px_50px_rgba(43,45,36,0.12)] ${aspectRatio} group select-none ${className}`}>
       {/* HTML5 Video Element */}
       <video
         ref={videoRef}

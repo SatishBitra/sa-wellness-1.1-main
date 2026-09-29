@@ -8,9 +8,6 @@ import {
   Printer,
   Sparkles,
   CalendarCheck,
-  User,
-  Mail,
-  Phone,
   ShieldAlert,
   Activity,
   Award,
@@ -77,14 +74,21 @@ interface AssessmentPageProps {
 export default function AssessmentPage({ onGoHome, onBookConsultation }: AssessmentPageProps) {
   // Navigation / Step state: 1 to 6 (1: Basics, 2: Medical/Family, 3: Lifestyle, 4: Women's Health, 5: Labs, 6: Results)
   const [currentStep, setCurrentStep] = useState(1);
+  // Mini-sections within each step: 1 or 2
+  const [currentSubStep, setCurrentSubStep] = useState(1);
+
+  const getMaxSubSteps = (step: number) => {
+    if (step >= 1 && step <= 5) {
+      if (step === 4 && sex === 'male') return 0;
+      return 2;
+    }
+    return 1;
+  };
 
   // Unit toggle: 'imperial' (inches, lbs) or 'metric' (cm, kg)
   const [unitSystem, setUnitSystem] = useState<'imperial' | 'metric'>('imperial');
 
-  // Step 1: User Contact & Basics
-  const [fullName, setFullName] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [phone, setPhone] = useState<string>('');
+  // Step 1: User Demographics & Body Measurements
   const [age, setAge] = useState<string>('');
   const [sex, setSex] = useState<'male' | 'female'>('male');
   const [heightCm, setHeightCm] = useState<string>('');
@@ -438,6 +442,14 @@ export default function AssessmentPage({ onGoHome, onBookConsultation }: Assessm
   }, [currentStep]);
 
   const handleNext = () => {
+    const maxSub = getMaxSubSteps(currentStep);
+    if (currentSubStep < maxSub) {
+      setCurrentSubStep((prev) => prev + 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    setCurrentSubStep(1);
     if (sex === 'male' && currentStep === 3) {
       setCurrentStep(5);
     } else {
@@ -446,10 +458,17 @@ export default function AssessmentPage({ onGoHome, onBookConsultation }: Assessm
   };
 
   const handleBack = () => {
-    if (sex === 'male' && currentStep === 5) {
-      setCurrentStep(3);
-    } else {
-      setCurrentStep((prev) => Math.max(prev - 1, 1));
+    if (currentSubStep > 1) {
+      setCurrentSubStep((prev) => prev - 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    if (currentStep > 1) {
+      const prevStep = sex === 'male' && currentStep === 5 ? 3 : currentStep - 1;
+      setCurrentStep(prevStep);
+      setCurrentSubStep(getMaxSubSteps(prevStep));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -500,7 +519,13 @@ export default function AssessmentPage({ onGoHome, onBookConsultation }: Assessm
         <div className="w-full bg-surface-secondary h-1.5">
           <div
             className="bg-brand-primary h-full transition-all duration-300"
-            style={{ width: `${(currentStep / 6) * 100}%` }}
+            style={{
+              width: `${
+                currentStep === 6
+                  ? 100
+                  : Math.min((((currentStep - 1) * 2 + currentSubStep) / (sex === 'male' ? 8 : 10)) * 100, 95)
+              }%`,
+            }}
           />
         </div>
       </header>
@@ -523,25 +548,22 @@ export default function AssessmentPage({ onGoHome, onBookConsultation }: Assessm
                     ref={(el) => {
                       tabRefs.current[s.num] = el;
                     }}
-                    onClick={() => setCurrentStep(s.num)}
-                    className={`group relative inline-flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl border whitespace-nowrap transition-all duration-300 ease-editorial cursor-pointer shrink-0 active:scale-95 ${
+                    onClick={() => {
+                      setCurrentStep(s.num);
+                      setCurrentSubStep(1);
+                    }}
+                    className={`group relative inline-flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl border whitespace-nowrap transition-all duration-200 cursor-pointer shrink-0 active:scale-95 ${
                       isActive
-                        ? 'bg-brand-deep text-white border-brand-deep shadow-md ring-2 ring-brand-deep/20 scale-[1.02]'
+                        ? 'bg-brand-deep text-white border-brand-deep shadow-xs'
                         : isPast
                         ? 'bg-surface-white border-brand-primary/35 text-brand-deep hover:bg-sand/30 hover:border-brand-primary/60'
                         : 'bg-surface-white/80 border-border-subtle text-ink-secondary hover:text-ink hover:bg-surface-secondary/70'
                     }`}
                   >
-                    {isActive && (
-                      <span className="relative flex h-2 w-2 mr-0.5">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sand opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-sand"></span>
-                      </span>
-                    )}
                     <span
                       className={`w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-600 transition-colors ${
                         isActive
-                          ? 'bg-white/20 text-white ring-1 ring-white/30'
+                          ? 'bg-white/20 text-white'
                           : isPast
                           ? 'bg-sand text-brand-deep'
                           : 'bg-surface-secondary text-ink-muted group-hover:text-ink-secondary'
@@ -549,7 +571,7 @@ export default function AssessmentPage({ onGoHome, onBookConsultation }: Assessm
                     >
                       {isPast ? '✓' : s.num}
                     </span>
-                    <span className={isActive ? 'font-600 tracking-tight' : ''}>{s.title}</span>
+                    <span className={isActive ? 'font-600' : ''}>{s.title}</span>
                   </button>
                 );
               })}
@@ -559,836 +581,856 @@ export default function AssessmentPage({ onGoHome, onBookConsultation }: Assessm
           {/* SECTION 1: BASIC INFORMATION */}
           {currentStep === 1 && (
             <div className="bg-surface-white rounded-[24px] border border-border-subtle p-6 sm:p-8 shadow-sm space-y-7 animate-fade-in">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border-subtle pb-4">
-                <div>
-                  <h2 className="font-display font-600 text-[22px] sm:text-[24px] text-ink">
-                    1. Your Basic Information
-                  </h2>
-                  <p className="text-[13.5px] text-ink-secondary mt-0.5">
-                    Please provide your contact and body measurements for accurate health calibration.
-                  </p>
-                </div>
+              {/* MINI-SECTION 1: DEMOGRAPHICS (Biological Sex & Age) */}
+              {currentSubStep === 1 && (
+                <div key="step1-part1" className="space-y-6 animate-fade-in">
+                  <div className="border-b border-border-subtle pb-4">
+                    <h2 className="font-display font-600 text-[22px] sm:text-[24px] text-ink">
+                      1. Basic Demographics
+                    </h2>
+                  </div>
 
-                {/* Unit Switcher */}
-                <div className="inline-flex p-1 bg-surface-secondary rounded-xl border border-border-subtle text-[12.5px] font-500 self-start sm:self-auto">
-                  <button
-                    onClick={() => setUnitSystem('imperial')}
-                    className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
-                      unitSystem === 'imperial'
-                        ? 'bg-surface-white text-ink shadow-xs font-600'
-                        : 'text-ink-secondary hover:text-ink'
-                    }`}
-                  >
-                    Imperial (in / lbs)
-                  </button>
-                  <button
-                    onClick={() => setUnitSystem('metric')}
-                    className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
-                      unitSystem === 'metric'
-                        ? 'bg-surface-white text-ink shadow-xs font-600'
-                        : 'text-ink-secondary hover:text-ink'
-                    }`}
-                  >
-                    Metric (cm / kg)
-                  </button>
-                </div>
-              </div>
+                  {/* Sex & Age */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-1">
+                    <div>
+                      <label className="block text-[13.5px] font-500 text-ink mb-1.5">
+                        Biological Sex
+                      </label>
+                      <div className="grid grid-cols-2 gap-3">
+                        <button
+                          type="button"
+                          onClick={() => setSex('male')}
+                          className={`p-3.5 rounded-xl border text-center font-500 text-[14px] transition-all cursor-pointer ${
+                            sex === 'male'
+                              ? 'bg-sand/50 border-brand-primary text-ink ring-1 ring-brand-primary font-600'
+                              : 'bg-surface-white border-border-subtle text-ink-secondary hover:bg-surface-secondary'
+                          }`}
+                        >
+                          Male
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setSex('female')}
+                          className={`p-3.5 rounded-xl border text-center font-500 text-[14px] transition-all cursor-pointer ${
+                            sex === 'female'
+                              ? 'bg-sand/50 border-brand-primary text-ink ring-1 ring-brand-primary font-600'
+                              : 'bg-surface-white border-border-subtle text-ink-secondary hover:bg-surface-secondary'
+                          }`}
+                        >
+                          Female
+                        </button>
+                      </div>
+                    </div>
 
-              {/* Name, Email, and Phone Number (Requested by User) */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-[13px] font-500 text-ink mb-1.5 flex items-center gap-1.5">
-                    <User size={14} className="text-brand-deep" />
-                    <span>Full Name</span>
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Priya Sharma"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-border-subtle bg-surface-white text-ink text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40 focus:border-brand-primary"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[13px] font-500 text-ink mb-1.5 flex items-center gap-1.5">
-                    <Mail size={14} className="text-brand-deep" />
-                    <span>Email Address</span>
-                  </label>
-                  <input
-                    type="email"
-                    placeholder="e.g. priya@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-border-subtle bg-surface-white text-ink text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40 focus:border-brand-primary"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[13px] font-500 text-ink mb-1.5 flex items-center gap-1.5">
-                    <Phone size={14} className="text-brand-deep" />
-                    <span>Phone Number</span>
-                  </label>
-                  <input
-                    type="tel"
-                    placeholder="e.g. (555) 234-5678"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-border-subtle bg-surface-white text-ink text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40 focus:border-brand-primary"
-                  />
-                </div>
-              </div>
-
-              {/* Sex & Age */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-1">
-                <div>
-                  <label className="block text-[13.5px] font-500 text-ink mb-1.5">
-                    Biological Sex
-                  </label>
-                  <div className="grid grid-cols-2 gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setSex('male')}
-                      className={`p-3 rounded-xl border text-center font-500 text-[14px] transition-all cursor-pointer ${
-                        sex === 'male'
-                          ? 'bg-sand/50 border-brand-primary text-ink ring-1 ring-brand-primary'
-                          : 'bg-surface-white border-border-subtle text-ink-secondary hover:bg-surface-secondary'
-                      }`}
-                    >
-                      Male
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setSex('female')}
-                      className={`p-3 rounded-xl border text-center font-500 text-[14px] transition-all cursor-pointer ${
-                        sex === 'female'
-                          ? 'bg-sand/50 border-brand-primary text-ink ring-1 ring-brand-primary'
-                          : 'bg-surface-white border-border-subtle text-ink-secondary hover:bg-surface-secondary'
-                      }`}
-                    >
-                      Female
-                    </button>
+                    <div>
+                      <label className="block text-[13.5px] font-500 text-ink mb-1.5">
+                        Age (years)
+                      </label>
+                      <input
+                        type="number"
+                        min="18"
+                        max="100"
+                        placeholder="e.g. 38"
+                        value={age}
+                        onChange={(e) => setAge(e.target.value)}
+                        className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-surface-white text-ink text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40 focus:border-brand-primary"
+                      />
+                    </div>
                   </div>
                 </div>
+              )}
 
-                <div>
-                  <label className="block text-[13.5px] font-500 text-ink mb-1.5">
-                    Age (years)
-                  </label>
-                  <input
-                    type="number"
-                    min="18"
-                    max="100"
-                    placeholder="e.g. 38"
-                    value={age}
-                    onChange={(e) => setAge(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-surface-white text-ink text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40 focus:border-brand-primary"
-                  />
-                </div>
-              </div>
+              {/* MINI-SECTION 2: BODY MEASUREMENTS & VITALS */}
+              {currentSubStep === 2 && (
+                <div key="step1-part2" className="space-y-7 animate-fade-in">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border-subtle pb-4">
+                    <h2 className="font-display font-600 text-[22px] sm:text-[24px] text-ink">
+                      Body Measurements &amp; Vitals
+                    </h2>
 
-              {/* Height & Weight */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <div>
-                  <label className="block text-[13.5px] font-500 text-ink mb-1.5">
-                    Height {unitSystem === 'imperial' ? '(ft & in)' : '(cm)'}
-                  </label>
-                  {unitSystem === 'imperial' ? (
-                    <div className="grid grid-cols-2 gap-3">
+                    {/* Unit Switcher */}
+                    <div className="inline-flex p-1 bg-surface-secondary rounded-xl border border-border-subtle text-[12.5px] font-500 self-start sm:self-auto">
+                      <button
+                        type="button"
+                        onClick={() => setUnitSystem('imperial')}
+                        className={`w-36 text-center justify-center inline-flex items-center py-1.5 rounded-lg transition-all cursor-pointer ${
+                          unitSystem === 'imperial'
+                            ? 'bg-surface-white text-ink shadow-xs font-600'
+                            : 'text-ink-secondary hover:text-ink'
+                        }`}
+                      >
+                        Imperial (in / lbs)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setUnitSystem('metric')}
+                        className={`w-36 text-center justify-center inline-flex items-center py-1.5 rounded-lg transition-all cursor-pointer ${
+                          unitSystem === 'metric'
+                            ? 'bg-surface-white text-ink shadow-xs font-600'
+                            : 'text-ink-secondary hover:text-ink'
+                        }`}
+                      >
+                        Metric (cm / kg)
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Height & Weight */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div>
+                      <label className="block text-[13.5px] font-500 text-ink mb-1.5">
+                        Height {unitSystem === 'imperial' ? '(ft & in)' : '(cm)'}
+                      </label>
+                      {unitSystem === 'imperial' ? (
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="relative">
+                            <input
+                              type="number"
+                              placeholder="Feet"
+                              value={heightFt}
+                              onChange={(e) => setHeightFt(e.target.value)}
+                              className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-surface-white text-ink text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
+                            />
+                            <span className="absolute right-3.5 top-3.5 text-[12px] text-ink-secondary">ft</span>
+                          </div>
+                          <div className="relative">
+                            <input
+                              type="number"
+                              placeholder="Inches"
+                              value={heightIn}
+                              onChange={(e) => setHeightIn(e.target.value)}
+                              className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-surface-white text-ink text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
+                            />
+                            <span className="absolute right-3.5 top-3.5 text-[12px] text-ink-secondary">in</span>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="relative">
+                          <input
+                            type="number"
+                            placeholder="e.g. 172"
+                            value={heightCm}
+                            onChange={(e) => setHeightCm(e.target.value)}
+                            className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-surface-white text-ink text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
+                          />
+                          <span className="absolute right-3.5 top-3.5 text-[12px] text-ink-secondary">cm</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-[13.5px] font-500 text-ink mb-1.5">
+                        Weight {unitSystem === 'imperial' ? '(lbs)' : '(kg)'}
+                      </label>
+                      {unitSystem === 'imperial' ? (
+                        <div className="relative">
+                          <input
+                            type="number"
+                            placeholder="e.g. 165"
+                            value={weightLbs}
+                            onChange={(e) => setWeightLbs(e.target.value)}
+                            className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-surface-white text-ink text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
+                          />
+                          <span className="absolute right-3.5 top-3.5 text-[12px] text-ink-secondary">lbs</span>
+                        </div>
+                      ) : (
+                        <div className="relative">
+                          <input
+                            type="number"
+                            placeholder="e.g. 75"
+                            value={weightKg}
+                            onChange={(e) => setWeightKg(e.target.value)}
+                            className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-surface-white text-ink text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
+                          />
+                          <span className="absolute right-3.5 top-3.5 text-[12px] text-ink-secondary">kg</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Real-time calculated indicators if entered */}
+                  {(calculatedBmi > 0 || calculatedWhtr > 0) && (
+                    <div className="p-3.5 rounded-xl bg-sand/35 border border-sand-warm flex flex-wrap items-center justify-between gap-3 text-[12.5px]">
+                      <div className="flex items-center gap-3">
+                        <span className="font-600 text-brand-deep">Calculated Live:</span>
+                        {calculatedBmi > 0 && (
+                          <span className="px-2.5 py-0.5 rounded-md bg-surface-white border border-border-subtle font-600 text-ink">
+                            BMI: {calculatedBmi}
+                          </span>
+                        )}
+                        {calculatedWhtr > 0 && (
+                          <span className="px-2.5 py-0.5 rounded-md bg-surface-white border border-border-subtle font-600 text-ink">
+                            Waist-to-Height: {calculatedWhtr}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Waist Circumference & Blood Pressure */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div>
+                      <label className="block text-[13.5px] font-500 text-ink mb-1.5">
+                        Waist Circumference (at navel)
+                      </label>
                       <div className="relative">
                         <input
                           type="number"
-                          placeholder="Feet"
-                          value={heightFt}
-                          onChange={(e) => setHeightFt(e.target.value)}
+                          placeholder={unitSystem === 'imperial' ? 'e.g. 34' : 'e.g. 86'}
+                          value={unitSystem === 'imperial' ? waistIn : waistCm}
+                          onChange={(e) => (unitSystem === 'imperial' ? setWaistIn(e.target.value) : setWaistCm(e.target.value))}
                           className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-surface-white text-ink text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
                         />
-                        <span className="absolute right-3.5 top-3.5 text-[12px] text-ink-secondary">ft</span>
-                      </div>
-                      <div className="relative">
-                        <input
-                          type="number"
-                          placeholder="Inches"
-                          value={heightIn}
-                          onChange={(e) => setHeightIn(e.target.value)}
-                          className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-surface-white text-ink text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
-                        />
-                        <span className="absolute right-3.5 top-3.5 text-[12px] text-ink-secondary">in</span>
+                        <span className="absolute right-3.5 top-3.5 text-[12px] text-ink-secondary">
+                          {unitSystem === 'imperial' ? 'in' : 'cm'}
+                        </span>
                       </div>
                     </div>
-                  ) : (
-                    <div className="relative">
-                      <input
-                        type="number"
-                        placeholder="e.g. 172"
-                        value={heightCm}
-                        onChange={(e) => setHeightCm(e.target.value)}
-                        className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-surface-white text-ink text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
-                      />
-                      <span className="absolute right-3.5 top-3.5 text-[12px] text-ink-secondary">cm</span>
-                    </div>
-                  )}
-                </div>
 
-                <div>
-                  <label className="block text-[13.5px] font-500 text-ink mb-1.5">
-                    Weight {unitSystem === 'imperial' ? '(lbs)' : '(kg)'}
-                  </label>
-                  {unitSystem === 'imperial' ? (
-                    <div className="relative">
-                      <input
-                        type="number"
-                        placeholder="e.g. 165"
-                        value={weightLbs}
-                        onChange={(e) => setWeightLbs(e.target.value)}
-                        className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-surface-white text-ink text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
-                      />
-                      <span className="absolute right-3.5 top-3.5 text-[12px] text-ink-secondary">lbs</span>
-                    </div>
-                  ) : (
-                    <div className="relative">
-                      <input
-                        type="number"
-                        placeholder="e.g. 75"
-                        value={weightKg}
-                        onChange={(e) => setWeightKg(e.target.value)}
-                        className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-surface-white text-ink text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
-                      />
-                      <span className="absolute right-3.5 top-3.5 text-[12px] text-ink-secondary">kg</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Waist Circumference & Blood Pressure */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <div>
-                  <label className="block text-[13.5px] font-500 text-ink mb-1.5">
-                    Waist Circumference (measured at navel)
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="number"
-                      placeholder={unitSystem === 'imperial' ? 'e.g. 34' : 'e.g. 86'}
-                      value={unitSystem === 'imperial' ? waistIn : waistCm}
-                      onChange={(e) => (unitSystem === 'imperial' ? setWaistIn(e.target.value) : setWaistCm(e.target.value))}
-                      className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-surface-white text-ink text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
-                    />
-                    <span className="absolute right-3.5 top-3.5 text-[12px] text-ink-secondary">
-                      {unitSystem === 'imperial' ? 'in' : 'cm'}
-                    </span>
-                  </div>
-                  <span className="text-[11.5px] text-ink-muted mt-1 block">
-                    Measured at level of belly button while breathing normally
-                  </span>
-                </div>
-
-                <div>
-                  <label className="block text-[13.5px] font-500 text-ink mb-1.5">
-                    Blood Pressure, if known (mmHg)
-                  </label>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="relative">
-                      <input
-                        type="number"
-                        placeholder="Systolic (120)"
-                        value={bpSystolic}
-                        onChange={(e) => setBpSystolic(e.target.value)}
-                        className="w-full px-3.5 py-3 rounded-xl border border-border-subtle bg-surface-white text-ink text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
-                      />
-                      <span className="absolute right-2.5 top-3.5 text-[11px] text-ink-muted">Sys</span>
-                    </div>
-                    <div className="relative">
-                      <input
-                        type="number"
-                        placeholder="Diastolic (80)"
-                        value={bpDiastolic}
-                        onChange={(e) => setBpDiastolic(e.target.value)}
-                        className="w-full px-3.5 py-3 rounded-xl border border-border-subtle bg-surface-white text-ink text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
-                      />
-                      <span className="absolute right-2.5 top-3.5 text-[11px] text-ink-muted">Dia</span>
+                    <div>
+                      <label className="block text-[13.5px] font-500 text-ink mb-1.5">
+                        Blood Pressure, if known (mmHg)
+                      </label>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="relative">
+                          <input
+                            type="number"
+                            placeholder="Systolic (120)"
+                            value={bpSystolic}
+                            onChange={(e) => setBpSystolic(e.target.value)}
+                            className="w-full px-3.5 py-3 rounded-xl border border-border-subtle bg-surface-white text-ink text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
+                          />
+                          <span className="absolute right-2.5 top-3.5 text-[11px] text-ink-muted">Sys</span>
+                        </div>
+                        <div className="relative">
+                          <input
+                            type="number"
+                            placeholder="Diastolic (80)"
+                            value={bpDiastolic}
+                            onChange={(e) => setBpDiastolic(e.target.value)}
+                            className="w-full px-3.5 py-3 rounded-xl border border-border-subtle bg-surface-white text-ink text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
+                          />
+                          <span className="absolute right-2.5 top-3.5 text-[11px] text-ink-muted">Dia</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-
-              <p className="text-[12px] text-ink-secondary leading-relaxed bg-surface-secondary/50 p-3.5 rounded-xl border border-border-subtle">
-                For Asian adults, including people from the South Asian subcontinent, the ADA 2026 standards use lower BMI and waist thresholds because metabolic risk can occur at lower BMI levels.
-              </p>
+              )}
             </div>
           )}
 
           {/* SECTION 2: FAMILY & MEDICAL HISTORY */}
           {currentStep === 2 && (
             <div className="bg-surface-white rounded-[24px] border border-border-subtle p-6 sm:p-8 shadow-sm space-y-7 animate-fade-in">
-              <div className="border-b border-border-subtle pb-4">
-                <h2 className="font-display font-600 text-[22px] sm:text-[24px] text-ink">
-                  2. Your Family &amp; Medical History
-                </h2>
-                <p className="text-[13.5px] text-ink-secondary mt-0.5">
-                  Select your personal medical history and immediate family background.
-                </p>
-              </div>
+              {/* MINI-SECTION 1: PERSONAL MEDICAL HISTORY */}
+              {currentSubStep === 1 && (
+                <div key="step2-part1" className="space-y-6 animate-fade-in">
+                  <div className="border-b border-border-subtle pb-4">
+                    <h2 className="font-display font-600 text-[22px] sm:text-[24px] text-ink">
+                      2. Personal Medical History
+                    </h2>
+                  </div>
 
-              {/* Personal Conditions Matrix */}
-              <div>
-                <h3 className="text-[14.5px] font-600 text-ink mb-3">
-                  Have you ever been told by a doctor or healthcare professional that you have:
-                </h3>
+                  {/* Personal Conditions Matrix */}
+                  <div>
+                    <h3 className="text-[14px] font-600 text-ink mb-3">
+                      Have you ever been told by a doctor that you have:
+                    </h3>
 
-                <div className="divide-y divide-border-subtle/70 border border-border-subtle rounded-2xl overflow-hidden">
-                  {[
-                    { key: 'prediabetes', label: 'Prediabetes or high blood sugar' },
-                    { key: 'diabetes', label: 'Diabetes' },
-                    { key: 'hypertension', label: 'High blood pressure' },
-                    { key: 'lipids', label: 'High cholesterol or triglycerides' },
-                    { key: 'fattyLiver', label: 'Fatty liver' },
-                    { key: 'cvd', label: 'Heart disease or stroke' },
-                    { key: 'sleepApnea', label: 'Sleep apnea' },
-                    ...(sex === 'female'
-                      ? [{ key: 'pcos', label: 'Polycystic ovary syndrome (PCOS)*' }]
-                      : []),
-                  ].map((condition) => (
-                    <div
-                      key={condition.key}
-                      className="p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-surface-white hover:bg-surface-secondary/40 transition-colors"
-                    >
-                      <span className="text-[14px] font-500 text-ink">{condition.label}</span>
+                    <div className="divide-y divide-border-subtle/70 border border-border-subtle rounded-2xl overflow-hidden">
+                      {[
+                        { key: 'prediabetes', label: 'Prediabetes or high blood sugar' },
+                        { key: 'diabetes', label: 'Diabetes' },
+                        { key: 'hypertension', label: 'High blood pressure' },
+                        { key: 'lipids', label: 'High cholesterol or triglycerides' },
+                        { key: 'fattyLiver', label: 'Fatty liver' },
+                        { key: 'cvd', label: 'Heart disease or stroke' },
+                        { key: 'sleepApnea', label: 'Sleep apnea' },
+                        ...(sex === 'female'
+                          ? [{ key: 'pcos', label: 'Polycystic ovary syndrome (PCOS)' }]
+                          : []),
+                      ].map((condition) => (
+                        <div
+                          key={condition.key}
+                          className="p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-surface-white hover:bg-surface-secondary/40 transition-colors"
+                        >
+                          <span className="text-[14px] font-500 text-ink">{condition.label}</span>
 
-                      <div className="inline-flex rounded-xl bg-surface-secondary p-1 border border-border-subtle self-start sm:self-auto">
-                        {(['yes', 'no', 'dont_know'] as const).map((val) => {
-                          const isSelected = history[condition.key] === val;
-                          return (
-                            <button
-                              key={val}
-                              type="button"
-                              onClick={() => setHistory((prev) => ({ ...prev, [condition.key]: val }))}
-                              className={`px-3.5 py-1.5 rounded-lg text-[13px] font-500 transition-all cursor-pointer ${
-                                isSelected
-                                  ? val === 'yes'
-                                    ? 'bg-brand-deep text-white shadow-xs'
-                                    : 'bg-surface-white text-ink shadow-xs'
-                                  : 'text-ink-secondary hover:text-ink'
-                              }`}
-                            >
-                              {val === 'yes' ? 'Yes' : val === 'no' ? 'No' : "Don't know"}
-                            </button>
-                          );
-                        })}
+                          <div className="inline-flex rounded-xl bg-surface-secondary p-1 border border-border-subtle self-start sm:self-auto">
+                            {(['yes', 'no', 'dont_know'] as const).map((val) => {
+                              const isSelected = history[condition.key] === val;
+                              return (
+                                <button
+                                  key={val}
+                                  type="button"
+                                  onClick={() => setHistory((prev) => ({ ...prev, [condition.key]: val }))}
+                                  className={`px-3.5 py-1.5 rounded-lg text-[13px] font-500 transition-all cursor-pointer ${
+                                    isSelected
+                                      ? val === 'yes'
+                                        ? 'bg-brand-deep text-white shadow-xs font-600'
+                                        : 'bg-surface-white text-ink shadow-xs font-600'
+                                      : 'text-ink-secondary hover:text-ink'
+                                  }`}
+                                >
+                                  {val === 'yes' ? 'Yes' : val === 'no' ? 'No' : "Don't know"}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* MINI-SECTION 2: FAMILY HISTORY */}
+              {currentSubStep === 2 && (
+                <div key="step2-part2" className="space-y-6 animate-fade-in">
+                  <div className="border-b border-border-subtle pb-4">
+                    <h2 className="font-display font-600 text-[22px] sm:text-[24px] text-ink">
+                      Family Medical History
+                    </h2>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+                    <div className="p-4 rounded-2xl border border-border-subtle bg-surface-secondary/40 space-y-3">
+                      <span className="text-[13.5px] font-500 text-ink block">
+                        Does a parent, brother or sister have diabetes?
+                      </span>
+                      <div className="flex gap-2">
+                        {[
+                          { val: 'yes', label: 'Yes' },
+                          { val: 'no', label: 'No' },
+                          { val: 'dont_know', label: "Don't know" },
+                        ].map((item) => (
+                          <button
+                            key={item.val}
+                            type="button"
+                            onClick={() => setFamilyDiabetes(item.val)}
+                            className={`flex-1 py-2 rounded-xl text-[13px] font-500 border transition-all cursor-pointer ${
+                              familyDiabetes === item.val
+                                ? 'bg-brand-deep text-white border-brand-deep shadow-xs font-600'
+                                : 'bg-surface-white border-border-subtle text-ink-secondary hover:bg-surface-secondary'
+                            }`}
+                          >
+                            {item.label}
+                          </button>
+                        ))}
                       </div>
                     </div>
-                  ))}
-                </div>
-              </div>
 
-              {/* Family History */}
-              <div className="pt-2 border-t border-border-subtle space-y-4">
-                <h3 className="text-[14.5px] font-600 text-ink">
-                  Family History
-                </h3>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="p-4 rounded-2xl border border-border-subtle bg-surface-secondary/40 space-y-3">
-                    <span className="text-[13.5px] font-500 text-ink block">
-                      Does a parent, brother or sister have diabetes?
-                    </span>
-                    <div className="flex gap-2">
-                      {[
-                        { val: 'yes', label: 'Yes' },
-                        { val: 'no', label: 'No' },
-                        { val: 'dont_know', label: "Don't know" },
-                      ].map((item) => (
-                        <button
-                          key={item.val}
-                          type="button"
-                          onClick={() => setFamilyDiabetes(item.val)}
-                          className={`flex-1 py-2 rounded-xl text-[13px] font-500 border transition-all cursor-pointer ${
-                            familyDiabetes === item.val
-                              ? 'bg-brand-deep text-white border-brand-deep shadow-xs'
-                              : 'bg-surface-white border-border-subtle text-ink-secondary hover:bg-surface-secondary'
-                          }`}
-                        >
-                          {item.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="p-4 rounded-2xl border border-border-subtle bg-surface-secondary/40 space-y-3">
-                    <span className="text-[13.5px] font-500 text-ink block">
-                      Does a close family member have heart disease or stroke?
-                    </span>
-                    <div className="flex gap-2">
-                      {[
-                        { val: 'yes', label: 'Yes' },
-                        { val: 'no', label: 'No' },
-                        { val: 'dont_know', label: "Don't know" },
-                      ].map((item) => (
-                        <button
-                          key={item.val}
-                          type="button"
-                          onClick={() => setFamilyHeartDisease(item.val)}
-                          className={`flex-1 py-2 rounded-xl text-[13px] font-500 border transition-all cursor-pointer ${
-                            familyHeartDisease === item.val
-                              ? 'bg-brand-deep text-white border-brand-deep shadow-xs'
-                              : 'bg-surface-white border-border-subtle text-ink-secondary hover:bg-surface-secondary'
-                          }`}
-                        >
-                          {item.label}
-                        </button>
-                      ))}
+                    <div className="p-4 rounded-2xl border border-border-subtle bg-surface-secondary/40 space-y-3">
+                      <span className="text-[13.5px] font-500 text-ink block">
+                        Does a close family member have heart disease or stroke?
+                      </span>
+                      <div className="flex gap-2">
+                        {[
+                          { val: 'yes', label: 'Yes' },
+                          { val: 'no', label: 'No' },
+                          { val: 'dont_know', label: "Don't know" },
+                        ].map((item) => (
+                          <button
+                            key={item.val}
+                            type="button"
+                            onClick={() => setFamilyHeartDisease(item.val)}
+                            className={`flex-1 py-2 rounded-xl text-[13px] font-500 border transition-all cursor-pointer ${
+                              familyHeartDisease === item.val
+                                ? 'bg-brand-deep text-white border-brand-deep shadow-xs font-600'
+                                : 'bg-surface-white border-border-subtle text-ink-secondary hover:bg-surface-secondary'
+                            }`}
+                          >
+                            {item.label}
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
           )}
 
           {/* SECTION 3: DAILY HABITS */}
           {currentStep === 3 && (
             <div className="bg-surface-white rounded-[24px] border border-border-subtle p-6 sm:p-8 shadow-sm space-y-7 animate-fade-in">
-              <div className="border-b border-border-subtle pb-4">
-                <h2 className="font-display font-600 text-[22px] sm:text-[24px] text-ink">
-                  3. Your Daily Habits
-                </h2>
-                <p className="text-[13.5px] text-ink-secondary mt-0.5">
-                  Reflect on your physical activity, dietary routines, and sleep patterns.
-                </p>
-              </div>
+              {/* MINI-SECTION 1: PHYSICAL ACTIVITY & SITTING (Questions A, B, C) */}
+              {currentSubStep === 1 && (
+                <div key="step3-part1" className="space-y-6 animate-fade-in">
+                  <div className="border-b border-border-subtle pb-4">
+                    <h2 className="font-display font-600 text-[22px] sm:text-[24px] text-ink">
+                      3. Physical Activity &amp; Movement
+                    </h2>
+                  </div>
 
-              {/* Questions A to H (Points stripped out) */}
-              <div className="space-y-6">
-                {/* A. Physical Activity */}
-                <div className="p-4 rounded-2xl bg-surface-secondary/40 border border-border-subtle space-y-2.5">
-                  <span className="text-[14px] font-600 text-ink block">
-                    A. Physical activity: How much moderate physical activity do you usually get each week?
-                  </span>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                    {[
-                      { id: 'under_75', label: 'Less than 75 minutes' },
-                      { id: '75_149', label: '75–149 minutes' },
-                      { id: '150_plus', label: '150 minutes or more' },
-                    ].map((opt) => (
-                      <button
-                        key={opt.id}
-                        type="button"
-                        onClick={() => setPhysicalActivity(opt.id)}
-                        className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
-                          physicalActivity === opt.id
-                            ? 'bg-sand/60 border-brand-primary text-ink shadow-xs ring-1 ring-brand-primary'
-                            : 'bg-surface-white border-border-subtle text-ink-secondary hover:bg-surface-secondary'
-                        }`}
-                      >
-                        <div className="text-[13.5px] font-500">{opt.label}</div>
-                      </button>
-                    ))}
+                  <div className="space-y-5">
+                    {/* A. Physical Activity */}
+                    <div className="p-4 rounded-2xl bg-surface-secondary/40 border border-border-subtle space-y-2.5">
+                      <span className="text-[14px] font-600 text-ink block">
+                        A. How much moderate physical activity do you usually get each week?
+                      </span>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                        {[
+                          { id: 'under_75', label: 'Less than 75 minutes' },
+                          { id: '75_149', label: '75–149 minutes' },
+                          { id: '150_plus', label: '150 minutes or more' },
+                        ].map((opt) => (
+                          <button
+                            key={opt.id}
+                            type="button"
+                            onClick={() => setPhysicalActivity(opt.id)}
+                            className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                              physicalActivity === opt.id
+                                ? 'bg-sand/60 border-brand-primary text-ink shadow-xs ring-1 ring-brand-primary font-600'
+                                : 'bg-surface-white border-border-subtle text-ink-secondary hover:bg-surface-secondary'
+                            }`}
+                          >
+                            <div className="text-[13.5px]">{opt.label}</div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* B. Strength Exercise */}
+                    <div className="p-4 rounded-2xl bg-surface-secondary/40 border border-border-subtle space-y-2.5">
+                      <span className="text-[14px] font-600 text-ink block">
+                        B. How often do you do strength or resistance exercise?
+                      </span>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                        {[
+                          { id: 'never', label: 'Never' },
+                          { id: 'once_week', label: 'About once a week' },
+                          { id: '2_plus', label: '2 or more times a week' },
+                        ].map((opt) => (
+                          <button
+                            key={opt.id}
+                            type="button"
+                            onClick={() => setStrengthExercise(opt.id)}
+                            className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                              strengthExercise === opt.id
+                                ? 'bg-sand/60 border-brand-primary text-ink shadow-xs ring-1 ring-brand-primary font-600'
+                                : 'bg-surface-white border-border-subtle text-ink-secondary hover:bg-surface-secondary'
+                            }`}
+                          >
+                            <div className="text-[13.5px]">{opt.label}</div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* C. Sitting Time */}
+                    <div className="p-4 rounded-2xl bg-surface-secondary/40 border border-border-subtle space-y-2.5">
+                      <span className="text-[14px] font-600 text-ink block">
+                        C. Approximately how many hours do you spend sitting on a typical day?
+                      </span>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                        {[
+                          { id: 'under_6', label: 'Less than 6 hours' },
+                          { id: '6_to_8', label: '6–8 hours' },
+                          { id: 'over_8', label: 'More than 8 hours' },
+                        ].map((opt) => (
+                          <button
+                            key={opt.id}
+                            type="button"
+                            onClick={() => setSittingTime(opt.id)}
+                            className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                              sittingTime === opt.id
+                                ? 'bg-sand/60 border-brand-primary text-ink shadow-xs ring-1 ring-brand-primary font-600'
+                                : 'bg-surface-white border-border-subtle text-ink-secondary hover:bg-surface-secondary'
+                            }`}
+                          >
+                            <div className="text-[13.5px]">{opt.label}</div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
+              )}
 
-                {/* B. Strength Exercise */}
-                <div className="p-4 rounded-2xl bg-surface-secondary/40 border border-border-subtle space-y-2.5">
-                  <span className="text-[14px] font-600 text-ink block">
-                    B. Strength exercise: How often do you do strength/resistance exercise?
-                  </span>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                    {[
-                      { id: 'never', label: 'Never' },
-                      { id: 'once_week', label: 'About once a week' },
-                      { id: '2_plus', label: '2 or more times a week' },
-                    ].map((opt) => (
-                      <button
-                        key={opt.id}
-                        type="button"
-                        onClick={() => setStrengthExercise(opt.id)}
-                        className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
-                          strengthExercise === opt.id
-                            ? 'bg-sand/60 border-brand-primary text-ink shadow-xs ring-1 ring-brand-primary'
-                            : 'bg-surface-white border-border-subtle text-ink-secondary hover:bg-surface-secondary'
-                        }`}
-                      >
-                        <div className="text-[13.5px] font-500">{opt.label}</div>
-                      </button>
-                    ))}
+              {/* MINI-SECTION 2: DIETARY PATTERNS & SLEEP (Questions D, E, F, G, H) */}
+              {currentSubStep === 2 && (
+                <div key="step3-part2" className="space-y-6 animate-fade-in">
+                  <div className="border-b border-border-subtle pb-4">
+                    <h2 className="font-display font-600 text-[22px] sm:text-[24px] text-ink">
+                      Dietary Patterns &amp; Sleep
+                    </h2>
+                  </div>
+
+                  <div className="space-y-5">
+                    {/* D. Sugary drinks */}
+                    <div className="p-4 rounded-2xl bg-surface-secondary/40 border border-border-subtle space-y-2.5">
+                      <span className="text-[14px] font-600 text-ink block">
+                        D. How often do you drink sweetened drinks (soft drinks, sweet chai/coffee, juices)?
+                      </span>
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                        {[
+                          { id: 'rarely', label: 'Rarely/never' },
+                          { id: '1_to_3', label: '1–3 times a week' },
+                          { id: '4_to_6', label: '4–6 times a week' },
+                          { id: 'daily', label: 'Daily' },
+                        ].map((opt) => (
+                          <button
+                            key={opt.id}
+                            type="button"
+                            onClick={() => setSugaryDrinks(opt.id)}
+                            className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                              sugaryDrinks === opt.id
+                                ? 'bg-sand/60 border-brand-primary text-ink shadow-xs ring-1 ring-brand-primary font-600'
+                                : 'bg-surface-white border-border-subtle text-ink-secondary hover:bg-surface-secondary'
+                            }`}
+                          >
+                            <div className="text-[13.5px]">{opt.label}</div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* E. Sweets and desserts */}
+                    <div className="p-4 rounded-2xl bg-surface-secondary/40 border border-border-subtle space-y-2.5">
+                      <span className="text-[14px] font-600 text-ink block">
+                        E. How often do you eat mithai, sweets, cakes, biscuits or desserts?
+                      </span>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                        {[
+                          { id: 'under_2', label: 'Less than twice a week' },
+                          { id: '2_to_4', label: '2–4 times a week' },
+                          { id: '5_plus', label: '5 or more times a week' },
+                        ].map((opt) => (
+                          <button
+                            key={opt.id}
+                            type="button"
+                            onClick={() => setSweetsDesserts(opt.id)}
+                            className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                              sweetsDesserts === opt.id
+                                ? 'bg-sand/60 border-brand-primary text-ink shadow-xs ring-1 ring-brand-primary font-600'
+                                : 'bg-surface-white border-border-subtle text-ink-secondary hover:bg-surface-secondary'
+                            }`}
+                          >
+                            <div className="text-[13.5px]">{opt.label}</div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* F. Refined carbohydrates */}
+                    <div className="p-4 rounded-2xl bg-surface-secondary/40 border border-border-subtle space-y-2.5">
+                      <span className="text-[14px] font-600 text-ink block">
+                        F. How often do white rice, maida, naan, or paratha make up a major part of your meals?
+                      </span>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                        {[
+                          { id: 'occasionally', label: 'Occasionally' },
+                          { id: 'once_day', label: 'About once a day' },
+                          { id: 'twice_plus', label: 'Twice a day or more' },
+                        ].map((opt) => (
+                          <button
+                            key={opt.id}
+                            type="button"
+                            onClick={() => setRefinedCarbs(opt.id)}
+                            className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                              refinedCarbs === opt.id
+                                ? 'bg-sand/60 border-brand-primary text-ink shadow-xs ring-1 ring-brand-primary font-600'
+                                : 'bg-surface-white border-border-subtle text-ink-secondary hover:bg-surface-secondary'
+                            }`}
+                          >
+                            <div className="text-[13.5px]">{opt.label}</div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* G. Vegetables and legumes */}
+                    <div className="p-4 rounded-2xl bg-surface-secondary/40 border border-border-subtle space-y-2.5">
+                      <span className="text-[14px] font-600 text-ink block">
+                        G. How often do you eat vegetables, dal, beans, chickpeas or legumes?
+                      </span>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                        {[
+                          { id: 'under_1', label: 'Less than once a day' },
+                          { id: '1_to_2', label: '1–2 times a day' },
+                          { id: '3_plus', label: '3 or more times a day' },
+                        ].map((opt) => (
+                          <button
+                            key={opt.id}
+                            type="button"
+                            onClick={() => setVegLegumes(opt.id)}
+                            className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                              vegLegumes === opt.id
+                                ? 'bg-sand/60 border-brand-primary text-ink shadow-xs ring-1 ring-brand-primary font-600'
+                                : 'bg-surface-white border-border-subtle text-ink-secondary hover:bg-surface-secondary'
+                            }`}
+                          >
+                            <div className="text-[13.5px]">{opt.label}</div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* H. Sleep */}
+                    <div className="p-4 rounded-2xl bg-surface-secondary/40 border border-border-subtle space-y-2.5">
+                      <span className="text-[14px] font-600 text-ink block">
+                        H. How much do you usually sleep at night?
+                      </span>
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                        {[
+                          { id: 'under_6', label: 'Less than 6 hours' },
+                          { id: '6_to_7', label: '6–7 hours' },
+                          { id: '7_to_9', label: '7–9 hours' },
+                          { id: 'over_9', label: 'More than 9 hours' },
+                        ].map((opt) => (
+                          <button
+                            key={opt.id}
+                            type="button"
+                            onClick={() => setSleepDuration(opt.id)}
+                            className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                              sleepDuration === opt.id
+                                ? 'bg-sand/60 border-brand-primary text-ink shadow-xs ring-1 ring-brand-primary font-600'
+                                : 'bg-surface-white border-border-subtle text-ink-secondary hover:bg-surface-secondary'
+                            }`}
+                          >
+                            <div className="text-[13.5px]">{opt.label}</div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
-
-                {/* C. Sitting */}
-                <div className="p-4 rounded-2xl bg-surface-secondary/40 border border-border-subtle space-y-2.5">
-                  <span className="text-[14px] font-600 text-ink block">
-                    C. Sitting: Approximately how many hours do you spend sitting on a typical day?
-                  </span>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                    {[
-                      { id: 'under_6', label: 'Less than 6 hours' },
-                      { id: '6_to_8', label: '6–8 hours' },
-                      { id: 'over_8', label: 'More than 8 hours' },
-                    ].map((opt) => (
-                      <button
-                        key={opt.id}
-                        type="button"
-                        onClick={() => setSittingTime(opt.id)}
-                        className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
-                          sittingTime === opt.id
-                            ? 'bg-sand/60 border-brand-primary text-ink shadow-xs ring-1 ring-brand-primary'
-                            : 'bg-surface-white border-border-subtle text-ink-secondary hover:bg-surface-secondary'
-                        }`}
-                      >
-                        <div className="text-[13.5px] font-500">{opt.label}</div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* D. Sugary drinks */}
-                <div className="p-4 rounded-2xl bg-surface-secondary/40 border border-border-subtle space-y-2.5">
-                  <span className="text-[14px] font-600 text-ink block">
-                    D. Sugary drinks: How often do you drink regular soft drinks, sweetened tea/coffee, energy drinks, sweetened juices or other sugary beverages?
-                  </span>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                    {[
-                      { id: 'rarely', label: 'Rarely/never' },
-                      { id: '1_to_3', label: '1–3 times a week' },
-                      { id: '4_to_6', label: '4–6 times a week' },
-                      { id: 'daily', label: 'Daily' },
-                    ].map((opt) => (
-                      <button
-                        key={opt.id}
-                        type="button"
-                        onClick={() => setSugaryDrinks(opt.id)}
-                        className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
-                          sugaryDrinks === opt.id
-                            ? 'bg-sand/60 border-brand-primary text-ink shadow-xs ring-1 ring-brand-primary'
-                            : 'bg-surface-white border-border-subtle text-ink-secondary hover:bg-surface-secondary'
-                        }`}
-                      >
-                        <div className="text-[13.5px] font-500">{opt.label}</div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* E. Sweets and desserts */}
-                <div className="p-4 rounded-2xl bg-surface-secondary/40 border border-border-subtle space-y-2.5">
-                  <span className="text-[14px] font-600 text-ink block">
-                    E. Sweets and desserts: How often do you eat mithai, sweets, cakes, biscuits, pastries or other desserts?
-                  </span>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                    {[
-                      { id: 'under_2', label: 'Less than twice a week' },
-                      { id: '2_to_4', label: '2–4 times a week' },
-                      { id: '5_plus', label: '5 or more times a week' },
-                    ].map((opt) => (
-                      <button
-                        key={opt.id}
-                        type="button"
-                        onClick={() => setSweetsDesserts(opt.id)}
-                        className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
-                          sweetsDesserts === opt.id
-                            ? 'bg-sand/60 border-brand-primary text-ink shadow-xs ring-1 ring-brand-primary'
-                            : 'bg-surface-white border-border-subtle text-ink-secondary hover:bg-surface-secondary'
-                        }`}
-                      >
-                        <div className="text-[13.5px] font-500">{opt.label}</div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* F. Refined carbohydrates */}
-                <div className="p-4 rounded-2xl bg-surface-secondary/40 border border-border-subtle space-y-2.5">
-                  <span className="text-[14px] font-600 text-ink block">
-                    F. Refined carbohydrates: How often do foods such as white rice, white bread, maida/refined flour, naan, paratha or similar refined grains make up a substantial part of your meals?
-                  </span>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                    {[
-                      { id: 'occasionally', label: 'Occasionally' },
-                      { id: 'once_day', label: 'About once a day' },
-                      { id: 'twice_plus', label: 'Twice a day or more' },
-                    ].map((opt) => (
-                      <button
-                        key={opt.id}
-                        type="button"
-                        onClick={() => setRefinedCarbs(opt.id)}
-                        className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
-                          refinedCarbs === opt.id
-                            ? 'bg-sand/60 border-brand-primary text-ink shadow-xs ring-1 ring-brand-primary'
-                            : 'bg-surface-white border-border-subtle text-ink-secondary hover:bg-surface-secondary'
-                        }`}
-                      >
-                        <div className="text-[13.5px] font-500">{opt.label}</div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* G. Vegetables and legumes */}
-                <div className="p-4 rounded-2xl bg-surface-secondary/40 border border-border-subtle space-y-2.5">
-                  <span className="text-[14px] font-600 text-ink block">
-                    G. Vegetables and legumes: How often do you eat vegetables, dal, beans, chickpeas or other legumes?
-                  </span>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                    {[
-                      { id: 'under_1', label: 'Less than once a day' },
-                      { id: '1_to_2', label: '1–2 times a day' },
-                      { id: '3_plus', label: '3 or more times a day' },
-                    ].map((opt) => (
-                      <button
-                        key={opt.id}
-                        type="button"
-                        onClick={() => setVegLegumes(opt.id)}
-                        className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
-                          vegLegumes === opt.id
-                            ? 'bg-sand/60 border-brand-primary text-ink shadow-xs ring-1 ring-brand-primary'
-                            : 'bg-surface-white border-border-subtle text-ink-secondary hover:bg-surface-secondary'
-                        }`}
-                      >
-                        <div className="text-[13.5px] font-500">{opt.label}</div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* H. Sleep */}
-                <div className="p-4 rounded-2xl bg-surface-secondary/40 border border-border-subtle space-y-2.5">
-                  <span className="text-[14px] font-600 text-ink block">
-                    H. Sleep: How much do you usually sleep?
-                  </span>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                    {[
-                      { id: 'under_6', label: 'Less than 6 hours' },
-                      { id: '6_to_7', label: '6–7 hours' },
-                      { id: '7_to_9', label: '7–9 hours' },
-                      { id: 'over_9', label: 'More than 9 hours' },
-                    ].map((opt) => (
-                      <button
-                        key={opt.id}
-                        type="button"
-                        onClick={() => setSleepDuration(opt.id)}
-                        className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
-                          sleepDuration === opt.id
-                            ? 'bg-sand/60 border-brand-primary text-ink shadow-xs ring-1 ring-brand-primary'
-                            : 'bg-surface-white border-border-subtle text-ink-secondary hover:bg-surface-secondary'
-                        }`}
-                      >
-                        <div className="text-[13.5px] font-500">{opt.label}</div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
+              )}
             </div>
           )}
 
           {/* SECTION 4: WOMEN'S HEALTH (Only active for Female) */}
           {currentStep === 4 && (
             <div className="bg-surface-white rounded-[24px] border border-border-subtle p-6 sm:p-8 shadow-sm space-y-7 animate-fade-in">
-              <div className="border-b border-border-subtle pb-4">
-                <h2 className="font-display font-600 text-[22px] sm:text-[24px] text-ink">
-                  4. Women&apos;s Health
-                </h2>
-                <p className="text-[13.5px] text-ink-secondary mt-0.5">
-                  Pregnancy-related metabolic indicators specific to female cardiometabolic risk.
-                </p>
-              </div>
+              {/* MINI-SECTION 1: GESTATIONAL DIABETES */}
+              {currentSubStep === 1 && (
+                <div key="step4-part1" className="space-y-6 animate-fade-in">
+                  <div className="border-b border-border-subtle pb-4">
+                    <h2 className="font-display font-600 text-[22px] sm:text-[24px] text-ink">
+                      4. Pregnancy-Related Blood Sugar
+                    </h2>
+                  </div>
 
-              <div className="space-y-6">
-                <div className="p-4 rounded-2xl bg-surface-secondary/40 border border-border-subtle space-y-3">
-                  <span className="text-[14px] font-600 text-ink block">
-                    Have you ever had diabetes during pregnancy (gestational diabetes)?
-                  </span>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                    {[
-                      { val: 'yes', label: 'Yes' },
-                      { val: 'no', label: 'No' },
-                      { val: 'never', label: 'Never pregnant' },
-                      { val: 'dont_know', label: "Don't know" },
-                    ].map((item) => (
-                      <button
-                        key={item.val}
-                        type="button"
-                        onClick={() => setGestationalDiabetes(item.val)}
-                        className={`py-2.5 px-3 rounded-xl text-[13.5px] font-500 border transition-all cursor-pointer ${
-                          gestationalDiabetes === item.val
-                            ? 'bg-brand-deep text-white border-brand-deep shadow-xs'
-                            : 'bg-surface-white border-border-subtle text-ink-secondary hover:bg-surface-secondary'
-                        }`}
-                      >
-                        {item.label}
-                      </button>
-                    ))}
+                  <div className="p-4 rounded-2xl bg-surface-secondary/40 border border-border-subtle space-y-3">
+                    <span className="text-[14px] font-600 text-ink block">
+                      Have you ever had diabetes during pregnancy (gestational diabetes)?
+                    </span>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                      {[
+                        { val: 'yes', label: 'Yes' },
+                        { val: 'no', label: 'No' },
+                        { val: 'never', label: 'Never pregnant' },
+                        { val: 'dont_know', label: "Don't know" },
+                      ].map((item) => (
+                        <button
+                          key={item.val}
+                          type="button"
+                          onClick={() => setGestationalDiabetes(item.val)}
+                          className={`py-3 px-3 rounded-xl text-[13.5px] font-500 border transition-all cursor-pointer ${
+                            gestationalDiabetes === item.val
+                              ? 'bg-brand-deep text-white border-brand-deep shadow-xs font-600'
+                              : 'bg-surface-white border-border-subtle text-ink-secondary hover:bg-surface-secondary'
+                          }`}
+                        >
+                          {item.label}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
+              )}
 
-                <div className="p-4 rounded-2xl bg-surface-secondary/40 border border-border-subtle space-y-3">
-                  <span className="text-[14px] font-600 text-ink block">
-                    Have you ever delivered a baby weighing approximately 4 kg (9 lb) or more?
-                  </span>
-                  <div className="grid grid-cols-3 gap-2.5">
-                    {[
-                      { val: 'yes', label: 'Yes' },
-                      { val: 'no', label: 'No' },
-                      { val: 'dont_know', label: "Don't know" },
-                    ].map((item) => (
-                      <button
-                        key={item.val}
-                        type="button"
-                        onClick={() => setDeliveredLargeBaby(item.val)}
-                        className={`py-2.5 px-3 rounded-xl text-[13.5px] font-500 border transition-all cursor-pointer ${
-                          deliveredLargeBaby === item.val
-                            ? 'bg-brand-deep text-white border-brand-deep shadow-xs'
-                            : 'bg-surface-white border-border-subtle text-ink-secondary hover:bg-surface-secondary'
-                        }`}
-                      >
-                        {item.label}
-                      </button>
-                    ))}
+              {/* MINI-SECTION 2: INFANT BIRTH WEIGHT */}
+              {currentSubStep === 2 && (
+                <div key="step4-part2" className="space-y-6 animate-fade-in">
+                  <div className="border-b border-border-subtle pb-4">
+                    <h2 className="font-display font-600 text-[22px] sm:text-[24px] text-ink">
+                      Infant Birth Weight
+                    </h2>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-surface-secondary/40 border border-border-subtle space-y-3">
+                    <span className="text-[14px] font-600 text-ink block">
+                      Have you ever delivered a baby weighing approximately 4 kg (9 lb) or more?
+                    </span>
+                    <div className="grid grid-cols-3 gap-2.5">
+                      {[
+                        { val: 'yes', label: 'Yes' },
+                        { val: 'no', label: 'No' },
+                        { val: 'dont_know', label: "Don't know" },
+                      ].map((item) => (
+                        <button
+                          key={item.val}
+                          type="button"
+                          onClick={() => setDeliveredLargeBaby(item.val)}
+                          className={`py-3 px-3 rounded-xl text-[13.5px] font-500 border transition-all cursor-pointer ${
+                            deliveredLargeBaby === item.val
+                              ? 'bg-brand-deep text-white border-brand-deep shadow-xs font-600'
+                              : 'bg-surface-white border-border-subtle text-ink-secondary hover:bg-surface-secondary'
+                          }`}
+                        >
+                          {item.label}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
           )}
 
           {/* SECTION 5: KNOW YOUR NUMBERS (LABS) */}
           {currentStep === 5 && (
             <div className="bg-surface-white rounded-[24px] border border-border-subtle p-6 sm:p-8 shadow-sm space-y-7 animate-fade-in">
-              <div className="border-b border-border-subtle pb-4">
-                <h2 className="font-display font-600 text-[22px] sm:text-[24px] text-ink">
-                  5. Know Your Numbers
-                </h2>
-                <p className="text-[13.5px] text-ink-secondary mt-0.5">
-                  If you have recent laboratory results, enter them below. If you don&apos;t have them, you can skip directly to your results.
-                </p>
-              </div>
+              {/* MINI-SECTION 1: GLUCOSE & LIPIDS */}
+              {currentSubStep === 1 && (
+                <div key="step5-part1" className="space-y-6 animate-fade-in">
+                  <div className="border-b border-border-subtle pb-4">
+                    <h2 className="font-display font-600 text-[22px] sm:text-[24px] text-ink">
+                      5. Blood Sugar &amp; Lipid Profile
+                    </h2>
+                  </div>
 
-              {/* Lab Inputs Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <div>
-                  <label className="block text-[13px] font-500 text-ink mb-1">
-                    HbA1c (%)
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="number"
-                      step="0.1"
-                      placeholder="e.g. 5.6"
-                      value={labA1c}
-                      onChange={(e) => setLabA1c(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-border-subtle text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
-                    />
-                    <span className="absolute right-3.5 top-3 text-[11px] text-ink-muted">%</span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-1">
+                    <div>
+                      <label className="block text-[13px] font-500 text-ink mb-1">
+                        HbA1c (%)
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="number"
+                          step="0.1"
+                          placeholder="e.g. 5.6"
+                          value={labA1c}
+                          onChange={(e) => setLabA1c(e.target.value)}
+                          className="w-full px-4 py-2.5 rounded-xl border border-border-subtle text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
+                        />
+                        <span className="absolute right-3.5 top-3 text-[11px] text-ink-muted">%</span>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-[13px] font-500 text-ink mb-1">
+                        Fasting glucose (mg/dL)
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="number"
+                          placeholder="e.g. 95"
+                          value={labGlucose}
+                          onChange={(e) => setLabGlucose(e.target.value)}
+                          className="w-full px-4 py-2.5 rounded-xl border border-border-subtle text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
+                        />
+                        <span className="absolute right-3.5 top-3 text-[11px] text-ink-muted">mg/dL</span>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-[13px] font-500 text-ink mb-1">
+                        Triglycerides (mg/dL)
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="number"
+                          placeholder="e.g. 150"
+                          value={labTriglycerides}
+                          onChange={(e) => setLabTriglycerides(e.target.value)}
+                          className="w-full px-4 py-2.5 rounded-xl border border-border-subtle text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
+                        />
+                        <span className="absolute right-3.5 top-3 text-[11px] text-ink-muted">mg/dL</span>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-[13px] font-500 text-ink mb-1">
+                        HDL cholesterol (mg/dL)
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="number"
+                          placeholder="e.g. 45"
+                          value={labHdl}
+                          onChange={(e) => setLabHdl(e.target.value)}
+                          className="w-full px-4 py-2.5 rounded-xl border border-border-subtle text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
+                        />
+                        <span className="absolute right-3.5 top-3 text-[11px] text-ink-muted">mg/dL</span>
+                      </div>
+                    </div>
+
+                    <div className="sm:col-span-2">
+                      <label className="block text-[13px] font-500 text-ink mb-1">
+                        LDL cholesterol (mg/dL)
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="number"
+                          placeholder="e.g. 110"
+                          value={labLdl}
+                          onChange={(e) => setLabLdl(e.target.value)}
+                          className="w-full px-4 py-2.5 rounded-xl border border-border-subtle text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
+                        />
+                        <span className="absolute right-3.5 top-3 text-[11px] text-ink-muted">mg/dL</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
+              )}
 
-                <div>
-                  <label className="block text-[13px] font-500 text-ink mb-1">
-                    Fasting glucose (mg/dL)
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="number"
-                      placeholder="e.g. 95"
-                      value={labGlucose}
-                      onChange={(e) => setLabGlucose(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-border-subtle text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
-                    />
-                    <span className="absolute right-3.5 top-3 text-[11px] text-ink-muted">mg/dL</span>
+              {/* MINI-SECTION 2: LIVER ENZYMES & ADVANCED MARKERS */}
+              {currentSubStep === 2 && (
+                <div key="step5-part2" className="space-y-6 animate-fade-in">
+                  <div className="border-b border-border-subtle pb-4">
+                    <h2 className="font-display font-600 text-[22px] sm:text-[24px] text-ink">
+                      Liver Enzymes &amp; Insulin Sensitivity
+                    </h2>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-1">
+                    <div className="sm:col-span-2">
+                      <label className="block text-[13px] font-500 text-ink mb-1">
+                        ALT / AST
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. 28 / 24"
+                        value={labAltAst}
+                        onChange={(e) => setLabAltAst(e.target.value)}
+                        className="w-full px-4 py-2.5 rounded-xl border border-border-subtle text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[13px] font-500 text-ink mb-1">
+                        Fasting insulin, if available
+                      </label>
+                      <input
+                        type="number"
+                        step="0.1"
+                        placeholder="e.g. 8.5"
+                        value={labInsulin}
+                        onChange={(e) => setLabInsulin(e.target.value)}
+                        className="w-full px-4 py-2.5 rounded-xl border border-border-subtle text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[13px] font-500 text-ink mb-1">
+                        HOMA-IR, if available
+                      </label>
+                      <input
+                        type="number"
+                        step="0.1"
+                        placeholder="e.g. 1.8"
+                        value={labHomaIr}
+                        onChange={(e) => setLabHomaIr(e.target.value)}
+                        className="w-full px-4 py-2.5 rounded-xl border border-border-subtle text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
+                      />
+                    </div>
                   </div>
                 </div>
-
-                <div>
-                  <label className="block text-[13px] font-500 text-ink mb-1">
-                    Triglycerides (mg/dL)
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="number"
-                      placeholder="e.g. 150"
-                      value={labTriglycerides}
-                      onChange={(e) => setLabTriglycerides(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-border-subtle text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
-                    />
-                    <span className="absolute right-3.5 top-3 text-[11px] text-ink-muted">mg/dL</span>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-[13px] font-500 text-ink mb-1">
-                    HDL cholesterol (mg/dL)
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="number"
-                      placeholder="e.g. 45"
-                      value={labHdl}
-                      onChange={(e) => setLabHdl(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-border-subtle text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
-                    />
-                    <span className="absolute right-3.5 top-3 text-[11px] text-ink-muted">mg/dL</span>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-[13px] font-500 text-ink mb-1">
-                    LDL cholesterol (mg/dL)
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="number"
-                      placeholder="e.g. 110"
-                      value={labLdl}
-                      onChange={(e) => setLabLdl(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-border-subtle text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
-                    />
-                    <span className="absolute right-3.5 top-3 text-[11px] text-ink-muted">mg/dL</span>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-[13px] font-500 text-ink mb-1">
-                    ALT / AST
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. 28 / 24"
-                    value={labAltAst}
-                    onChange={(e) => setLabAltAst(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl border border-border-subtle text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[13px] font-500 text-ink mb-1">
-                    Fasting insulin, if available
-                  </label>
-                  <input
-                    type="number"
-                    step="0.1"
-                    placeholder="e.g. 8.5"
-                    value={labInsulin}
-                    onChange={(e) => setLabInsulin(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl border border-border-subtle text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[13px] font-500 text-ink mb-1">
-                    HOMA-IR, if available
-                  </label>
-                  <input
-                    type="number"
-                    step="0.1"
-                    placeholder="e.g. 1.8"
-                    value={labHomaIr}
-                    onChange={(e) => setLabHomaIr(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl border border-border-subtle text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
-                  />
-                </div>
-              </div>
-
-              {/* Lab Guidance Info Box */}
-              <div className="p-4 rounded-2xl bg-surface-secondary/60 border border-border-subtle text-[12.5px] text-ink-secondary leading-relaxed">
-                <strong>Important:</strong> A1C, fasting glucose and, when appropriate, a 2-hour oral glucose tolerance test are used clinically to identify prediabetes and diabetes. Fasting insulin and HOMA-IR may provide additional information in selected settings but should not be treated as a universal diagnostic test for insulin resistance.
-              </div>
+              )}
             </div>
           )}
 
@@ -1405,7 +1447,7 @@ export default function AssessmentPage({ onGoHome, onBookConsultation }: Assessm
                   height={40}
                 />
                 <div className="text-right">
-                  <span className="text-[12.5px] font-700 text-brand-deep block uppercase tracking-wider">
+                  <span className="text-[13px] font-700 text-brand-deep block">
                     Metabolic Risk Profile Report
                   </span>
                   <span className="text-[11px] text-ink-secondary block">
@@ -1425,7 +1467,7 @@ export default function AssessmentPage({ onGoHome, onBookConsultation }: Assessm
                     </div>
 
                     <h2 className="font-display font-600 text-ink text-[28px] sm:text-[36px] leading-[1.12]">
-                      {fullName ? `${fullName}'s Health Profile` : 'Your Metabolic Health Profile'}
+                      Your Metabolic Health Profile
                     </h2>
 
                     <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2.5">
@@ -1467,7 +1509,7 @@ export default function AssessmentPage({ onGoHome, onBookConsultation }: Assessm
                     </svg>
 
                     <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                      <span className="text-[11.5px] font-600 text-ink-muted uppercase tracking-wider">
+                      <span className="text-[12px] font-600 text-ink-muted">
                         Risk Score
                       </span>
                       <div className="flex items-baseline gap-0.5">
@@ -1487,7 +1529,7 @@ export default function AssessmentPage({ onGoHome, onBookConsultation }: Assessm
 
                 {/* Subscore Pillar Meters */}
                 <div className="mt-10 pt-8 border-t border-border-subtle">
-                  <h4 className="text-[13px] font-600 uppercase tracking-wider text-ink-secondary mb-4">
+                  <h4 className="text-[14px] font-600 text-ink-secondary mb-4">
                     Metabolic Risk Domain Breakdown
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -1552,7 +1594,7 @@ export default function AssessmentPage({ onGoHome, onBookConsultation }: Assessm
 
                 {/* Clinical Flags Screeners */}
                 <div className="mt-8 pt-6 border-t border-border-subtle">
-                  <h4 className="text-[13px] font-600 uppercase tracking-wider text-ink-secondary mb-3">
+                  <h4 className="text-[14px] font-600 text-ink-secondary mb-3">
                     Identified Clinical Flags &amp; Indicators
                   </h4>
                   {clinicalFlags.length > 0 ? (
@@ -1579,7 +1621,7 @@ export default function AssessmentPage({ onGoHome, onBookConsultation }: Assessm
                 <div className="mt-8 pt-6 border-t border-border-subtle">
                   <div className="flex items-center gap-2 mb-2">
                     <Award size={18} className="text-brand-deep" />
-                    <h4 className="text-[14px] font-600 uppercase tracking-wider text-ink">
+                    <h4 className="text-[15px] font-600 text-ink">
                       Your Top Modifiable Priorities
                     </h4>
                   </div>
@@ -1613,7 +1655,7 @@ export default function AssessmentPage({ onGoHome, onBookConsultation }: Assessm
 
                 {/* What Should I Do Next? */}
                 <div className="mt-8 pt-6 border-t border-border-subtle space-y-4">
-                  <h4 className="text-[13px] font-600 uppercase tracking-wider text-ink-secondary">
+                  <h4 className="text-[14px] font-600 text-ink-secondary">
                     What Should I Do Next?
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-[13px]">
@@ -1640,18 +1682,13 @@ export default function AssessmentPage({ onGoHome, onBookConsultation }: Assessm
 
                 {/* Educational Takeaway Reminder */}
                 <div className="mt-8 p-5 rounded-2xl bg-brand-deep text-white space-y-2">
-                  <div className="flex items-center gap-2 text-sand text-[13px] font-600 uppercase tracking-wider">
+                  <div className="flex items-center gap-2 text-sand text-[13px] font-600">
                     <ShieldAlert size={16} className="text-sand" />
                     <span>Remember</span>
                   </div>
                   <p className="text-[14px] leading-relaxed text-white/95">
                     <strong>You do not have to wait for diabetes to take action.</strong> For South Asians, metabolic risk can occur at lower BMI levels and is often accompanied by hidden abdominal visceral fat. Knowing your numbers early gives you an opportunity to act before disease develops.
                   </p>
-                </div>
-
-                {/* Educational Disclaimer */}
-                <div className="mt-6 text-[12px] text-ink-muted leading-relaxed">
-                  <strong>Disclaimer:</strong> This questionnaire is an educational risk-profiling tool and is not a validated diagnostic or predictive clinical score. It should not be used to diagnose insulin resistance, prediabetes, diabetes, obesity, fatty liver, or cardiovascular disease. Laboratory results and clinical findings should always be interpreted by an appropriately qualified healthcare professional.
                 </div>
               </div>
 
@@ -1693,7 +1730,7 @@ export default function AssessmentPage({ onGoHome, onBookConsultation }: Assessm
           {currentStep < 6 && (
             <div className="fixed bottom-0 inset-x-0 z-40 bg-surface-white/95 backdrop-blur-md border-t border-border-subtle px-4 py-3 pb-[calc(14px+env(safe-area-inset-bottom))] shadow-[0_-4px_24px_rgba(0,0,0,0.08)] sm:static sm:bg-transparent sm:backdrop-blur-none sm:border-0 sm:p-0 sm:shadow-none sm:mt-8 flex items-center justify-between w-full print:hidden">
               {/* Back / Cancel Button */}
-              {currentStep > 1 ? (
+              {currentStep > 1 || currentSubStep > 1 ? (
                 <button
                   type="button"
                   onClick={handleBack}
@@ -1723,11 +1760,13 @@ export default function AssessmentPage({ onGoHome, onBookConsultation }: Assessm
                 className="inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3 rounded-xl bg-brand-deep text-white text-[14px] sm:text-[14.5px] font-600 sm:font-500 hover:bg-brand-primary active:scale-[0.98] transition-all duration-200 shadow-sm cursor-pointer ml-auto"
               >
                 <span>
-                  {currentStep === 5 ? (
+                  {currentStep === 5 && currentSubStep === 2 ? (
                     <>
                       <span className="sm:hidden">Calculate Results</span>
                       <span className="hidden sm:inline">Calculate Score &amp; View Results</span>
                     </>
+                  ) : currentSubStep < getMaxSubSteps(currentStep) ? (
+                    'Save & Continue'
                   ) : (
                     'Save & Next'
                   )}
@@ -1739,8 +1778,8 @@ export default function AssessmentPage({ onGoHome, onBookConsultation }: Assessm
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="py-6 border-t border-border-subtle bg-surface-white text-[12.5px] text-ink-secondary print:hidden">
+      {/* Footer (hidden on mobile) */}
+      <footer className="hidden sm:block py-6 border-t border-border-subtle bg-surface-white text-[12.5px] text-ink-secondary print:hidden">
         <div className="mx-auto max-w-[1180px] px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <span>
             © {new Date().getFullYear()} SA Wellness · Dedicated South Asian Nutrition &amp; Cardiometabolic Care
