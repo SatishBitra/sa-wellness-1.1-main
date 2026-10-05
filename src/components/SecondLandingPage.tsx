@@ -750,8 +750,8 @@ export default function SecondLandingPage() {
                 {/* Top Image */}
                 <div className="relative h-[210px] sm:h-[230px] w-full bg-surface-secondary overflow-hidden">
                   <img
-                    src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80"
-                    alt="Wholesome colorful meal with salmon, avocado, grain, and lemon water"
+                    src="/assets/f21.jpeg"
+                    alt="Flexible, not restrictive South Asian meal prep and nutrition"
                     className="w-full h-full object-cover"
                     loading="lazy"
                   />
@@ -791,8 +791,8 @@ export default function SecondLandingPage() {
                 {/* Top Image */}
                 <div className="relative h-[210px] sm:h-[230px] w-full bg-surface-secondary overflow-hidden">
                   <img
-                    src="https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=800&q=80"
-                    alt="Planning notes on desk with coffee mug and laptop"
+                    src="/assets/f24.jpeg"
+                    alt="Personalized lifestyle and nutrition planning"
                     className="w-full h-full object-cover"
                     loading="lazy"
                   />
@@ -832,8 +832,8 @@ export default function SecondLandingPage() {
                 {/* Top Image */}
                 <div className="relative h-[210px] sm:h-[230px] w-full bg-surface-secondary overflow-hidden">
                   <img
-                    src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80"
-                    alt="Celebration preparation with soft window light"
+                    src="/assets/f23.jpeg"
+                    alt="Sustainable habits for celebration and beyond"
                     className="w-full h-full object-cover"
                     loading="lazy"
                   />
