@@ -60,6 +60,26 @@
     transform: scale(1);
   }
 
+  @keyframes subtleShimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  .skeleton-shimmer {
+    background: linear-gradient(
+      90deg,
+      rgba(220, 225, 218, 0.45) 0%,
+      rgba(240, 240, 233, 0.9) 50%,
+      rgba(220, 225, 218, 0.45) 100%
+    );
+    background-size: 200% 100%;
+    animation: subtleShimmer 1.8s ease-in-out infinite;
+  }
+
   @media (max-width: 639px) {
     .mobile-stack-card {
       position: sticky !important;

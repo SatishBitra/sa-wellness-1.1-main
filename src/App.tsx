@@ -13,9 +13,10 @@ import FinalCTA from '@/components/FinalCTA';
 import Footer from '@/components/Footer';
 import MobileCTA from '@/components/MobileCTA';
 import AssessmentPage from '@/components/AssessmentPage';
+import SecondLandingPage from '@/components/SecondLandingPage';
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<'home' | 'assessment'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'assessment' | 'second-page'>('home');
 
   useEffect(() => {
     const handleLocation = () => {
@@ -23,6 +24,13 @@ export default function App() {
       const path = window.location.pathname;
       if (hash === '#assessment' || path === '/assessment') {
         setCurrentView('assessment');
+      } else if (
+        hash === '#2nd-page' ||
+        hash === '#second-page' ||
+        path === '/2nd-page' ||
+        path === '/second-page'
+      ) {
+        setCurrentView('second-page');
       } else {
         setCurrentView('home');
       }
@@ -46,11 +54,24 @@ export default function App() {
 
   const navigateToHome = () => {
     setCurrentView('home');
-    window.history.pushState(null, '', window.location.pathname);
+    window.history.pushState(null, '', window.location.pathname.replace(/\/2nd-page|\/second-page|\/assessment/g, '') || '/');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const navigateToSecondPage = () => {
+    setCurrentView('second-page');
+    window.history.pushState(null, '', '#2nd-page');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const navigateToConsultation = () => {
+    if (currentView === 'second-page') {
+      const el = document.querySelector('#consultation-form');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+      return;
+    }
     setCurrentView('home');
     window.history.pushState(null, '', '#consultation');
     setTimeout(() => {
@@ -70,6 +91,32 @@ export default function App() {
     );
   }
 
+  if (currentView === 'second-page') {
+    return (
+      <ReactLenis
+        root
+        options={{
+          duration: 1.2,
+          lerp: 0.1,
+          smoothWheel: true,
+        }}
+      >
+        <div className="min-h-screen bg-surface-primary">
+          <Header
+            currentPage="second-page"
+            onNavigateHome={navigateToHome}
+            onNavigateSecondPage={navigateToSecondPage}
+            onBookConsultation={navigateToConsultation}
+          />
+          <main>
+            <SecondLandingPage />
+          </main>
+          <Footer />
+        </div>
+      </ReactLenis>
+    );
+  }
+
   return (
     <ReactLenis
       root
@@ -80,7 +127,12 @@ export default function App() {
       }}
     >
       <div className="min-h-screen bg-surface-primary">
-        <Header />
+        <Header
+          currentPage="home"
+          onNavigateHome={navigateToHome}
+          onNavigateSecondPage={navigateToSecondPage}
+          onBookConsultation={navigateToConsultation}
+        />
         <main>
           <Hero onTakeAssessment={navigateToAssessment} />
           <HealthReality />
