@@ -144,10 +144,11 @@ interface FormDataState {
 
 function SecondPageSkeleton() {
   return (
-    <div className="min-h-screen bg-surface-primary pt-[115px] sm:pt-[130px] pb-24 px-6 lg:px-10 max-w-[1280px] mx-auto animate-pulse transition-opacity duration-300">
+    <div className="min-h-screen bg-surface-primary pt-[100px] sm:pt-[130px] pb-24 px-6 lg:px-10 max-w-[1280px] mx-auto animate-pulse transition-opacity duration-300">
       {/* Hero grid skeleton */}
-      <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-12 lg:gap-16 items-center">
-        <div className="space-y-4">
+      <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-10 sm:gap-12 lg:gap-16 items-center">
+        <div className="w-full h-[320px] sm:h-[480px] rounded-hero skeleton-shimmer order-1 lg:order-2" />
+        <div className="space-y-4 order-2 lg:order-1">
           <div className="w-48 h-4 rounded-full skeleton-shimmer" />
           <div className="w-full max-w-lg h-12 rounded-xl skeleton-shimmer" />
           <div className="w-3/4 h-8 rounded-xl skeleton-shimmer" />
@@ -159,7 +160,6 @@ function SecondPageSkeleton() {
           <div className="w-52 h-12 rounded-xl skeleton-shimmer pt-3" />
           <div className="w-72 h-4 rounded skeleton-shimmer pt-2" />
         </div>
-        <div className="w-full h-[400px] sm:h-[480px] rounded-hero skeleton-shimmer" />
       </div>
 
       {/* 3 Pillars skeleton */}
@@ -284,12 +284,27 @@ export default function SecondLandingPage() {
       {/* ============================================================== */}
       <section
         id="top"
-        className="relative pt-[115px] sm:pt-[130px] pb-16 lg:pt-[140px] lg:pb-24 overflow-hidden border-b border-border-subtle"
+        className="relative pt-[100px] sm:pt-[130px] pb-16 lg:pt-[140px] lg:pb-24 overflow-hidden border-b border-border-subtle"
       >
         <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
-          <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-12 lg:gap-16 items-center">
-            {/* Left Content Column */}
-            <div className="flex flex-col">
+          <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-10 sm:gap-12 lg:gap-16 items-center">
+            {/* Visual Column: Placed first on mobile, right column on desktop */}
+            <div className="relative reveal-scale order-1 lg:order-2">
+              <div className="relative overflow-hidden rounded-hero sm:rounded-editorial border border-border-subtle shadow-[0_16px_40px_rgba(43,45,36,0.06)] bg-surface-secondary">
+                <img
+                  src="/assets/JQVGlyKEnTY79oQzmf27aZWk6lyItKCO7ZhP_ApkJ-tzMMMC83HPqasiD-W2IMJxh8SMUYYF3vu1Wu8oATFlJIgWBBwRw-762eAm4kaXFKqjC3X413Fj4QgWs4P7RFV657PhjuTNKVZ0whz5EABsTWvQhpKuceWE9OANLpwR1tHGctXFxRxsReMXifkYy_R_.jpeg"
+                  alt="South Asian individual celebrating wellness and occasion preparation"
+                  className="w-full h-[320px] sm:h-[480px] lg:h-[520px] object-cover object-center"
+                  width={1200}
+                  height={800}
+                  loading="eager"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-ink/30 via-transparent to-transparent pointer-events-none" />
+              </div>
+            </div>
+
+            {/* Left Content Column: Placed second on mobile, left column on desktop */}
+            <div className="flex flex-col order-2 lg:order-1">
               {/* Section Badge 1 */}
               <div className="reveal">
                 <span className="text-eyebrow text-brand-deep uppercase">
@@ -341,21 +356,6 @@ export default function SecondLandingPage() {
                 <p className="text-[13.5px] sm:text-[14px] text-brand-deep font-500 italic">
                   &ldquo;91% of clients report feeling lighter, more energetic, and camera-ready within 4 weeks.&rdquo;
                 </p>
-              </div>
-            </div>
-
-            {/* Right Column: Editorial Visual */}
-            <div className="relative reveal-scale">
-              <div className="relative overflow-hidden rounded-hero sm:rounded-editorial border border-border-subtle shadow-[0_16px_40px_rgba(43,45,36,0.06)] bg-surface-secondary">
-                <img
-                  src="/assets/JQVGlyKEnTY79oQzmf27aZWk6lyItKCO7ZhP_ApkJ-tzMMMC83HPqasiD-W2IMJxh8SMUYYF3vu1Wu8oATFlJIgWBBwRw-762eAm4kaXFKqjC3X413Fj4QgWs4P7RFV657PhjuTNKVZ0whz5EABsTWvQhpKuceWE9OANLpwR1tHGctXFxRxsReMXifkYy_R_.jpeg"
-                  alt="South Asian individual celebrating wellness and occasion preparation"
-                  className="w-full h-[400px] sm:h-[480px] lg:h-[520px] object-cover object-center"
-                  width={1200}
-                  height={800}
-                  loading="eager"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-ink/30 via-transparent to-transparent pointer-events-none" />
               </div>
             </div>
           </div>
@@ -723,16 +723,16 @@ export default function SecondLandingPage() {
       {/* ============================================================== */}
       <section className="py-20 lg:py-28 bg-surface-primary border-b border-border-subtle">
         <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
-          <div className="reveal text-center max-w-3xl mx-auto">
+          <div className="reveal text-left sm:text-center max-w-3xl sm:mx-auto">
             {/* Section Badge 3 */}
-            <span className="text-eyebrow text-brand-deep uppercase">
+            <span className="text-eyebrow text-brand-deep uppercase block">
               Realistic Preparation
             </span>
 
             <h2 className="mt-3 font-display font-600 text-ink text-[28px] sm:text-[38px] lg:text-[42px] leading-[1.16] tracking-tight">
               Your Life Doesn’t Have to Go on Hold.
             </h2>
-            <div className="mt-4 space-y-2 text-ink-secondary text-[16px] sm:text-[17px] leading-[1.65]">
+            <div className="mt-4 space-y-2 text-ink-secondary text-[15.5px] sm:text-[17px] leading-[1.65]">
               <p>
                 Preparing for an important occasion shouldn&apos;t mean putting your life, social plans, or favorite foods aside.
               </p>
@@ -876,9 +876,9 @@ export default function SecondLandingPage() {
       {/* ============================================================== */}
       <section className="py-20 lg:py-28 bg-surface-secondary/40 border-b border-border-subtle">
         <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
-          <div className="reveal text-center max-w-3xl mx-auto mb-14 lg:mb-18">
+          <div className="reveal text-left sm:text-center max-w-3xl sm:mx-auto mb-10 sm:mb-14 lg:mb-18">
             {/* Section Badge 4 */}
-            <span className="text-eyebrow text-brand-deep uppercase">
+            <span className="text-eyebrow text-brand-deep uppercase block">
               Proven Outcomes
             </span>
 
@@ -892,27 +892,27 @@ export default function SecondLandingPage() {
 
           {/* Three Case Blueprints with One-on-One Sticky Stacking Animation */}
           <div className="relative pt-2 pb-16">
-            <div className="space-y-10 sm:space-y-14">
+            <div className="space-y-8 sm:space-y-14">
               {caseStudies.map((cs, idx) => {
-                // Top offset and stacking z-index for one-on-one overlap
-                const topOffset = 90 + idx * 24; // 90px, 114px, 138px
-                const zIndex = 10 + idx * 5;     // 10, 15, 20
+                // Responsive top offset and stacking z-index for one-on-one overlap
+                const zIndex = 10 + idx * 5;
                 const shadowStrength = 0.08 + idx * 0.04;
+                const topOffset = `clamp(${68 + idx * 10}px, 8.5vh + ${idx * 14}px, ${90 + idx * 24}px)`;
 
                 return (
                   <div
                     key={cs.id}
                     style={{
                       position: 'sticky',
-                      top: `${topOffset}px`,
+                      top: topOffset,
                       zIndex: zIndex,
-                      boxShadow: `0 ${10 + idx * 6}px ${28 + idx * 10}px rgba(43,45,36,${shadowStrength})`,
+                      boxShadow: `0 ${8 + idx * 4}px ${20 + idx * 8}px rgba(43,45,36,${shadowStrength})`,
                     }}
-                    className="bg-surface-white rounded-editorial border border-border-subtle overflow-hidden transition-all duration-300 lg:h-[400px] will-change-transform"
+                    className="bg-surface-white rounded-2xl sm:rounded-editorial border border-border-subtle overflow-hidden transition-all duration-300 lg:h-[400px] will-change-transform"
                   >
                     <div className="grid lg:grid-cols-[440px_1fr] h-full items-stretch">
                       {/* Left: Image Column */}
-                      <div className="relative h-[260px] sm:h-[300px] lg:h-full w-full bg-surface-secondary overflow-hidden">
+                      <div className="relative h-[200px] sm:h-[260px] lg:h-full w-full bg-surface-secondary overflow-hidden">
                         <img
                           src={cs.image}
                           alt={cs.alt}
@@ -923,24 +923,24 @@ export default function SecondLandingPage() {
                       </div>
 
                       {/* Right: Content Column */}
-                      <div className="p-7 sm:p-9 lg:p-10 flex flex-col justify-between h-full bg-surface-white">
+                      <div className="p-5 sm:p-8 lg:p-10 flex flex-col justify-between h-full bg-surface-white">
                         <div>
                           {/* Top Tag & Location Bar */}
-                          <div className="flex items-center justify-between pb-3 border-b border-border-subtle">
-                            <span className="text-[12px] font-600 uppercase tracking-widest text-accent-warm">
+                          <div className="flex items-center justify-between pb-2.5 sm:pb-3 border-b border-border-subtle">
+                            <span className="text-[11.5px] sm:text-[12px] font-600 uppercase tracking-widest text-accent-warm">
                               {cs.tag}
                             </span>
-                            <span className="text-[13px] font-500 text-ink-secondary">
+                            <span className="text-[12.5px] sm:text-[13px] font-500 text-ink-secondary">
                               {cs.location}
                             </span>
                           </div>
 
-                          <h3 className="font-display font-600 text-ink text-[22px] sm:text-[25px] mt-3">
+                          <h3 className="font-display font-600 text-ink text-[19px] sm:text-[23px] lg:text-[25px] mt-2.5 sm:mt-3 leading-snug">
                             {cs.title}
                           </h3>
 
                           {/* Client & Event Meta */}
-                          <div className="mt-2.5 flex flex-wrap gap-x-6 gap-y-1 text-[13.5px]">
+                          <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-[12.5px] sm:text-[13.5px]">
                             <div>
                               <span className="font-500 text-ink">Client: </span>
                               <span className="text-ink-secondary">{cs.client} ({cs.location})</span>
@@ -952,7 +952,7 @@ export default function SecondLandingPage() {
                           </div>
 
                           {/* Goal & Strategy Text */}
-                          <div className="mt-4 space-y-2.5 text-[14px] leading-relaxed">
+                          <div className="mt-3 sm:mt-4 space-y-2 text-[13px] sm:text-[14px] leading-relaxed">
                             <p>
                               <strong className="font-500 text-ink">Goal: </strong>
                               <span className="text-ink-secondary">{cs.goal}</span>
@@ -965,9 +965,9 @@ export default function SecondLandingPage() {
                         </div>
 
                         {/* Result Box */}
-                        <div className="mt-4 p-3.5 sm:p-4 rounded-xl bg-surface-primary border border-border-subtle shrink-0">
-                          <span className="font-500 text-ink">Result: </span>
-                          <span className="text-ink font-500">{cs.result}</span>
+                        <div className="mt-3 sm:mt-4 p-3 sm:p-4 rounded-xl bg-surface-primary border border-border-subtle shrink-0">
+                          <span className="font-500 text-ink text-[12.5px] sm:text-[14px]">Result: </span>
+                          <span className="text-ink font-500 text-[12.5px] sm:text-[14px]">{cs.result}</span>
                         </div>
                       </div>
                     </div>
@@ -997,16 +997,16 @@ export default function SecondLandingPage() {
         className="py-20 lg:py-28 bg-surface-primary border-b border-border-subtle scroll-mt-20"
       >
         <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
-          <div className="reveal text-center max-w-3xl mx-auto">
+          <div className="reveal text-left sm:text-center max-w-3xl sm:mx-auto">
             {/* Section Badge 5 */}
-            <span className="text-eyebrow text-brand-deep uppercase">
+            <span className="text-eyebrow text-brand-deep uppercase block">
               Why SA Wellness Is Different
             </span>
 
             <h2 className="mt-3 font-display font-600 text-ink text-[28px] sm:text-[38px] lg:text-[42px] leading-[1.16] tracking-tight">
               You Don’t Need a More Restrictive Plan. You Need a More Personal One.
             </h2>
-            <p className="mt-4 font-display font-500 text-brand-deep text-[18px] sm:text-[20px]">
+            <p className="mt-3 sm:mt-4 font-display font-500 text-brand-deep text-[17px] sm:text-[20px]">
               Your Occasion Is the Reason to Start - Not a Reason to Rush.
             </p>
           </div>
@@ -1048,11 +1048,11 @@ export default function SecondLandingPage() {
           </div>
 
           {/* Supporting Copy & Button */}
-          <div className="reveal delay-200 mt-12 text-center max-w-2xl mx-auto">
-            <p className="text-[16px] text-ink-secondary leading-[1.65]">
+          <div className="reveal delay-200 mt-10 sm:mt-12 text-left sm:text-center max-w-2xl sm:mx-auto">
+            <p className="text-[15.5px] sm:text-[16px] text-ink-secondary leading-[1.65]">
               At SA Wellness, we look beyond a meal plan to understand your health, lifestyle, food preferences, goals, and the occasion you&apos;re preparing for.
             </p>
-            <div className="mt-7">
+            <div className="mt-7 flex sm:justify-center">
               <button
                 onClick={scrollToConsultation}
                 className="inline-flex items-center justify-center px-7 py-3.5 rounded-xl bg-brand-deep text-surface-white text-[15px] font-500 hover:bg-brand-primary transition-all duration-250 ease-editorial hover:-translate-y-0.5 shadow-xs cursor-pointer"
@@ -1073,9 +1073,9 @@ export default function SecondLandingPage() {
       >
         <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
           <div className="grid lg:grid-cols-[0.9fr_1.1fr] gap-12 lg:gap-16 items-center">
-            {/* Dr. Hena Nafis Image on Left Side */}
+            {/* Dr. Hena Nafis Image on Left Side - reduced radius on mobile */}
             <div className="relative reveal-scale">
-              <div className="overflow-hidden rounded-editorial border border-border-subtle shadow-md bg-surface-white">
+              <div className="overflow-hidden rounded-xl sm:rounded-editorial border border-border-subtle shadow-md bg-surface-white">
                 <img
                   src={founderImg}
                   alt="Dr. Hena Nafis, Founder, SA Wellness"
@@ -1121,9 +1121,9 @@ export default function SecondLandingPage() {
         className="py-20 lg:py-28 bg-surface-primary border-b border-border-subtle scroll-mt-20"
       >
         <div className="mx-auto max-w-[960px] px-6 lg:px-10">
-          <div className="reveal text-center max-w-2xl mx-auto mb-14">
+          <div className="reveal text-left sm:text-center max-w-2xl sm:mx-auto mb-10 sm:mb-14">
             {/* Section Badge 7 */}
-            <span className="text-eyebrow text-brand-deep uppercase">
+            <span className="text-eyebrow text-brand-deep uppercase block">
               Frequently Asked Questions
             </span>
 

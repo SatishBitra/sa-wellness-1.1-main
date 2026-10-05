@@ -1,3 +1,3 @@
-# sa-wellness-1
+# SA Wellness
 
-[![Open in Bolt](https://bolt.new/static/open-in-bolt.svg)](https://bolt.new/~/sb1-qhxzezw3)
+Personalized South Asian Health & Nutrition Care. 100% online nutrition and lifestyle consultations for South Asians living in the United States.
