@@ -127,10 +127,10 @@ export default function Header({
           </nav>
 
           <div className="flex items-center gap-2.5 sm:gap-3">
-            {/* Small CTA in the navbar: '2nd Page' / '1st Page' */}
+            {/* Small CTA in the navbar: '2nd Page' / '1st Page' - hidden in mobile nav header */}
             <button
               onClick={handleToggleLandingPage}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl border border-brand-deep/25 bg-surface-white/90 hover:bg-surface-secondary text-brand-deep text-[12.5px] sm:text-[13.5px] font-500 hover:border-brand-deep transition-all duration-200 cursor-pointer shadow-2xs hover:-translate-y-0.5"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl border border-brand-deep/25 bg-surface-white/90 hover:bg-surface-secondary text-brand-deep text-[12.5px] sm:text-[13.5px] font-500 hover:border-brand-deep transition-all duration-200 cursor-pointer shadow-2xs hover:-translate-y-0.5"
               aria-label={currentPage === 'second-page' ? 'Go to 1st page' : 'Go to 2nd page'}
               title={currentPage === 'second-page' ? 'Switch to 1st Landing Page' : 'Switch to 2nd Landing Page'}
             >
