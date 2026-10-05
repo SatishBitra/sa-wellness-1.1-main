@@ -37,8 +37,7 @@ const caseStudies: CaseStudy[] = [
       'Adjusted macro ratios for home-cooked meals, added targeted gut-support nutrients, and applied a specialized 7-day pre-event hydration plan.',
     result:
       'Heavy bridal lengha fit effortlessly with zero waistline tightness; sustained full energy through late-night functions.',
-    image:
-      'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=1200&q=80',
+    image: '/assets/t0.png',
     alt: 'South Asian celebratory event preparation with traditional textiles and natural lighting',
   },
   {
@@ -53,8 +52,7 @@ const caseStudies: CaseStudy[] = [
       'Structuring event-day meal timing and pairing traditional party foods with metabolic-balancing choices earlier in the day.',
     result:
       'Both reduced waist circumference and felt light, active, and relaxed during their entire hosting week.',
-    image:
-      'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1200&q=80',
+    image: '/assets/t02.png',
     alt: 'Warm family dinner party table setting with natural celebration ambiance',
   },
   {
@@ -69,8 +67,7 @@ const caseStudies: CaseStudy[] = [
       'Optimized digestion with simple spice-pairing adjustments and an anti-inflammatory routine for frequent travel days.',
     result:
       'Total digestive ease, balanced daily energy, and full confidence in every photo.',
-    image:
-      'https://images.unsplash.com/photo-1543807535-eceef0bc6599?auto=format&fit=crop&w=1200&q=80',
+    image: '/assets/t03-1.png',
     alt: 'Multi-generational family gathering and relaxed conversation in a bright home setting',
   },
 ];
