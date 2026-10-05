@@ -112,6 +112,7 @@ export default function App() {
             <SecondLandingPage />
           </main>
           <Footer />
+          <MobileCTA onBookConsultation={navigateToConsultation} />
         </div>
       </ReactLenis>
     );

@@ -1,12 +1,14 @@
 import { useState, useEffect, type FormEvent } from 'react';
 import {
   CheckCircle2,
-  Shield,
+  ShieldCheck,
   Loader2,
   AlertCircle,
   Leaf,
   User,
   Calendar,
+  Pause,
+  Play,
 } from 'lucide-react';
 import founderImg from '../../assets/03lyKqCdFEsXx6Kmt8oSVHMgaA.png';
 
@@ -14,9 +16,9 @@ interface CaseStudy {
   id: string;
   tag: string;
   title: string;
-  client: string;
-  location: string;
-  event: string;
+  member: string;
+  city: string;
+  diagnosis: string;
   goal: string;
   strategy: string;
   result: string;
@@ -27,48 +29,48 @@ interface CaseStudy {
 const caseStudies: CaseStudy[] = [
   {
     id: 'case-01',
-    tag: 'Case Blueprint 1',
+    tag: 'Card 1',
     title: 'Bridal & Sangeet Prep',
-    client: 'Meera K.',
-    location: 'San Francisco, CA',
-    event: '4-Day Wedding Weekend',
+    member: 'Meera K.',
+    city: 'San Francisco, CA',
+    diagnosis: 'Bridal & Sangeet Prep',
     goal: 'Reduce persistent abdominal bloat, improve skin clarity, and maintain high stamina through long events.',
     strategy:
       'Adjusted macro ratios for home-cooked meals, added targeted gut-support nutrients, and applied a specialized 7-day pre-event hydration plan.',
     result:
       'Heavy bridal lengha fit effortlessly with zero waistline tightness; sustained full energy through late-night functions.',
     image: '/assets/t0.png',
-    alt: 'South Asian celebratory event preparation with traditional textiles and natural lighting',
+    alt: 'Bridal & Sangeet Prep client celebration',
   },
   {
     id: 'case-02',
-    tag: 'Case Blueprint 2',
+    tag: 'Card 2',
     title: 'Milestone Anniversary & Hosting',
-    client: 'Sanjay & Neha P.',
-    location: 'Dallas, TX',
-    event: '25th Wedding Anniversary Gala',
+    member: 'Sanjay & Neha P.',
+    city: 'Dallas, TX',
+    diagnosis: '25th Wedding Anniversary Gala',
     goal: 'Shed stubborn midsection weight while hosting weekend dinner parties for visiting family.',
     strategy:
       'Structuring event-day meal timing and pairing traditional party foods with metabolic-balancing choices earlier in the day.',
     result:
       'Both reduced waist circumference and felt light, active, and relaxed during their entire hosting week.',
     image: '/assets/t02.png',
-    alt: 'Warm family dinner party table setting with natural celebration ambiance',
+    alt: 'Milestone Anniversary & Hosting celebration',
   },
   {
     id: 'case-03',
-    tag: 'Case Blueprint 3',
+    tag: 'Card 3',
     title: 'Family Reunion & Travel',
-    client: 'Anjali R.',
-    location: 'Northern New Jersey',
-    event: 'Milestone Birthday & Multi-City Family Reunion',
+    member: 'Anjali R.',
+    city: 'Northern New Jersey',
+    diagnosis: 'Milestone Birthday & Multi-City Reunion',
     goal: 'Eliminate post-meal sluggishness and feel light in tailored traditional wear.',
     strategy:
       'Optimized digestion with simple spice-pairing adjustments and an anti-inflammatory routine for frequent travel days.',
     result:
       'Total digestive ease, balanced daily energy, and full confidence in every photo.',
     image: '/assets/t03-1.png',
-    alt: 'Multi-generational family gathering and relaxed conversation in a bright home setting',
+    alt: 'Family Reunion & Travel celebration outcome',
   },
 ];
 
@@ -189,6 +191,40 @@ export default function SecondLandingPage() {
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [formStatus, setFormStatus] = useState<FormStatus>('idle');
 
+  // Outcomes Carousel State
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    if (!isPlaying) return;
+
+    const intervalTime = 50;
+    const totalDuration = 6000;
+    const increment = (intervalTime / totalDuration) * 100;
+
+    const interval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          setActiveSlide((curr) => (curr + 1) % caseStudies.length);
+          return 0;
+        }
+        return prev + increment;
+      });
+    }, intervalTime);
+
+    return () => clearInterval(interval);
+  }, [isPlaying]);
+
+  const handleSelectSlide = (index: number) => {
+    setActiveSlide(index);
+    setProgress(0);
+  };
+
+  const handleTogglePlay = () => {
+    setIsPlaying((prev) => !prev);
+  };
+
   // Subtle skeleton loader / fade-in transition on initial page mount/switch
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -285,33 +321,115 @@ export default function SecondLandingPage() {
       >
         <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
           <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-10 sm:gap-12 lg:gap-16 items-center">
-            {/* Visual Column: Placed first on mobile, right column on desktop */}
-            <div className="relative reveal-scale order-1 lg:order-2">
-              <div className="relative overflow-hidden rounded-hero sm:rounded-editorial border border-border-subtle shadow-[0_16px_40px_rgba(43,45,36,0.06)] bg-surface-secondary">
-                <img
-                  src="/assets/JQVGlyKEnTY79oQzmf27aZWk6lyItKCO7ZhP_ApkJ-tzMMMC83HPqasiD-W2IMJxh8SMUYYF3vu1Wu8oATFlJIgWBBwRw-762eAm4kaXFKqjC3X413Fj4QgWs4P7RFV657PhjuTNKVZ0whz5EABsTWvQhpKuceWE9OANLpwR1tHGctXFxRxsReMXifkYy_R_.jpeg"
-                  alt="South Asian individual celebrating wellness and occasion preparation"
-                  className="w-full h-[320px] sm:h-[480px] lg:h-[520px] object-cover object-center"
-                  width={1200}
-                  height={800}
-                  loading="eager"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-ink/30 via-transparent to-transparent pointer-events-none" />
+            {/* Visual Column: Layered Lifestyle Photo Composition */}
+            <div className="relative reveal-scale order-1 lg:order-2 w-full">
+              <div className="relative h-[480px] xs:h-[510px] sm:h-[540px] lg:h-[560px] w-full max-w-[540px] mx-auto select-none pt-2">
+                {/* Ambient glow backdrop */}
+                <div className="absolute inset-0 bg-radial-gradient from-sand-light/60 to-transparent pointer-events-none" />
+
+                {/* Card 1: Your Goal — Weddings & Milestone Prep */}
+                <div className="absolute top-0 left-0 w-[55%] sm:w-[52%] h-[225px] sm:h-[250px] z-10 rounded-2xl sm:rounded-3xl overflow-hidden border border-white/25 shadow-[0_16px_36px_rgba(20,24,18,0.18)] transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl group cursor-pointer">
+                  <img
+                    src="/assets/t0.png"
+                    alt="South Asian bridal and milestone celebration preparation"
+                    className="w-full h-full object-cover object-center transition-transform duration-500 ease-editorial group-hover:scale-104"
+                    loading="eager"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/15" />
+                  <div className="absolute inset-0 p-4 sm:p-5 flex flex-col justify-between">
+                    <div>
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-white/20 backdrop-blur-md border border-white/25 text-white text-[10.5px] sm:text-[11px] font-600 uppercase tracking-wider">
+                        Your Goal
+                      </span>
+                    </div>
+                    <div>
+                      <h3 className="font-display font-600 text-white text-[15px] sm:text-[17px] leading-snug drop-shadow-xs">
+                        Feel confident for the moments ahead.
+                      </h3>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Card 2: Your Food — Celebratory Dining & Traditional Food */}
+                <div className="absolute top-2 sm:top-4 right-0 w-[54%] sm:w-[50%] h-[215px] sm:h-[240px] z-10 rounded-2xl sm:rounded-3xl overflow-hidden border border-white/25 shadow-[0_16px_36px_rgba(20,24,18,0.18)] transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl group cursor-pointer">
+                  <img
+                    src="/assets/t02.png"
+                    alt="South Asian shared festive meals and balanced nutrition"
+                    className="w-full h-full object-cover object-center transition-transform duration-500 ease-editorial group-hover:scale-104"
+                    loading="eager"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/15" />
+                  <div className="absolute inset-0 p-4 sm:p-5 flex flex-col justify-between">
+                    <div>
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-white/20 backdrop-blur-md border border-white/25 text-white text-[10.5px] sm:text-[11px] font-600 uppercase tracking-wider">
+                        Your Food
+                      </span>
+                    </div>
+                    <div>
+                      <h3 className="font-display font-600 text-white text-[15px] sm:text-[17px] leading-snug drop-shadow-xs">
+                        Keep the food you actually love.
+                      </h3>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Card 3: Your Life — Travel & Everyday Routine */}
+                <div className="absolute bottom-2 sm:bottom-3 left-0 sm:left-2 w-[60%] sm:w-[56%] h-[235px] sm:h-[265px] z-20 rounded-2xl sm:rounded-3xl overflow-hidden border border-white/25 shadow-[0_16px_36px_rgba(20,24,18,0.18)] transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl group cursor-pointer">
+                  <img
+                    src="/assets/t03-1.png"
+                    alt="South Asian celebration, travel, and active daily lifestyle"
+                    className="w-full h-full object-cover object-center transition-transform duration-500 ease-editorial group-hover:scale-104"
+                    loading="eager"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/15" />
+                  <div className="absolute inset-0 p-4 sm:p-5 flex flex-col justify-between">
+                    <div>
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-white/20 backdrop-blur-md border border-white/25 text-white text-[10.5px] sm:text-[11px] font-600 uppercase tracking-wider">
+                        Your Life
+                      </span>
+                    </div>
+                    <div>
+                      <h3 className="font-display font-600 text-white text-[15px] sm:text-[17px] leading-snug drop-shadow-xs">
+                        Build something you can live with.
+                      </h3>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Foreground Trust Card: Floats on the Your Life card on the top right side without overlapping Your Food */}
+                <div
+                  onClick={scrollToConsultation}
+                  className="absolute bottom-[135px] sm:bottom-[155px] left-[20%] sm:left-[24%] w-[62%] sm:w-[56%] z-40 bg-surface-white/95 backdrop-blur-md rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-border-subtle shadow-[0_20px_45px_rgba(43,45,36,0.18)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_25px_50px_rgba(43,45,36,0.24)] cursor-pointer group"
+                >
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="text-[10.5px] sm:text-[11px] font-700 uppercase tracking-wider text-emerald-800">
+                      Free 20-min Consult
+                    </span>
+                  </div>
+                  <p className="font-display font-600 text-ink text-[14px] sm:text-[15px] leading-snug">
+                    1:1 with a real coach
+                  </p>
+                  <p className="text-[11.5px] sm:text-[12px] text-ink-secondary mt-0.5">
+                    No forms. No bots. Culturally tailored.
+                  </p>
+                </div>
               </div>
             </div>
 
-            {/* Left Content Column: Placed second on mobile, left column on desktop */}
+            {/* Left Content Column: Lean, Emotionally Grounded & High-Converting */}
             <div className="flex flex-col order-2 lg:order-1">
-              {/* Section Badge 1 */}
+              {/* Eyebrow */}
               <div className="reveal">
-                <span className="text-eyebrow text-brand-deep uppercase">
+                <span className="text-eyebrow text-brand-deep uppercase tracking-wider">
                   Occasion &amp; Milestone Wellness Care
                 </span>
               </div>
 
               {/* Primary Headline */}
-              <h1 className="reveal delay-100 mt-4 font-display font-600 text-ink text-[32px] sm:text-[44px] lg:text-[48px] leading-[1.14] tracking-tight text-balance">
-                Your Food Is Part of Your Life. Your Nutrition Should Be, Too.
+              <h1 className="reveal delay-100 mt-4 font-display font-600 text-ink text-[32px] sm:text-[44px] lg:text-[48px] leading-[1.12] tracking-tight text-balance max-w-xl">
+                Your Food Is Part of Your Life.
+                <span className="block mt-1">Your Nutrition Should Be, Too.</span>
               </h1>
 
               {/* Supporting Headline */}
@@ -330,67 +448,42 @@ export default function SecondLandingPage() {
               </div>
 
               {/* Primary CTA */}
-              <div className="reveal delay-400 mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+              <div className="reveal delay-400 mt-7 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
                 <button
                   onClick={scrollToConsultation}
-                  className="inline-flex items-center justify-center px-7 py-3.5 rounded-xl bg-brand-deep text-surface-white text-[15px] font-500 hover:bg-brand-primary transition-all duration-250 ease-editorial hover:-translate-y-0.5 shadow-xs cursor-pointer"
+                  className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-brand-deep text-surface-white text-[15.5px] font-500 hover:bg-brand-primary transition-all duration-250 ease-editorial hover:-translate-y-0.5 shadow-xs cursor-pointer"
                 >
                   <span>Book Your Consultation</span>
                 </button>
               </div>
 
-              {/* Trust Statement */}
-              <div className="reveal delay-500 mt-8 pt-7 border-t border-border-subtle space-y-2.5">
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[13.5px] text-ink-secondary">
-                  <span className="font-500 text-ink">
-                    Personalised care for South Asians living in the U.S.
+              {/* Proof Hierarchy: 3 Key Pillars + Verified Stat */}
+              <div className="reveal delay-500 mt-7 pt-6 border-t border-border-subtle space-y-3.5">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[13px] sm:text-[13.5px] text-ink font-500">
+                  <span className="inline-flex items-center gap-1.5">
+                    <CheckCircle2 size={13.5} className="text-brand-deep shrink-0" />
+                    1:1 Personalized Care
                   </span>
-                  <span className="text-accent-warm hidden sm:inline">·</span>
-                  <span className="text-ink-secondary">
-                    Thousands of milestone moments transformed.
+                  <span className="text-accent-warm">·</span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <CheckCircle2 size={13.5} className="text-brand-deep shrink-0" />
+                    Online Across the U.S.
+                  </span>
+                  <span className="text-accent-warm">·</span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <CheckCircle2 size={13.5} className="text-brand-deep shrink-0" />
+                    South Asian Expertise
                   </span>
                 </div>
-                <p className="text-[13.5px] sm:text-[14px] text-brand-deep font-500 italic">
-                  &ldquo;91% of clients report feeling lighter, more energetic, and camera-ready within 4 weeks.&rdquo;
-                </p>
-              </div>
-            </div>
-          </div>
 
-          {/* Three-Pillar System */}
-          <div className="mt-14 lg:mt-18 pt-10 border-t border-border-subtle">
-            <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
-              {/* Pillar 1 */}
-              <div className="pr-4 reveal delay-100">
-                <span className="text-[13px] font-600 uppercase tracking-wider text-brand-deep block">
-                  Your Goal
-                </span>
-                <div className="w-10 h-[1.5px] bg-accent-warm my-2" />
-                <p className="font-display font-500 text-ink text-[18px] sm:text-[20px] mt-1">
-                  A plan built around you.
-                </p>
-              </div>
-
-              {/* Pillar 2 */}
-              <div className="pr-4 md:border-l md:border-border-subtle md:pl-8 lg:pl-12 reveal delay-200">
-                <span className="text-[13px] font-600 uppercase tracking-wider text-brand-deep block">
-                  Your Food
-                </span>
-                <div className="w-10 h-[1.5px] bg-accent-warm my-2" />
-                <p className="font-display font-500 text-ink text-[18px] sm:text-[20px] mt-1">
-                  South Asian food stays part of it.
-                </p>
-              </div>
-
-              {/* Pillar 3 */}
-              <div className="md:border-l md:border-border-subtle md:pl-8 lg:pl-12 reveal delay-300">
-                <span className="text-[13px] font-600 uppercase tracking-wider text-brand-deep block">
-                  Your Life
-                </span>
-                <div className="w-10 h-[1.5px] bg-accent-warm my-2" />
-                <p className="font-display font-500 text-ink text-[18px] sm:text-[20px] mt-1">
-                  Simple enough to follow every day.
-                </p>
+                <div className="flex items-baseline gap-3 pt-1">
+                  <span className="font-display font-600 text-brand-deep text-[28px] sm:text-[32px] leading-none shrink-0">
+                    91%
+                  </span>
+                  <p className="text-[13px] sm:text-[13.5px] text-ink-secondary leading-snug">
+                    of clients report feeling lighter, more energetic, and camera-ready within 4 weeks.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -473,8 +566,8 @@ export default function SecondLandingPage() {
                   </div>
                 </div>
 
-                <div className="mt-8 flex items-center gap-2 text-[12.5px] text-ink-secondary">
-                  <Shield size={15} className="text-brand-primary" />
+                <div className="mt-8 flex items-center gap-2.5 text-[12.5px] sm:text-[13px] text-ink-secondary">
+                  <ShieldCheck size={18} className="text-emerald-600 fill-emerald-100/60 shrink-0" />
                   <span>100% Online &amp; HIPAA-Compliant Telehealth Across the U.S.</span>
                 </div>
               </div>
@@ -868,13 +961,19 @@ export default function SecondLandingPage() {
       </section>
 
       {/* ============================================================== */}
-      {/* SECTION 4: REAL TRANSFORMATION / CASE BLUEPRINTS */}
-      {/* Stacking Animation of One on One While Scrolling */}
+      {/* SECTION 4: PROVEN OUTCOMES */}
+      {/* Centered Section Header + Separate Left Image & Right Card */}
       {/* ============================================================== */}
-      <section className="py-20 lg:py-28 bg-surface-secondary/40 border-b border-border-subtle">
-        <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
-          <div className="reveal text-left sm:text-center max-w-3xl sm:mx-auto mb-10 sm:mb-14 lg:mb-18">
-            {/* Section Badge 4 */}
+      <section
+        id="outcomes"
+        className="py-20 lg:py-28 relative overflow-hidden bg-[#F5F1EB] border-b border-border-subtle scroll-mt-20"
+      >
+        {/* Serene soft mist cloud background */}
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_35%_50%,rgba(255,255,255,0.92)_0%,rgba(255,255,255,0)_70%)]" />
+
+        <div className="relative mx-auto max-w-[1280px] px-6 lg:px-10">
+          {/* Centered Section Header: Section Badge, Title & Description in Middle */}
+          <div className="reveal text-left sm:text-center max-w-3xl sm:mx-auto mb-12 sm:mb-16">
             <span className="text-eyebrow text-brand-deep uppercase block">
               Proven Outcomes
             </span>
@@ -882,103 +981,174 @@ export default function SecondLandingPage() {
             <h2 className="mt-3 font-display font-600 text-ink text-[28px] sm:text-[38px] lg:text-[42px] leading-[1.16] tracking-tight">
               Real transformation built around real celebrations.
             </h2>
-            <p className="mt-3 text-ink-secondary text-[15px] sm:text-[16px]">
-              Scroll to explore each milestone blueprint.
+
+            <p className="mt-4 text-ink-secondary text-[15px] sm:text-[16px] leading-[1.68] max-w-xl sm:mx-auto">
+              Every occasion is personal. We create evidence-informed nutrition strategies tailored to your celebrations, family foods, and timeline.
             </p>
           </div>
 
-          {/* Three Case Blueprints with One-on-One Sticky Stacking Animation */}
-          <div className="relative pt-2 pb-16">
-            <div className="space-y-8 sm:space-y-14">
-              {caseStudies.map((cs, idx) => {
-                // Responsive top offset and stacking z-index for one-on-one overlap
-                const zIndex = 10 + idx * 5;
-                const shadowStrength = 0.08 + idx * 0.04;
-                const topOffset = `clamp(${68 + idx * 10}px, 8.5vh + ${idx * 14}px, ${90 + idx * 24}px)`;
+          {/* 2-Column Layout: Left Side Image Placeholder & Right Side Outcome Card */}
+          {(() => {
+            const currentCase = caseStudies[activeSlide];
+            return (
+              <div className="grid lg:grid-cols-[1fr_1.15fr] gap-8 lg:gap-12 items-stretch max-w-5xl mx-auto">
+                {/* Left Side: Image Placeholder for each card (changes simultaneously) */}
+                <div className="reveal delay-100 h-full">
+                  <div className="h-full min-h-[360px] sm:min-h-[440px] lg:min-h-full rounded-2xl sm:rounded-3xl overflow-hidden border border-border-subtle shadow-[0_12px_36px_rgba(43,45,36,0.06)] bg-surface-white relative group">
+                    <img
+                      key={currentCase.id}
+                      src={currentCase.image}
+                      alt={currentCase.alt}
+                      className="w-full h-full object-cover object-center transition-all duration-500 ease-editorial group-hover:scale-102"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-ink/20 via-transparent to-transparent pointer-events-none" />
+                  </div>
+                </div>
 
-                return (
-                  <div
-                    key={cs.id}
-                    style={{
-                      position: 'sticky',
-                      top: topOffset,
-                      zIndex: zIndex,
-                      boxShadow: `0 ${8 + idx * 4}px ${20 + idx * 8}px rgba(43,45,36,${shadowStrength})`,
-                    }}
-                    className="bg-surface-white rounded-2xl sm:rounded-editorial border border-border-subtle overflow-hidden transition-all duration-300 lg:h-[400px] will-change-transform"
-                  >
-                    <div className="grid lg:grid-cols-[440px_1fr] h-full items-stretch">
-                      {/* Left: Image Column */}
-                      <div className="relative h-[200px] sm:h-[260px] lg:h-full w-full bg-surface-secondary overflow-hidden">
-                        <img
-                          src={cs.image}
-                          alt={cs.alt}
-                          className="w-full h-full object-cover object-center transition-transform duration-500 ease-editorial hover:scale-102"
-                          loading="lazy"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-ink/30 via-transparent to-transparent pointer-events-none" />
+                {/* Right Side: The Outcome Card */}
+                <div className="reveal delay-150 h-full">
+                  <div className="bg-surface-white rounded-2xl sm:rounded-3xl border border-border-subtle shadow-[0_12px_36px_rgba(43,45,36,0.06)] p-6 sm:p-8 lg:p-9 h-full flex flex-col justify-between transition-all duration-300">
+                    <div>
+                      {/* Top Header Row: MEMBER, DIAGNOSIS, and City Badge on Top Right */}
+                      <div>
+                        <div className="flex items-start justify-between gap-4">
+                          <div>
+                            <span className="text-[11px] sm:text-[11.5px] font-700 uppercase tracking-widest text-[#2B2D24]/70 block">
+                              MEMBER
+                            </span>
+                            <span className="font-display font-600 text-ink text-[17px] sm:text-[19px] block mt-1 leading-snug">
+                              {currentCase.member}
+                            </span>
+                          </div>
+
+                          {/* City Name as Badge on Top Right */}
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-[11.5px] sm:text-[12px] font-600 bg-[#F4EFEA] text-brand-deep border border-border-subtle/80 shrink-0">
+                            {currentCase.city}
+                          </span>
+                        </div>
+
+                        <div className="mt-3">
+                          <span className="text-[11px] sm:text-[11.5px] font-700 uppercase tracking-widest text-[#2B2D24]/70 block">
+                            DIAGNOSIS
+                          </span>
+                          <span className="text-[14px] sm:text-[15px] font-500 text-ink block mt-1 leading-snug">
+                            {currentCase.diagnosis}
+                          </span>
+                        </div>
+
+                        {/* Thin divider line under Member / Diagnosis */}
+                        <div className="h-[1px] bg-border-subtle/70 my-4" />
+
+                        {/* GOALS */}
+                        <div>
+                          <span className="text-[11px] sm:text-[11.5px] font-700 uppercase tracking-widest text-[#2B2D24]/70 block mb-1">
+                            GOALS
+                          </span>
+                          <p className="text-[13.5px] sm:text-[14px] text-ink-secondary leading-relaxed">
+                            {currentCase.goal}
+                          </p>
+                        </div>
                       </div>
 
-                      {/* Right: Content Column */}
-                      <div className="p-5 sm:p-8 lg:p-10 flex flex-col justify-between h-full bg-surface-white">
-                        <div>
-                          {/* Top Tag & Location Bar */}
-                          <div className="flex items-center justify-between pb-2.5 sm:pb-3 border-b border-border-subtle">
-                            <span className="text-[11.5px] sm:text-[12px] font-600 uppercase tracking-widest text-accent-warm">
-                              {cs.tag}
-                            </span>
-                            <span className="text-[12.5px] sm:text-[13px] font-500 text-ink-secondary">
-                              {cs.location}
-                            </span>
-                          </div>
+                      {/* Divider 1 */}
+                      <div className="h-[1px] bg-border-subtle/70 my-4 sm:my-5" />
 
-                          <h3 className="font-display font-600 text-ink text-[19px] sm:text-[23px] lg:text-[25px] mt-2.5 sm:mt-3 leading-snug">
-                            {cs.title}
-                          </h3>
+                      {/* THE STRATEGY (actions replaced with The Strategy & removed 'The Strategy:' in description) */}
+                      <div>
+                        <span className="text-[11px] sm:text-[11.5px] font-700 uppercase tracking-widest text-[#2B2D24]/70 block mb-1.5">
+                          THE STRATEGY
+                        </span>
+                        <p className="text-[13.5px] sm:text-[14px] text-ink-secondary leading-relaxed">
+                          {currentCase.strategy}
+                        </p>
+                      </div>
 
-                          {/* Client & Event Meta */}
-                          <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-[12.5px] sm:text-[13.5px]">
-                            <div>
-                              <span className="font-500 text-ink">Client: </span>
-                              <span className="text-ink-secondary">{cs.client} ({cs.location})</span>
-                            </div>
-                            <div>
-                              <span className="font-500 text-ink">Event: </span>
-                              <span className="text-ink-secondary">{cs.event}</span>
-                            </div>
-                          </div>
+                      {/* Divider 2 */}
+                      <div className="h-[1px] bg-border-subtle/70 my-4 sm:my-5" />
 
-                          {/* Goal & Strategy Text */}
-                          <div className="mt-3 sm:mt-4 space-y-2 text-[13px] sm:text-[14px] leading-relaxed">
-                            <p>
-                              <strong className="font-500 text-ink">Goal: </strong>
-                              <span className="text-ink-secondary">{cs.goal}</span>
-                            </p>
-                            <p>
-                              <strong className="font-500 text-ink">The Strategy: </strong>
-                              <span className="text-ink-secondary">{cs.strategy}</span>
-                            </p>
-                          </div>
-                        </div>
+                      {/* RESULT (wins replaced with Result & removed 'Result:' in description) */}
+                      <div>
+                        <span className="text-[11px] sm:text-[11.5px] font-700 uppercase tracking-widest text-[#2B2D24]/70 block mb-1.5">
+                          RESULT
+                        </span>
+                        <p className="text-[13.5px] sm:text-[14px] text-ink font-500 leading-relaxed">
+                          {currentCase.result}
+                        </p>
+                      </div>
 
-                        {/* Result Box */}
-                        <div className="mt-3 sm:mt-4 p-3 sm:p-4 rounded-xl bg-surface-primary border border-border-subtle shrink-0">
-                          <span className="font-500 text-ink text-[12.5px] sm:text-[14px]">Result: </span>
-                          <span className="text-ink font-500 text-[12.5px] sm:text-[14px]">{cs.result}</span>
-                        </div>
+                      {/* Divider 3 */}
+                      <div className="h-[1px] bg-border-subtle/70 my-4 sm:my-5" />
+                    </div>
+
+                    {/* Footer: Dietitian Shared by in Hierarchical Alignment */}
+                    <div className="flex items-center gap-3 pt-1">
+                      <img
+                        src={founderImg}
+                        alt="Dr. Hena Nafis"
+                        className="w-9 h-9 rounded-full object-cover object-top ring-1 ring-border-subtle shrink-0"
+                      />
+                      <div className="flex flex-col justify-center">
+                        <span className="text-[13px] sm:text-[13.5px] font-600 text-ink leading-snug">
+                          Shared by Dr. Hena Nafis
+                        </span>
+                        <span className="text-[11.5px] sm:text-[12px] text-ink-secondary mt-0.5">
+                          Chief Nutritionist &amp; Registered Dietitian
+                        </span>
                       </div>
                     </div>
                   </div>
-                );
-              })}
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* Carousel Controls (dots, progress bar, play/pause button) */}
+          <div className="max-w-xl mx-auto mt-8 flex items-center justify-between gap-4 px-2">
+            {/* Dots */}
+            <div className="flex items-center gap-2">
+              {caseStudies.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => handleSelectSlide(i)}
+                  className={`transition-all duration-300 rounded-full cursor-pointer ${
+                    activeSlide === i
+                      ? 'w-6 h-2.5 bg-ink'
+                      : 'w-2.5 h-2.5 bg-ink/25 hover:bg-ink/50'
+                  }`}
+                  aria-label={`Go to slide ${i + 1}`}
+                />
+              ))}
             </div>
+
+            {/* Smooth Progress Bar */}
+            <div className="flex-1 h-1.5 bg-ink/10 rounded-full overflow-hidden mx-2 sm:mx-4">
+              <div
+                className="h-full bg-ink/80 rounded-full transition-all duration-75 ease-linear"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+
+            {/* Play / Pause Toggle Button */}
+            <button
+              onClick={handleTogglePlay}
+              className="w-8 h-8 rounded-full bg-surface-white border border-border-subtle/80 flex items-center justify-center text-ink hover:bg-surface-secondary transition-colors cursor-pointer shadow-2xs shrink-0"
+              aria-label={isPlaying ? 'Pause auto-play' : 'Resume auto-play'}
+              title={isPlaying ? 'Pause' : 'Play'}
+            >
+              {isPlaying ? (
+                <Pause size={13} className="fill-ink text-ink" />
+              ) : (
+                <Play size={13} className="fill-ink text-ink ml-0.5" />
+              )}
+            </button>
           </div>
 
-          {/* Proven Outcomes CTA */}
-          <div className="mt-12 text-center reveal">
+          {/* Centered Book Your Consultation Button */}
+          <div className="mt-10 text-center reveal">
             <button
               onClick={scrollToConsultation}
-              className="inline-flex items-center justify-center px-7 py-3.5 rounded-xl bg-brand-deep text-surface-white text-[15px] font-500 hover:bg-brand-primary transition-all duration-250 ease-editorial hover:-translate-y-0.5 shadow-xs cursor-pointer"
+              className="inline-flex items-center justify-center px-8 py-3.5 rounded-xl bg-brand-deep text-surface-white text-[15px] font-500 hover:bg-brand-primary transition-all duration-250 ease-editorial hover:-translate-y-0.5 shadow-xs cursor-pointer"
             >
               <span>Book Your Consultation</span>
             </button>
@@ -1179,18 +1349,6 @@ export default function SecondLandingPage() {
           </div>
         </div>
       </section>
-
-      {/* ============================================================== */}
-      {/* STICKY MOBILE CTA */}
-      {/* ============================================================== */}
-      <div className="sm:hidden fixed bottom-0 inset-x-0 z-40 bg-surface-white/95 backdrop-blur-md border-t border-border-subtle p-3 pb-[calc(10px+env(safe-area-inset-bottom))] shadow-[0_-4px_20px_rgba(43,45,36,0.06)]">
-        <button
-          onClick={scrollToConsultation}
-          className="w-full py-3.5 rounded-xl bg-brand-deep text-surface-white text-[14.5px] font-500 hover:bg-brand-primary active:scale-[0.98] transition-all cursor-pointer shadow-xs"
-        >
-          Book Your Consultation
-        </button>
-      </div>
     </div>
   );
 }
