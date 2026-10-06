@@ -16,7 +16,10 @@ import {
   Dumbbell,
   Instagram,
   Youtube,
-  Facebook
+  Facebook,
+  User,
+  Mail,
+  Phone
 } from 'lucide-react';
 
 function WhatsAppIcon({ size = 15 }: { size?: number }) {
@@ -84,6 +87,9 @@ export default function AssessmentPage({ onGoHome, onBookConsultation }: Assessm
   const [unitSystem, setUnitSystem] = useState<'imperial' | 'metric'>('imperial');
 
   // Step 1: User Demographics & Body Measurements
+  const [fullName, setFullName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [phone, setPhone] = useState<string>('');
   const [age, setAge] = useState<string>('');
   const [sex, setSex] = useState<'male' | 'female'>('male');
   const [heightCm, setHeightCm] = useState<string>('');
@@ -532,7 +538,11 @@ export default function AssessmentPage({ onGoHome, onBookConsultation }: Assessm
           <div className="mb-8 print:hidden relative">
             <div
               ref={tabsContainerRef}
-              className="flex items-center gap-2 overflow-x-auto pb-2 pt-1 px-1 scroll-smooth scrollbar-none text-[13px] font-500 touch-pan-x"
+              className="flex items-center gap-2 overflow-x-auto pb-2 pt-1 px-1 scroll-smooth no-scrollbar scrollbar-none text-[13px] font-500 touch-pan-x"
+              style={{
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none',
+              }}
             >
               {stepsList.map((s) => {
                 const isActive = currentStep === s.num;
@@ -576,17 +586,78 @@ export default function AssessmentPage({ onGoHome, onBookConsultation }: Assessm
           {/* SECTION 1: BASIC INFORMATION */}
           {currentStep === 1 && (
             <div className="bg-surface-white rounded-[24px] border border-border-subtle p-6 sm:p-8 shadow-sm space-y-7 animate-fade-in">
-              {/* MINI-SECTION 1: DEMOGRAPHICS (Biological Sex & Age) */}
+              {/* MINI-SECTION 1: DEMOGRAPHICS (Name, Email, Phone, Biological Sex & Age) */}
               {currentSubStep === 1 && (
                 <div key="step1-part1" className="space-y-6 animate-fade-in">
                   <div className="border-b border-border-subtle pb-4">
                     <h2 className="font-display font-600 text-[22px] sm:text-[24px] text-ink">
                       1. Basic Demographics
                     </h2>
+                    <p className="text-[13px] sm:text-[13.5px] text-ink-secondary mt-1">
+                      Enter your personal details to receive your customized metabolic health analysis.
+                    </p>
                   </div>
 
-                  {/* Sex & Age */}
+                  {/* Contact Information (Name, Email, Phone) */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-1">
+                    <div className="sm:col-span-2">
+                      <label className="block text-[13.5px] font-500 text-ink mb-1.5">
+                        Full Name
+                      </label>
+                      <div className="relative">
+                        <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-ink-muted">
+                          <User size={18} />
+                        </span>
+                        <input
+                          type="text"
+                          placeholder="e.g. Rahul Sharma"
+                          value={fullName}
+                          onChange={(e) => setFullName(e.target.value)}
+                          className="w-full pl-10 pr-4 py-3 rounded-xl border border-border-subtle bg-surface-white text-ink text-[14px] placeholder:text-ink-muted/70 focus:outline-none focus:ring-2 focus:ring-brand-primary/40 focus:border-brand-primary transition-all"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-[13.5px] font-500 text-ink mb-1.5">
+                        Email Address
+                      </label>
+                      <div className="relative">
+                        <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-ink-muted">
+                          <Mail size={18} />
+                        </span>
+                        <input
+                          type="email"
+                          placeholder="e.g. rahul@example.com"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="w-full pl-10 pr-4 py-3 rounded-xl border border-border-subtle bg-surface-white text-ink text-[14px] placeholder:text-ink-muted/70 focus:outline-none focus:ring-2 focus:ring-brand-primary/40 focus:border-brand-primary transition-all"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-[13.5px] font-500 text-ink mb-1.5">
+                        Phone Number
+                      </label>
+                      <div className="relative">
+                        <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-ink-muted">
+                          <Phone size={18} />
+                        </span>
+                        <input
+                          type="tel"
+                          placeholder="e.g. +91 98765 43210"
+                          value={phone}
+                          onChange={(e) => setPhone(e.target.value)}
+                          className="w-full pl-10 pr-4 py-3 rounded-xl border border-border-subtle bg-surface-white text-ink text-[14px] placeholder:text-ink-muted/70 focus:outline-none focus:ring-2 focus:ring-brand-primary/40 focus:border-brand-primary transition-all"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Biological Demographics (Sex & Age) */}
+                  <div className="pt-2 border-t border-border-subtle/70">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-2">
                     <div>
                       <label className="block text-[13.5px] font-500 text-ink mb-1.5">
                         Biological Sex

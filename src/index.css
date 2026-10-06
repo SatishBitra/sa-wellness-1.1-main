@@ -107,6 +107,21 @@
     text-wrap: pretty;
   }
 
+  /* Cross-browser scrollbar hiding utilities */
+  .no-scrollbar::-webkit-scrollbar,
+  .scrollbar-none::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    -webkit-appearance: none !important;
+  }
+
+  .no-scrollbar,
+  .scrollbar-none {
+    -ms-overflow-style: none !important;  /* IE and Edge */
+    scrollbar-width: none !important;  /* Firefox */
+  }
+
   .delay-100 { animation-delay: 100ms; }
   .delay-200 { animation-delay: 200ms; }
   .delay-300 { animation-delay: 300ms; }
