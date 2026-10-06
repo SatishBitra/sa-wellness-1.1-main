@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { useLenis } from 'lenis/react';
+import logoImg from '../../assets/fIBPHwmodHYgCtu5q2ugcSwxTb0.png';
 
 const homeNavLinks = [
   { label: 'Health Concerns', href: '#health-concerns' },

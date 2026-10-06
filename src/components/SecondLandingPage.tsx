@@ -9,6 +9,10 @@ import {
   Calendar,
   Pause,
   Play,
+  Target,
+  Utensils,
+  Home,
+  ArrowRight,
 } from 'lucide-react';
 import founderImg from '../../assets/03lyKqCdFEsXx6Kmt8oSVHMgaA.png';
 
@@ -253,6 +257,33 @@ export default function SecondLandingPage() {
   const countYears = useCountUp(30, 550, statsAnimated);
   const countCare = useCountUp(1, 400, statsAnimated);
 
+  // Mobile Hero Carousel State
+  const [mobileHeroSlide, setMobileHeroSlide] = useState(0);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setMobileHeroSlide((prev) => (prev + 1) % 3);
+    }, 4500);
+    return () => clearInterval(timer);
+  }, []);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX === null) return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const diff = touchStartX - touchEndX;
+    if (diff > 45) {
+      setMobileHeroSlide((prev) => (prev + 1) % 3);
+    } else if (diff < -45) {
+      setMobileHeroSlide((prev) => (prev - 1 + 3) % 3);
+    }
+    setTouchStartX(null);
+  };
+
   // Form State
   const [formData, setFormData] = useState<FormDataState>({
     name: '',
@@ -398,13 +429,20 @@ export default function SecondLandingPage() {
             {/* Visual Column: Editorial 3-Card Collage + Floating Consultation Layer */}
             <div className="relative reveal-scale order-1 lg:order-2 w-full flex justify-center lg:justify-end">
               {/* DESKTOP & TABLET COMPOSITION (sm and above) */}
-              <div className="hidden sm:block relative w-full max-w-[520px] lg:max-w-[550px] xl:max-w-[560px] h-[530px] lg:h-[550px] select-none">
-                {/* Soft ambient mist backdrop */}
-                <div className="absolute inset-0 bg-radial-gradient from-sand-light/50 to-transparent pointer-events-none" />
+              <div className="hidden sm:block relative w-full max-w-[530px] sm:max-w-[560px] lg:max-w-[580px] h-[570px] sm:h-[600px] lg:h-[610px] select-none">
+                {/* Organic botanical & blob shapes from screenshot */}
+                <div className="absolute -top-4 -right-4 w-[280px] h-[280px] bg-[#788863]/30 rounded-[58%_42%_62%_38%/42%_58%_42%_58%] pointer-events-none" />
+                <div className="absolute top-10 left-8 w-[350px] h-[350px] bg-[#EFE8DD] rounded-[50%_50%_42%_58%/56%_44%_56%_44%] pointer-events-none" />
+                <div className="absolute -bottom-4 -left-4 w-[320px] h-[290px] bg-[#71805D]/30 rounded-[52%_48%_40%_60%/40%_60%_50%_50%] pointer-events-none" />
+                <div className="absolute bottom-4 right-0 w-[240px] h-[200px] bg-[#EBE3D5] rounded-[55%_45%_60%_40%/45%_55%_45%_55%] pointer-events-none" />
+                {/* Delicate botanical outline on left */}
+                <svg className="absolute -left-6 top-20 w-32 h-44 opacity-25 text-[#9A8B78] pointer-events-none" viewBox="0 0 100 140" fill="none" stroke="currentColor" strokeWidth="1.2">
+                  <path d="M50 140 Q 50 70 45 10 M 45 40 Q 25 30 20 20 M 47 60 Q 70 50 75 40 M 48 80 Q 25 70 20 60 M 49 100 Q 75 90 80 80" />
+                </svg>
 
                 {/* ================= TOP ROW ================= */}
-                {/* Card 1: YOUR GOAL (Upper Left, Depth Level 1, sits slightly higher & forward) */}
-                <div className="absolute top-0 left-0 w-[53%] h-[240px] lg:h-[250px] z-10 rounded-[24px] overflow-hidden border border-white/30 shadow-[0_12px_28px_rgba(20,24,18,0.11)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_36px_rgba(20,24,18,0.16)] group cursor-pointer">
+                {/* Card 1: YOUR GOAL (Upper Left, Depth Level 1, tilted -4deg) */}
+                <div className="absolute top-1 left-1 w-[53%] sm:w-[52%] h-[340px] sm:h-[355px] lg:h-[365px] z-10 -rotate-[4deg] rounded-[28px] overflow-hidden border-[2px] border-white/60 shadow-[0_18px_38px_rgba(20,24,18,0.16)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_22px_45px_rgba(20,24,18,0.20)] group cursor-pointer">
                   <img
                     src="/assets/yl.png"
                     alt="Active lifestyle and fitness preparation"
@@ -412,24 +450,26 @@ export default function SecondLandingPage() {
                     loading="eager"
                   />
                   {/* Subtle dark bottom gradient for text contrast */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/10" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/10" />
 
                   <div className="absolute inset-0 p-4.5 sm:p-5 flex flex-col justify-between">
                     <div>
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-black/35 backdrop-blur-md border border-white/20 text-white text-[10.5px] sm:text-[11px] font-600 uppercase tracking-wider">
-                        Your Goal
-                      </span>
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/40 backdrop-blur-md border border-white/50 text-[#2B2D24] text-[10.5px] sm:text-[11px] font-700 tracking-wider uppercase shadow-2xs">
+                        <Target size={13} className="text-[#2B2D24] shrink-0" />
+                        <span>YOUR GOAL</span>
+                      </div>
                     </div>
                     <div>
-                      <h3 className="font-display font-600 text-white text-[15px] sm:text-[16.5px] leading-snug drop-shadow-xs">
+                      <h3 className="font-display font-600 text-white text-[16px] sm:text-[17.5px] leading-snug drop-shadow-xs">
                         Feel confident for the moments ahead.
                       </h3>
+                      <div className="w-7 h-[2px] bg-white/80 rounded-full mt-2" />
                     </div>
                   </div>
                 </div>
 
-                {/* Card 2: YOUR FOOD (Upper Right, Depth Level 2, overlaps YOUR GOAL subtly by ~16px) */}
-                <div className="absolute top-3 sm:top-4 right-0 w-[51%] h-[235px] lg:h-[245px] z-20 rounded-[24px] overflow-hidden border border-white/30 shadow-[0_14px_30px_rgba(20,24,18,0.13)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(20,24,18,0.18)] group cursor-pointer">
+                {/* Card 2: YOUR FOOD (Upper Right, Depth Level 2, tilted +3.5deg, overlaps YOUR GOAL) */}
+                <div className="absolute top-8 sm:top-10 right-0 w-[52%] sm:w-[51%] h-[300px] sm:h-[315px] lg:h-[325px] z-20 rotate-[3.5deg] rounded-[28px] overflow-hidden border-[2px] border-white/60 shadow-[0_18px_38px_rgba(20,24,18,0.18)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_22px_45px_rgba(20,24,18,0.22)] group cursor-pointer">
                   <img
                     src="/assets/yf.png"
                     alt="Traditional South Asian nutrition and joyful meals"
@@ -437,25 +477,27 @@ export default function SecondLandingPage() {
                     loading="eager"
                   />
                   {/* Subtle dark bottom gradient for text contrast */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/10" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/10" />
 
                   <div className="absolute inset-0 p-4.5 sm:p-5 flex flex-col justify-between">
                     <div>
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-black/35 backdrop-blur-md border border-white/20 text-white text-[10.5px] sm:text-[11px] font-600 uppercase tracking-wider">
-                        Your Food
-                      </span>
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/45 backdrop-blur-md border border-white/50 text-[#2B2D24] text-[10.5px] sm:text-[11px] font-700 tracking-wider uppercase shadow-2xs">
+                        <Utensils size={13} className="text-[#2B2D24] shrink-0" />
+                        <span>YOUR FOOD</span>
+                      </div>
                     </div>
                     <div>
-                      <h3 className="font-display font-600 text-white text-[15px] sm:text-[16.5px] leading-snug drop-shadow-xs">
+                      <h3 className="font-display font-600 text-white text-[16px] sm:text-[17.5px] leading-snug drop-shadow-xs">
                         Keep the food you actually love.
                       </h3>
+                      <div className="w-7 h-[2px] bg-white/80 rounded-full mt-2" />
                     </div>
                   </div>
                 </div>
 
                 {/* ================= BOTTOM CARD ================= */}
-                {/* Card 3: YOUR LIFE (Grounding Anchor, ~80% width, aligned toward left/center) */}
-                <div className="absolute bottom-2 sm:bottom-3 left-1 sm:left-3 w-[78%] lg:w-[80%] h-[250px] lg:h-[265px] z-10 rounded-[24px] overflow-hidden border border-white/30 shadow-[0_14px_32px_rgba(20,24,18,0.12)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(20,24,18,0.17)] group cursor-pointer">
+                {/* Card 3: YOUR LIFE (Grounding Anchor, tilted -2.5deg) */}
+                <div className="absolute bottom-2 left-1 sm:left-2 w-[70%] sm:w-[72%] h-[235px] sm:h-[250px] lg:h-[255px] z-10 -rotate-[2.5deg] rounded-[28px] overflow-hidden border-[2px] border-white/60 shadow-[0_16px_36px_rgba(20,24,18,0.16)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_42px_rgba(20,24,18,0.20)] group cursor-pointer">
                   <img
                     src="/assets/om5.png"
                     alt="South Asian everyday lifestyle and celebration"
@@ -463,136 +505,173 @@ export default function SecondLandingPage() {
                     loading="eager"
                   />
                   {/* Subtle dark bottom gradient for text contrast */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/10" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/10" />
 
                   <div className="absolute inset-0 p-4.5 sm:p-5 flex flex-col justify-between">
                     <div>
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-black/35 backdrop-blur-md border border-white/20 text-white text-[10.5px] sm:text-[11px] font-600 uppercase tracking-wider">
-                        Your Life
-                      </span>
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/45 backdrop-blur-md border border-white/50 text-[#2B2D24] text-[10.5px] sm:text-[11px] font-700 tracking-wider uppercase shadow-2xs">
+                        <Home size={13} className="text-[#2B2D24] shrink-0" />
+                        <span>YOUR LIFE</span>
+                      </div>
                     </div>
-                    <div className="max-w-[70%]">
-                      <h3 className="font-display font-600 text-white text-[15px] sm:text-[16.5px] leading-snug drop-shadow-xs">
+                    <div className="max-w-[62%]">
+                      <h3 className="font-display font-600 text-white text-[15.5px] sm:text-[17px] leading-snug drop-shadow-xs">
                         Build something you can live with.
                       </h3>
+                      <div className="w-7 h-[2px] bg-white/80 rounded-full mt-2" />
                     </div>
                   </div>
                 </div>
 
                 {/* ================= FLOATING CONSULTATION CARD ================= */}
-                {/* Overlaps lower-right portion of YOUR LIFE by ~40% & extends slightly outside right edge (Depth Level 4) */}
+                {/* MOVED UPSIDE ON THE YOUR LIFE CARD (Depth Level 4, rotate-0, clean horizontal placement) */}
                 <div
                   onClick={scrollToConsultation}
-                  className="absolute bottom-1 sm:bottom-2 right-[-8px] lg:right-[-16px] w-[245px] sm:w-[260px] lg:w-[270px] z-30 bg-surface-white/95 backdrop-blur-md rounded-[22px] p-4 sm:p-4.5 border border-border-subtle shadow-[0_16px_36px_rgba(43,45,36,0.14)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_22px_44px_rgba(43,45,36,0.20)] cursor-pointer group"
+                  className="absolute bottom-12 sm:bottom-16 lg:bottom-18 right-0 sm:-right-2 lg:-right-4 w-[265px] sm:w-[285px] lg:w-[295px] z-30 bg-white rounded-[24px] p-4 sm:p-4.5 border border-border-subtle/80 shadow-[0_20px_45px_rgba(43,45,36,0.16)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_26px_50px_rgba(43,45,36,0.22)] cursor-pointer group"
                 >
-                  <div className="flex items-center gap-1.5 mb-1">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-[10px] sm:text-[10.5px] font-700 uppercase tracking-wider text-emerald-800">
-                      Free 20-min Consult
+                  <div className="flex items-center gap-1.5 mb-1.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#1B704C] shrink-0" />
+                    <span className="text-[10.5px] sm:text-[11px] font-700 uppercase tracking-wider text-[#1B704C]">
+                      FREE 20-MIN CONSULT
                     </span>
                   </div>
-                  <p className="font-display font-600 text-ink text-[13.5px] sm:text-[14.5px] leading-snug">
-                    1:1 with a real coach
-                  </p>
-                  <p className="text-[11px] sm:text-[11.5px] text-ink-secondary mt-0.5">
-                    No forms. No bots. Culturally tailored.
-                  </p>
+
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="font-display font-600 text-ink text-[15px] sm:text-[16px] leading-snug">
+                        1:1 with a real coach
+                      </p>
+                      <p className="text-[11.5px] sm:text-[12px] text-ink-secondary mt-1 leading-snug">
+                        No forms. No bots.<br />Culturally tailored.
+                      </p>
+                    </div>
+
+                    <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#EDE7DF] text-[#3E4233] flex items-center justify-center shrink-0 shadow-2xs group-hover:bg-[#DFD7CB] transition-colors">
+                      <ArrowRight size={18} className="text-[#3E4233]" />
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              {/* MOBILE CONTROLLED VERTICAL STACK (< sm) */}
-              <div className="sm:hidden w-full max-w-[420px] mx-auto flex flex-col gap-3.5 select-none pt-1">
-                {/* 1. YOUR GOAL */}
-                <div className="w-full h-[195px] rounded-[22px] overflow-hidden border border-white/25 shadow-sm relative group cursor-pointer">
-                  <img
-                    src="/assets/yl.png"
-                    alt="Active lifestyle and fitness preparation"
-                    className="w-full h-full object-cover object-center"
-                    loading="eager"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/10" />
-                  <div className="absolute inset-0 p-4 flex flex-col justify-between">
-                    <div>
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-black/35 backdrop-blur-md border border-white/20 text-white text-[10.5px] font-600 uppercase tracking-wider">
-                        Your Goal
-                      </span>
-                    </div>
-                    <div>
-                      <h3 className="font-display font-600 text-white text-[15px] leading-snug">
-                        Feel confident for the moments ahead.
-                      </h3>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 2. YOUR FOOD */}
-                <div className="w-full h-[195px] rounded-[22px] overflow-hidden border border-white/25 shadow-sm relative group cursor-pointer">
-                  <img
-                    src="/assets/yf.png"
-                    alt="Traditional South Asian nutrition and joyful meals"
-                    className="w-full h-full object-cover object-center"
-                    loading="eager"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/10" />
-                  <div className="absolute inset-0 p-4 flex flex-col justify-between">
-                    <div>
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-black/35 backdrop-blur-md border border-white/20 text-white text-[10.5px] font-600 uppercase tracking-wider">
-                        Your Food
-                      </span>
-                    </div>
-                    <div>
-                      <h3 className="font-display font-600 text-white text-[15px] leading-snug">
-                        Keep the food you actually love.
-                      </h3>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 3. YOUR LIFE */}
-                <div className="w-full h-[205px] rounded-[22px] overflow-hidden border border-white/25 shadow-sm relative group cursor-pointer">
-                  <img
-                    src="/assets/om5.png"
-                    alt="South Asian everyday lifestyle and celebration"
-                    className="w-full h-full object-cover object-center"
-                    loading="eager"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/10" />
-                  <div className="absolute inset-0 p-4 flex flex-col justify-between">
-                    <div>
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-black/35 backdrop-blur-md border border-white/20 text-white text-[10.5px] font-600 uppercase tracking-wider">
-                        Your Life
-                      </span>
-                    </div>
-                    <div>
-                      <h3 className="font-display font-600 text-white text-[15px] leading-snug">
-                        Build something you can live with.
-                      </h3>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 4. CONSULTATION CARD (Positioned cleanly below YOUR LIFE on mobile, not overlapping) */}
+              {/* MOBILE CAROUSEL (< sm): 3 Cards as Swipeable Carousel without Floating Card */}
+              <div className="sm:hidden w-full max-w-[420px] mx-auto select-none pt-1">
+                {/* Carousel Slider */}
                 <div
-                  onClick={scrollToConsultation}
-                  className="w-full bg-surface-white rounded-2xl p-4 border border-border-subtle shadow-xs flex items-center justify-between gap-3 cursor-pointer group"
+                  className="relative overflow-hidden rounded-[26px] shadow-[0_14px_34px_rgba(20,24,18,0.14)] border-[2px] border-white/60 bg-surface-white"
+                  onTouchStart={handleTouchStart}
+                  onTouchEnd={handleTouchEnd}
                 >
-                  <div className="flex flex-col">
-                    <div className="flex items-center gap-1.5 mb-0.5">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                      <span className="text-[10px] font-700 uppercase tracking-wider text-emerald-800">
-                        Free 20-min Consult
-                      </span>
+                  <div
+                    className="flex transition-transform duration-500 ease-editorial"
+                    style={{ transform: `translateX(-${mobileHeroSlide * 100}%)` }}
+                  >
+                    {/* Slide 1: YOUR GOAL */}
+                    <div className="w-full shrink-0 relative h-[260px] xs:h-[280px]">
+                      <img
+                        src="/assets/yl.png"
+                        alt="Active lifestyle and fitness preparation"
+                        className="w-full h-full object-cover object-center"
+                        loading="eager"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/10 pointer-events-none" />
+                      <div className="absolute inset-0 p-4.5 flex flex-col justify-between pointer-events-none">
+                        <div>
+                          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/45 backdrop-blur-md border border-white/50 text-[#2B2D24] text-[10.5px] font-700 uppercase tracking-wider shadow-2xs">
+                            <Target size={12} className="text-[#2B2D24]" />
+                            <span>YOUR GOAL</span>
+                          </div>
+                        </div>
+                        <div>
+                          <h3 className="font-display font-600 text-white text-[16px] leading-snug drop-shadow-xs">
+                            Feel confident for the moments ahead.
+                          </h3>
+                          <div className="w-7 h-[2px] bg-white/80 rounded-full mt-2" />
+                        </div>
+                      </div>
                     </div>
-                    <p className="font-display font-600 text-ink text-[14px] leading-snug">
-                      1:1 with a real coach
-                    </p>
-                    <p className="text-[11.5px] text-ink-secondary mt-0.5">
-                      No forms. No bots. Culturally tailored.
-                    </p>
+
+                    {/* Slide 2: YOUR FOOD */}
+                    <div className="w-full shrink-0 relative h-[260px] xs:h-[280px]">
+                      <img
+                        src="/assets/yf.png"
+                        alt="Traditional South Asian nutrition and joyful meals"
+                        className="w-full h-full object-cover object-center"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/10 pointer-events-none" />
+                      <div className="absolute inset-0 p-4.5 flex flex-col justify-between pointer-events-none">
+                        <div>
+                          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/45 backdrop-blur-md border border-white/50 text-[#2B2D24] text-[10.5px] font-700 uppercase tracking-wider shadow-2xs">
+                            <Utensils size={12} className="text-[#2B2D24]" />
+                            <span>YOUR FOOD</span>
+                          </div>
+                        </div>
+                        <div>
+                          <h3 className="font-display font-600 text-white text-[16px] leading-snug drop-shadow-xs">
+                            Keep the food you actually love.
+                          </h3>
+                          <div className="w-7 h-[2px] bg-white/80 rounded-full mt-2" />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Slide 3: YOUR LIFE */}
+                    <div className="w-full shrink-0 relative h-[260px] xs:h-[280px]">
+                      <img
+                        src="/assets/om5.png"
+                        alt="South Asian everyday lifestyle and celebration"
+                        className="w-full h-full object-cover object-center"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/10 pointer-events-none" />
+                      <div className="absolute inset-0 p-4.5 flex flex-col justify-between pointer-events-none">
+                        <div>
+                          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/45 backdrop-blur-md border border-white/50 text-[#2B2D24] text-[10.5px] font-700 uppercase tracking-wider shadow-2xs">
+                            <Home size={12} className="text-[#2B2D24]" />
+                            <span>YOUR LIFE</span>
+                          </div>
+                        </div>
+                        <div>
+                          <h3 className="font-display font-600 text-white text-[16px] leading-snug drop-shadow-xs">
+                            Build something you can live with.
+                          </h3>
+                          <div className="w-7 h-[2px] bg-white/80 rounded-full mt-2" />
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="w-8 h-8 rounded-full bg-brand-soft/60 flex items-center justify-center text-brand-deep shrink-0 group-hover:bg-brand-primary group-hover:text-white transition-colors">
-                    <span className="text-[15px] font-medium">→</span>
-                  </div>
+
+                  {/* Left / Right Quick Tap Arrows */}
+                  <button
+                    onClick={() => setMobileHeroSlide((prev) => (prev - 1 + 3) % 3)}
+                    className="absolute left-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/35 backdrop-blur-md text-white flex items-center justify-center hover:bg-black/55 transition-colors cursor-pointer border border-white/25 shadow-xs"
+                    aria-label="Previous card"
+                  >
+                    <span className="text-[14px] leading-none mb-0.5">‹</span>
+                  </button>
+                  <button
+                    onClick={() => setMobileHeroSlide((prev) => (prev + 1) % 3)}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/35 backdrop-blur-md text-white flex items-center justify-center hover:bg-black/55 transition-colors cursor-pointer border border-white/25 shadow-xs"
+                    aria-label="Next card"
+                  >
+                    <span className="text-[14px] leading-none mb-0.5">›</span>
+                  </button>
+                </div>
+
+                {/* Carousel Pagination Dots */}
+                <div className="flex items-center justify-center gap-2 mt-3.5">
+                  {[0, 1, 2].map((idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setMobileHeroSlide(idx)}
+                      className={`h-2 transition-all duration-300 rounded-full cursor-pointer ${
+                        mobileHeroSlide === idx
+                          ? 'w-7 bg-brand-deep'
+                          : 'w-2 bg-border-subtle hover:bg-ink-secondary/40'
+                      }`}
+                      aria-label={`Go to slide ${idx + 1}`}
+                    />
+                  ))}
                 </div>
               </div>
             </div>
