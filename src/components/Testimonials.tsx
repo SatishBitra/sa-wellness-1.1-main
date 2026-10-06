@@ -26,7 +26,7 @@ const featuredTestimonial: FeaturedTestimonial = {
   role: 'Physician',
   location: 'Palo Alto, CA',
   image: 'https://miro.medium.com/v2/resize:fit:720/format:webp/1*XHYkenPR7qdYHOcMVI-dfw.png',
-  avatar: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=300&fit=crop',
+  avatar: 'blob:https://chatgpt.com/dcea65e1-be1d-4366-b03b-dd5e9b57a916',
 };
 
 const gridTestimonials: GridTestimonial[] = [
