@@ -16,6 +16,7 @@ import {
   MapPin,
   Lightbulb,
   BarChart2,
+  Plus,
 } from 'lucide-react';
 import founderImg from '../../assets/03lyKqCdFEsXx6Kmt8oSVHMgaA.png';
 
@@ -1666,27 +1667,34 @@ export default function SecondLandingPage() {
               return (
                 <div
                   key={index}
-                  className="reveal bg-surface-white rounded-2xl border border-border-subtle overflow-hidden transition-all duration-200"
+                  className={`reveal bg-surface-white rounded-[20px] sm:rounded-2xl border transition-all duration-250 overflow-hidden ${
+                    isOpen
+                      ? 'border-brand-primary/40 shadow-sm ring-1 ring-brand-primary/10'
+                      : 'border-border-subtle hover:border-border hover:shadow-2xs'
+                  }`}
                 >
                   <button
                     onClick={() => setOpenFaqIndex(isOpen ? null : index)}
-                    className="w-full p-4.5 sm:p-6 text-left flex items-center justify-between gap-4 cursor-pointer"
+                    className="w-full px-5 py-4 sm:px-6 sm:py-5 text-left flex items-center justify-between gap-3.5 sm:gap-4 cursor-pointer select-none group"
                     aria-expanded={isOpen}
                   >
-                    <span className="font-display font-500 text-ink text-[15.5px] sm:text-[17px]">
+                    <span className="font-display font-600 text-ink text-[15.5px] sm:text-[17px] leading-snug group-hover:text-brand-deep transition-colors">
                       {item.question}
                     </span>
                     <span
-                      className={`w-7 h-7 rounded-full border border-border-subtle flex items-center justify-center shrink-0 transition-transform duration-200 ${
-                        isOpen ? 'rotate-45 bg-sand text-brand-deep' : 'text-ink-secondary'
+                      className={`w-7.5 h-7.5 sm:w-8 sm:h-8 rounded-full border border-border-subtle flex items-center justify-center shrink-0 transition-all duration-300 ease-editorial ${
+                        isOpen
+                          ? 'rotate-45 bg-sand text-brand-deep border-sand-warm shadow-2xs'
+                          : 'bg-surface-secondary/50 text-ink-secondary group-hover:bg-sand/40 group-hover:text-brand-deep'
                       }`}
                     >
-                      <span className="text-[16px] font-light leading-none">+</span>
+                      <Plus size={15} strokeWidth={2.2} />
                     </span>
                   </button>
+
                   {isOpen && (
-                    <div className="px-4.5 sm:px-6 pb-5 sm:pb-6 text-ink-secondary text-[14px] sm:text-[14.5px] leading-relaxed pt-1 border-t border-border-subtle/50">
-                      {item.answer}
+                    <div className="px-5 pb-5 pt-3.5 sm:px-6 sm:pb-6 sm:pt-4 text-ink-secondary text-[14px] sm:text-[15px] leading-[1.65] border-t border-border-subtle/60 animate-fade-in">
+                      <p className="max-w-2xl">{item.answer}</p>
                     </div>
                   )}
                 </div>
@@ -1695,7 +1703,7 @@ export default function SecondLandingPage() {
           </div>
 
           {/* Small line below FAQ & Book Your Consultation */}
-          <div className="reveal delay-100 mt-8 sm:mt-12 text-center p-6 sm:p-8 rounded-editorial bg-surface-secondary/40 border border-border-subtle">
+          <div className="reveal delay-100 mt-8 sm:mt-12 text-center p-5 sm:p-8 rounded-[22px] sm:rounded-editorial bg-surface-secondary/40 border border-border-subtle">
             <p className="text-[15.5px] sm:text-[16px] font-500 text-ink">
               Still have questions? Start with a conversation.
             </p>
