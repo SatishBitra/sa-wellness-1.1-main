@@ -1265,11 +1265,11 @@ export default function SecondLandingPage() {
                 {/* Right Side: The Outcome Card matching attached design */}
                 <div className="reveal delay-150 h-full">
                   <div className="bg-surface-white rounded-[26px] sm:rounded-[28px] border border-border-subtle/80 shadow-[0_12px_36px_rgba(43,45,36,0.06)] p-6 sm:p-7 lg:px-7.5 lg:py-6 h-full flex flex-col justify-between transition-all duration-300">
-                    <div>
-                      {/* Header Row: MEMBER, Name, and City Badge with MapPin */}
+                    {/* Header Row: MEMBER, Name, and City Badge with MapPin */}
+                    <div className="shrink-0">
                       <div className="flex items-start justify-between gap-4">
                         <div>
-                          <span className="text-[10.5px] font-700 uppercase tracking-widest text-[#7C7A72] block">
+                          <span className="text-[10px] sm:text-[10.5px] font-700 uppercase tracking-widest text-[#7C7A72] block">
                             MEMBER
                           </span>
                           <h3 className="font-display font-600 text-ink text-[22px] sm:text-[26px] lg:text-[27px] leading-tight mt-0.5">
@@ -1283,82 +1283,82 @@ export default function SecondLandingPage() {
                           <span>{currentCase.city}</span>
                         </div>
                       </div>
+                    </div>
 
-                      {/* Detail Rows Container */}
-                      <div className="mt-4 sm:mt-5 space-y-0">
-                        {/* Row 1: DIAGNOSIS */}
-                        <div className="flex items-start gap-3.5 sm:gap-4 py-1">
-                          <div className="w-9 h-9 rounded-full bg-[#EFEAE2] text-[#55574C] flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
-                            <Calendar size={15.5} strokeWidth={1.9} />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <span className="text-[10px] sm:text-[10.5px] font-700 uppercase tracking-wider text-[#7C7A72] block leading-none mb-1">
-                              DIAGNOSIS
-                            </span>
-                            <p className="text-[14px] sm:text-[14.5px] font-500 text-ink leading-snug">
-                              {currentCase.diagnosis}
-                            </p>
-                          </div>
+                    {/* Center Detail Rows: Evenly distributed with balanced gaps and paddings */}
+                    <div className="flex-1 flex flex-col justify-between my-3 sm:my-4 py-0.5">
+                      {/* Row 1: DIAGNOSIS */}
+                      <div className="flex items-center gap-3.5 sm:gap-4 py-1.5 sm:py-2">
+                        <div className="w-9 h-9 rounded-full bg-[#EFEAE2] text-[#55574C] flex items-center justify-center shrink-0 shadow-2xs">
+                          <Calendar size={15.5} strokeWidth={1.9} />
                         </div>
-
-                        {/* Divider 1 */}
-                        <div className="h-[1px] bg-[#EDE7DF] my-2.5 sm:my-3" />
-
-                        {/* Row 2: GOALS */}
-                        <div className="flex items-start gap-3.5 sm:gap-4 py-1">
-                          <div className="w-9 h-9 rounded-full bg-[#EFEAE2] text-[#55574C] flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
-                            <Target size={15.5} strokeWidth={1.9} />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <span className="text-[10px] sm:text-[10.5px] font-700 uppercase tracking-wider text-[#7C7A72] block leading-none mb-1">
-                              GOALS
-                            </span>
-                            <p className="text-[12.5px] sm:text-[13px] text-[#55534C] leading-normal">
-                              {currentCase.goal}
-                            </p>
-                          </div>
+                        <div className="flex-1 min-w-0">
+                          <span className="text-[10px] sm:text-[10.5px] font-700 uppercase tracking-wider text-[#7C7A72] block leading-none mb-1">
+                            DIAGNOSIS
+                          </span>
+                          <p className="text-[14px] sm:text-[14.5px] font-500 text-ink leading-snug">
+                            {currentCase.diagnosis}
+                          </p>
                         </div>
+                      </div>
 
-                        {/* Divider 2 */}
-                        <div className="h-[1px] bg-[#EDE7DF] my-2.5 sm:my-3" />
+                      {/* Divider 1 */}
+                      <div className="h-[1px] bg-[#EDE7DF] w-full" />
 
-                        {/* Row 3: THE STRATEGY */}
-                        <div className="flex items-start gap-3.5 sm:gap-4 py-1">
-                          <div className="w-9 h-9 rounded-full bg-[#EFEAE2] text-[#55574C] flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
-                            <Lightbulb size={15.5} strokeWidth={1.9} />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <span className="text-[10px] sm:text-[10.5px] font-700 uppercase tracking-wider text-[#7C7A72] block leading-none mb-1">
-                              THE STRATEGY
-                            </span>
-                            <p className="text-[12.5px] sm:text-[13px] text-[#55534C] leading-normal">
-                              {currentCase.strategy}
-                            </p>
-                          </div>
+                      {/* Row 2: GOALS */}
+                      <div className="flex items-center gap-3.5 sm:gap-4 py-1.5 sm:py-2">
+                        <div className="w-9 h-9 rounded-full bg-[#EFEAE2] text-[#55574C] flex items-center justify-center shrink-0 shadow-2xs">
+                          <Target size={15.5} strokeWidth={1.9} />
                         </div>
+                        <div className="flex-1 min-w-0">
+                          <span className="text-[10px] sm:text-[10.5px] font-700 uppercase tracking-wider text-[#7C7A72] block leading-none mb-1">
+                            GOALS
+                          </span>
+                          <p className="text-[12.5px] sm:text-[13px] text-[#55534C] leading-normal">
+                            {currentCase.goal}
+                          </p>
+                        </div>
+                      </div>
 
-                        {/* Divider 3 */}
-                        <div className="h-[1px] bg-[#EDE7DF] my-2.5 sm:my-3" />
+                      {/* Divider 2 */}
+                      <div className="h-[1px] bg-[#EDE7DF] w-full" />
 
-                        {/* Row 4: RESULT */}
-                        <div className="flex items-start gap-3.5 sm:gap-4 py-1">
-                          <div className="w-9 h-9 rounded-full bg-[#EFEAE2] text-[#55574C] flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
-                            <BarChart2 size={15.5} strokeWidth={1.9} />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <span className="text-[10px] sm:text-[10.5px] font-700 uppercase tracking-wider text-[#7C7A72] block leading-none mb-1">
-                              RESULT
-                            </span>
-                            <p className="text-[12.5px] sm:text-[13px] text-ink font-500 leading-normal">
-                              {currentCase.result}
-                            </p>
-                          </div>
+                      {/* Row 3: THE STRATEGY */}
+                      <div className="flex items-center gap-3.5 sm:gap-4 py-1.5 sm:py-2">
+                        <div className="w-9 h-9 rounded-full bg-[#EFEAE2] text-[#55574C] flex items-center justify-center shrink-0 shadow-2xs">
+                          <Lightbulb size={15.5} strokeWidth={1.9} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <span className="text-[10px] sm:text-[10.5px] font-700 uppercase tracking-wider text-[#7C7A72] block leading-none mb-1">
+                            THE STRATEGY
+                          </span>
+                          <p className="text-[12.5px] sm:text-[13px] text-[#55534C] leading-normal">
+                            {currentCase.strategy}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Divider 3 */}
+                      <div className="h-[1px] bg-[#EDE7DF] w-full" />
+
+                      {/* Row 4: RESULT */}
+                      <div className="flex items-center gap-3.5 sm:gap-4 py-1.5 sm:py-2">
+                        <div className="w-9 h-9 rounded-full bg-[#EFEAE2] text-[#55574C] flex items-center justify-center shrink-0 shadow-2xs">
+                          <BarChart2 size={15.5} strokeWidth={1.9} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <span className="text-[10px] sm:text-[10.5px] font-700 uppercase tracking-wider text-[#7C7A72] block leading-none mb-1">
+                            RESULT
+                          </span>
+                          <p className="text-[12.5px] sm:text-[13px] text-ink font-500 leading-normal">
+                            {currentCase.result}
+                          </p>
                         </div>
                       </div>
                     </div>
 
                     {/* Bottom Founder Box with Avatar and Vertical Divider */}
-                    <div className="mt-4 sm:mt-4.5 rounded-2xl bg-[#F5F0E9] border border-[#E9E2D8] px-4 py-3 flex items-center gap-3.5 sm:gap-4">
+                    <div className="shrink-0 rounded-2xl bg-[#F5F0E9] border border-[#E9E2D8] px-4 py-3 sm:py-3.5 flex items-center gap-3.5 sm:gap-4">
                       <img
                         src={founderImg}
                         alt="Dr. Hena Nafis"
