@@ -31,6 +31,7 @@ interface CaseStudy {
   result: string;
   image: string;
   alt: string;
+  imagePosition?: string;
 }
 
 const caseStudies: CaseStudy[] = [
@@ -48,6 +49,7 @@ const caseStudies: CaseStudy[] = [
       'Heavy bridal lengha fit effortlessly with zero waistline tightness; sustained full energy through late-night functions.',
     image: '/assets/too.png',
     alt: 'Bridal & Sangeet Prep client celebration',
+    imagePosition: 'object-top',
   },
   {
     id: 'case-02',
@@ -1126,12 +1128,13 @@ export default function SecondLandingPage() {
                 {/* Combines the image at the top and below text content into ONE seamless card */}
                 <div className="block lg:hidden bg-surface-white rounded-[26px] border border-border-subtle/80 shadow-[0_12px_36px_rgba(43,45,36,0.06)] overflow-hidden transition-all duration-300 max-w-xl mx-auto">
                   {/* Top: Combined Case Study Image */}
-                  <div className="relative h-[220px] sm:h-[260px] w-full bg-surface-secondary overflow-hidden border-b border-border-subtle/60">
+                  <div className="relative h-[230px] sm:h-[270px] w-full bg-surface-secondary overflow-hidden border-b border-border-subtle/60">
                     <img
                       key={`mob-${currentCase.id}`}
                       src={currentCase.image}
                       alt={currentCase.alt}
-                      className="w-full h-full object-cover object-center transition-all duration-500 ease-editorial"
+                      style={{ objectPosition: currentCase.id === 'case-01' ? 'center top' : 'center center' }}
+                      className={`w-full h-full object-cover ${currentCase.id === 'case-01' ? 'object-top' : 'object-center'} transition-all duration-500 ease-editorial`}
                       loading="lazy"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
@@ -1260,7 +1263,8 @@ export default function SecondLandingPage() {
                         key={currentCase.id}
                         src={currentCase.image}
                         alt={currentCase.alt}
-                        className="w-full h-full object-cover object-center transition-all duration-500 ease-editorial group-hover:scale-102"
+                        style={{ objectPosition: currentCase.id === 'case-01' ? 'center top' : 'center center' }}
+                        className={`w-full h-full object-cover ${currentCase.id === 'case-01' ? 'object-top' : 'object-center'} transition-all duration-500 ease-editorial group-hover:scale-102`}
                         loading="lazy"
                       />
                     </div>
@@ -1466,14 +1470,83 @@ export default function SecondLandingPage() {
             </p>
           </div>
 
-          {/* Comparison Table */}
-          <div className="reveal delay-150 mt-8 sm:mt-14 max-w-4xl mx-auto bg-surface-white rounded-editorial border border-border-subtle overflow-hidden shadow-sm">
+          {/* ================= MOBILE COMPARISON CARDS (< sm) ================= */}
+          {/* Separate Top (The Usual Approach) and Bottom (The SA Wellness Approach) Cards */}
+          <div className="block sm:hidden mt-8 space-y-4 max-w-xl mx-auto reveal delay-150">
+            {/* Top Card: The Usual Approach */}
+            <div className="bg-[#FAF7F2] rounded-[22px] border border-border-subtle p-5 shadow-xs">
+              <div className="flex items-center justify-between pb-3.5 mb-3.5 border-b border-border-subtle">
+                <div>
+                  <span className="text-[10px] font-700 uppercase tracking-wider text-ink-muted block leading-none">
+                    TRADITIONAL METHOD
+                  </span>
+                  <h3 className="font-display font-600 text-ink text-[18px] mt-1">
+                    The Usual Approach
+                  </h3>
+                </div>
+                <span className="w-7 h-7 rounded-full bg-surface-secondary/70 border border-border-subtle text-ink-muted flex items-center justify-center shrink-0 text-[12px] font-bold">
+                  ✕
+                </span>
+              </div>
+
+              <div className="space-y-3">
+                {comparisons.map((row, idx) => (
+                  <div key={`usual-${idx}`} className="flex items-start gap-3 text-[13.5px] text-ink-secondary leading-snug">
+                    <span className="w-5 h-5 rounded-full border border-border-subtle bg-surface-white text-ink-muted flex items-center justify-center shrink-0 mt-0.5 text-[10.5px]">
+                      ✕
+                    </span>
+                    <span>{row.usual}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Subtle Divider / VS Bridge */}
+            <div className="flex items-center justify-center py-0.5">
+              <div className="h-[1px] bg-border-subtle/80 flex-1" />
+              <span className="px-3 py-1 text-[10.5px] font-700 tracking-wider text-brand-deep bg-surface-secondary rounded-full border border-border-subtle uppercase mx-2 shadow-2xs">
+                VS
+              </span>
+              <div className="h-[1px] bg-border-subtle/80 flex-1" />
+            </div>
+
+            {/* Bottom Card: The SA Wellness Approach (Elevated & Highlighted) */}
+            <div className="bg-surface-white rounded-[24px] border-2 border-brand-primary/45 p-5 shadow-[0_12px_32px_rgba(71,75,55,0.08)] ring-1 ring-brand-primary/10 relative overflow-hidden">
+              <div className="flex items-center justify-between pb-3.5 mb-3.5 border-b border-border-subtle">
+                <div>
+                  <span className="inline-flex items-center gap-1 text-[10px] font-700 uppercase tracking-wider text-brand-deep bg-brand-soft/70 px-2 py-0.5 rounded-md leading-none">
+                    OUR SOLUTION
+                  </span>
+                  <h3 className="font-display font-600 text-ink text-[18px] mt-1">
+                    The SA Wellness Approach
+                  </h3>
+                </div>
+                <span className="w-7 h-7 rounded-full bg-brand-deep text-white flex items-center justify-center shrink-0 text-[12px] font-bold shadow-2xs">
+                  ✓
+                </span>
+              </div>
+
+              <div className="space-y-3">
+                {comparisons.map((row, idx) => (
+                  <div key={`sa-${idx}`} className="flex items-start gap-3 text-[13.5px] text-ink font-500 leading-snug">
+                    <span className="w-5 h-5 rounded-full bg-brand-deep text-white flex items-center justify-center shrink-0 mt-0.5 text-[10.5px] shadow-2xs">
+                      ✓
+                    </span>
+                    <span>{row.sa}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* ================= DESKTOP COMPARISON TABLE (sm and above) ================= */}
+          <div className="hidden sm:block reveal delay-150 mt-12 lg:mt-14 max-w-4xl mx-auto bg-surface-white rounded-editorial border border-border-subtle overflow-hidden shadow-sm">
             {/* Header */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 border-b border-border-subtle text-[13.5px] font-600">
+            <div className="grid grid-cols-2 border-b border-border-subtle text-[13.5px] font-600">
               <div className="p-4 sm:p-5 text-ink-secondary bg-surface-primary/60">
                 The Usual Approach
               </div>
-              <div className="p-4 sm:p-5 text-brand-deep bg-brand-soft/40 border-t sm:border-t-0 sm:border-l border-border-subtle">
+              <div className="p-4 sm:p-5 text-brand-deep bg-brand-soft/40 border-l border-border-subtle">
                 The SA Wellness Approach
               </div>
             </div>
@@ -1481,7 +1554,7 @@ export default function SecondLandingPage() {
             {/* Rows */}
             <div className="divide-y divide-border-subtle">
               {comparisons.map((row, idx) => (
-                <div key={idx} className="grid grid-cols-1 sm:grid-cols-2 text-[14.5px]">
+                <div key={idx} className="grid grid-cols-2 text-[14.5px]">
                   {/* Left Column (The Usual Approach) */}
                   <div className="p-4 sm:p-5 text-ink-secondary flex items-start gap-3 bg-surface-white">
                     <span className="w-5 h-5 rounded-full border border-border-subtle text-ink-secondary flex items-center justify-center shrink-0 mt-0.5 text-[11px]">
@@ -1491,7 +1564,7 @@ export default function SecondLandingPage() {
                   </div>
 
                   {/* Right Column (The SA Wellness Approach) */}
-                  <div className="p-4 sm:p-5 text-ink font-500 flex items-start gap-3 bg-surface-secondary/30 sm:border-l border-border-subtle">
+                  <div className="p-4 sm:p-5 text-ink font-500 flex items-start gap-3 bg-surface-secondary/30 border-l border-border-subtle">
                     <span className="w-5 h-5 rounded-full bg-brand-deep text-white flex items-center justify-center shrink-0 mt-0.5 text-[11px]">
                       ✓
                     </span>
