@@ -31,6 +31,8 @@ interface CaseStudy {
   strategy: string;
   result: string;
   image: string;
+  mobileImage?: string;
+  mobileImagePosition?: string;
   alt: string;
   imagePosition?: string;
 }
@@ -49,8 +51,8 @@ const caseStudies: CaseStudy[] = [
     result:
       'Heavy bridal lengha fit effortlessly with zero waistline tightness; sustained full energy through late-night functions.',
     image: '/assets/too.png',
+    mobileImage: 'https://images.pexels.com/photos/38551352/pexels-photo-38551352.jpeg',
     alt: 'Bridal & Sangeet Prep client celebration',
-    imagePosition: 'object-top',
   },
   {
     id: 'case-02',
@@ -1132,10 +1134,14 @@ export default function SecondLandingPage() {
                   <div className="relative h-[230px] sm:h-[270px] w-full bg-surface-secondary overflow-hidden border-b border-border-subtle/60">
                     <img
                       key={`mob-${currentCase.id}`}
-                      src={currentCase.image}
+                      src={currentCase.mobileImage || currentCase.image}
                       alt={currentCase.alt}
-                      style={{ objectPosition: currentCase.id === 'case-01' ? 'center top' : 'center center' }}
-                      className={`w-full h-full object-cover ${currentCase.id === 'case-01' ? 'object-top' : 'object-center'} transition-all duration-500 ease-editorial`}
+                      style={{
+                        objectPosition:
+                          currentCase.mobileImagePosition ||
+                          (currentCase.mobileImage ? 'center center' : currentCase.id === 'case-01' ? 'center top' : 'center center'),
+                      }}
+                      className="w-full h-full object-cover transition-all duration-500 ease-editorial"
                       loading="lazy"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
