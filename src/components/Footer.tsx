@@ -61,7 +61,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-ink py-14">
+    <footer className="bg-ink py-10 sm:py-14">
       <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
         <div className="flex flex-col lg:flex-row justify-between gap-10">
           <div className="max-w-sm">

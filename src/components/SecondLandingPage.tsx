@@ -1,4 +1,4 @@
-import { useState, useEffect, type FormEvent } from 'react';
+import { useState, useEffect, useRef, type FormEvent } from 'react';
 import {
   CheckCircle2,
   ShieldCheck,
@@ -39,7 +39,7 @@ const caseStudies: CaseStudy[] = [
       'Adjusted macro ratios for home-cooked meals, added targeted gut-support nutrients, and applied a specialized 7-day pre-event hydration plan.',
     result:
       'Heavy bridal lengha fit effortlessly with zero waistline tightness; sustained full energy through late-night functions.',
-    image: '/assets/t0.png',
+    image: '/assets/too.png',
     alt: 'Bridal & Sangeet Prep client celebration',
   },
   {
@@ -54,7 +54,7 @@ const caseStudies: CaseStudy[] = [
       'Structuring event-day meal timing and pairing traditional party foods with metabolic-balancing choices earlier in the day.',
     result:
       'Both reduced waist circumference and felt light, active, and relaxed during their entire hosting week.',
-    image: '/assets/t02.png',
+    image: '/assets/toop.png',
     alt: 'Milestone Anniversary & Hosting celebration',
   },
   {
@@ -69,7 +69,7 @@ const caseStudies: CaseStudy[] = [
       'Optimized digestion with simple spice-pairing adjustments and an anti-inflammatory routine for frequent travel days.',
     result:
       'Total digestive ease, balanced daily energy, and full confidence in every photo.',
-    image: '/assets/t03-1.png',
+    image: '/assets/to2.png',
     alt: 'Family Reunion & Travel celebration outcome',
   },
 ];
@@ -175,9 +175,83 @@ function SecondPageSkeleton() {
   );
 }
 
+// Fast speed count-up hook so final numerical values resolve quickly and cleanly
+function useCountUp(target: number, duration: number = 650, trigger: boolean = false) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (!trigger) return;
+    let startTime: number | null = null;
+    let animationFrameId: number;
+
+    const step = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // Snappy ease-out curve for fast, energetic counting that settles immediately
+      const easeOut = 1 - Math.pow(1 - progress, 2);
+      setCount(Math.round(easeOut * target));
+
+      if (progress < 1) {
+        animationFrameId = requestAnimationFrame(step);
+      } else {
+        setCount(target);
+      }
+    };
+
+    animationFrameId = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [target, duration, trigger]);
+
+  return count;
+}
+
 export default function SecondLandingPage() {
   const [isReady, setIsReady] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+
+  // Section 2 Stats Fast Speed Count-Up (Cards 1, 2, 3 only)
+  const statsSectionRef = useRef<HTMLDivElement>(null);
+  const [statsAnimated, setStatsAnimated] = useState(false);
+
+  useEffect(() => {
+    const node = statsSectionRef.current;
+    if (!node) return;
+
+    const handleCheck = () => {
+      const rect = node.getBoundingClientRect();
+      if (rect.top <= window.innerHeight * 0.95 && rect.bottom >= 0) {
+        setStatsAnimated(true);
+      }
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setStatsAnimated(true);
+          observer.disconnect();
+        }
+      },
+      {
+        threshold: 0.05,
+        rootMargin: '120px 0px 60px 0px',
+      }
+    );
+
+    observer.observe(node);
+    window.addEventListener('scroll', handleCheck, { passive: true });
+    handleCheck();
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', handleCheck);
+    };
+  }, []);
+
+  // Snappy durations: ~650ms, ~550ms, ~400ms for swift visual resolution
+  const countConsultations = useCountUp(5000, 650, statsAnimated);
+  const countYears = useCountUp(30, 550, statsAnimated);
+  const countCare = useCountUp(1, 400, statsAnimated);
 
   // Form State
   const [formData, setFormData] = useState<FormDataState>({
@@ -321,98 +395,204 @@ export default function SecondLandingPage() {
       >
         <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
           <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-10 sm:gap-12 lg:gap-16 items-center">
-            {/* Visual Column: Layered Lifestyle Photo Composition */}
-            <div className="relative reveal-scale order-1 lg:order-2 w-full">
-              <div className="relative h-[480px] xs:h-[510px] sm:h-[540px] lg:h-[560px] w-full max-w-[540px] mx-auto select-none pt-2">
-                {/* Ambient glow backdrop */}
-                <div className="absolute inset-0 bg-radial-gradient from-sand-light/60 to-transparent pointer-events-none" />
+            {/* Visual Column: Editorial 3-Card Collage + Floating Consultation Layer */}
+            <div className="relative reveal-scale order-1 lg:order-2 w-full flex justify-center lg:justify-end">
+              {/* DESKTOP & TABLET COMPOSITION (sm and above) */}
+              <div className="hidden sm:block relative w-full max-w-[520px] lg:max-w-[550px] xl:max-w-[560px] h-[530px] lg:h-[550px] select-none">
+                {/* Soft ambient mist backdrop */}
+                <div className="absolute inset-0 bg-radial-gradient from-sand-light/50 to-transparent pointer-events-none" />
 
-                {/* Card 1: Your Goal — Weddings & Milestone Prep */}
-                <div className="absolute top-0 left-0 w-[55%] sm:w-[52%] h-[225px] sm:h-[250px] z-10 rounded-2xl sm:rounded-3xl overflow-hidden border border-white/25 shadow-[0_16px_36px_rgba(20,24,18,0.18)] transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl group cursor-pointer">
+                {/* ================= TOP ROW ================= */}
+                {/* Card 1: YOUR GOAL (Upper Left, Depth Level 1, sits slightly higher & forward) */}
+                <div className="absolute top-0 left-0 w-[53%] h-[240px] lg:h-[250px] z-10 rounded-[24px] overflow-hidden border border-white/30 shadow-[0_12px_28px_rgba(20,24,18,0.11)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_36px_rgba(20,24,18,0.16)] group cursor-pointer">
                   <img
-                    src="/assets/t0.png"
-                    alt="South Asian bridal and milestone celebration preparation"
-                    className="w-full h-full object-cover object-center transition-transform duration-500 ease-editorial group-hover:scale-104"
+                    src="/assets/yl.png"
+                    alt="Active lifestyle and fitness preparation"
+                    className="w-full h-full object-cover object-center transition-transform duration-500 ease-editorial group-hover:scale-103"
                     loading="eager"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/15" />
-                  <div className="absolute inset-0 p-4 sm:p-5 flex flex-col justify-between">
+                  {/* Subtle dark bottom gradient for text contrast */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/10" />
+
+                  <div className="absolute inset-0 p-4.5 sm:p-5 flex flex-col justify-between">
                     <div>
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-white/20 backdrop-blur-md border border-white/25 text-white text-[10.5px] sm:text-[11px] font-600 uppercase tracking-wider">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-black/35 backdrop-blur-md border border-white/20 text-white text-[10.5px] sm:text-[11px] font-600 uppercase tracking-wider">
                         Your Goal
                       </span>
                     </div>
                     <div>
-                      <h3 className="font-display font-600 text-white text-[15px] sm:text-[17px] leading-snug drop-shadow-xs">
+                      <h3 className="font-display font-600 text-white text-[15px] sm:text-[16.5px] leading-snug drop-shadow-xs">
                         Feel confident for the moments ahead.
                       </h3>
                     </div>
                   </div>
                 </div>
 
-                {/* Card 2: Your Food — Celebratory Dining & Traditional Food */}
-                <div className="absolute top-2 sm:top-4 right-0 w-[54%] sm:w-[50%] h-[215px] sm:h-[240px] z-10 rounded-2xl sm:rounded-3xl overflow-hidden border border-white/25 shadow-[0_16px_36px_rgba(20,24,18,0.18)] transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl group cursor-pointer">
+                {/* Card 2: YOUR FOOD (Upper Right, Depth Level 2, overlaps YOUR GOAL subtly by ~16px) */}
+                <div className="absolute top-3 sm:top-4 right-0 w-[51%] h-[235px] lg:h-[245px] z-20 rounded-[24px] overflow-hidden border border-white/30 shadow-[0_14px_30px_rgba(20,24,18,0.13)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(20,24,18,0.18)] group cursor-pointer">
                   <img
-                    src="/assets/t02.png"
-                    alt="South Asian shared festive meals and balanced nutrition"
-                    className="w-full h-full object-cover object-center transition-transform duration-500 ease-editorial group-hover:scale-104"
+                    src="/assets/yf.png"
+                    alt="Traditional South Asian nutrition and joyful meals"
+                    className="w-full h-full object-cover object-center transition-transform duration-500 ease-editorial group-hover:scale-103"
                     loading="eager"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/15" />
-                  <div className="absolute inset-0 p-4 sm:p-5 flex flex-col justify-between">
+                  {/* Subtle dark bottom gradient for text contrast */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/10" />
+
+                  <div className="absolute inset-0 p-4.5 sm:p-5 flex flex-col justify-between">
                     <div>
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-white/20 backdrop-blur-md border border-white/25 text-white text-[10.5px] sm:text-[11px] font-600 uppercase tracking-wider">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-black/35 backdrop-blur-md border border-white/20 text-white text-[10.5px] sm:text-[11px] font-600 uppercase tracking-wider">
                         Your Food
                       </span>
                     </div>
                     <div>
-                      <h3 className="font-display font-600 text-white text-[15px] sm:text-[17px] leading-snug drop-shadow-xs">
+                      <h3 className="font-display font-600 text-white text-[15px] sm:text-[16.5px] leading-snug drop-shadow-xs">
                         Keep the food you actually love.
                       </h3>
                     </div>
                   </div>
                 </div>
 
-                {/* Card 3: Your Life — Travel & Everyday Routine */}
-                <div className="absolute bottom-2 sm:bottom-3 left-0 sm:left-2 w-[60%] sm:w-[56%] h-[235px] sm:h-[265px] z-20 rounded-2xl sm:rounded-3xl overflow-hidden border border-white/25 shadow-[0_16px_36px_rgba(20,24,18,0.18)] transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl group cursor-pointer">
+                {/* ================= BOTTOM CARD ================= */}
+                {/* Card 3: YOUR LIFE (Grounding Anchor, ~80% width, aligned toward left/center) */}
+                <div className="absolute bottom-2 sm:bottom-3 left-1 sm:left-3 w-[78%] lg:w-[80%] h-[250px] lg:h-[265px] z-10 rounded-[24px] overflow-hidden border border-white/30 shadow-[0_14px_32px_rgba(20,24,18,0.12)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(20,24,18,0.17)] group cursor-pointer">
                   <img
-                    src="/assets/t03-1.png"
-                    alt="South Asian celebration, travel, and active daily lifestyle"
-                    className="w-full h-full object-cover object-center transition-transform duration-500 ease-editorial group-hover:scale-104"
+                    src="/assets/om5.png"
+                    alt="South Asian everyday lifestyle and celebration"
+                    className="w-full h-full object-cover object-center transition-transform duration-500 ease-editorial group-hover:scale-103"
                     loading="eager"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/15" />
-                  <div className="absolute inset-0 p-4 sm:p-5 flex flex-col justify-between">
+                  {/* Subtle dark bottom gradient for text contrast */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/10" />
+
+                  <div className="absolute inset-0 p-4.5 sm:p-5 flex flex-col justify-between">
                     <div>
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-white/20 backdrop-blur-md border border-white/25 text-white text-[10.5px] sm:text-[11px] font-600 uppercase tracking-wider">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-black/35 backdrop-blur-md border border-white/20 text-white text-[10.5px] sm:text-[11px] font-600 uppercase tracking-wider">
                         Your Life
                       </span>
                     </div>
-                    <div>
-                      <h3 className="font-display font-600 text-white text-[15px] sm:text-[17px] leading-snug drop-shadow-xs">
+                    <div className="max-w-[70%]">
+                      <h3 className="font-display font-600 text-white text-[15px] sm:text-[16.5px] leading-snug drop-shadow-xs">
                         Build something you can live with.
                       </h3>
                     </div>
                   </div>
                 </div>
 
-                {/* Foreground Trust Card: Floats on the Your Life card on the top right side without overlapping Your Food */}
+                {/* ================= FLOATING CONSULTATION CARD ================= */}
+                {/* Overlaps lower-right portion of YOUR LIFE by ~40% & extends slightly outside right edge (Depth Level 4) */}
                 <div
                   onClick={scrollToConsultation}
-                  className="absolute bottom-[135px] sm:bottom-[155px] left-[20%] sm:left-[24%] w-[62%] sm:w-[56%] z-40 bg-surface-white/95 backdrop-blur-md rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-border-subtle shadow-[0_20px_45px_rgba(43,45,36,0.18)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_25px_50px_rgba(43,45,36,0.24)] cursor-pointer group"
+                  className="absolute bottom-1 sm:bottom-2 right-[-8px] lg:right-[-16px] w-[245px] sm:w-[260px] lg:w-[270px] z-30 bg-surface-white/95 backdrop-blur-md rounded-[22px] p-4 sm:p-4.5 border border-border-subtle shadow-[0_16px_36px_rgba(43,45,36,0.14)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_22px_44px_rgba(43,45,36,0.20)] cursor-pointer group"
                 >
                   <div className="flex items-center gap-1.5 mb-1">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-[10.5px] sm:text-[11px] font-700 uppercase tracking-wider text-emerald-800">
+                    <span className="text-[10px] sm:text-[10.5px] font-700 uppercase tracking-wider text-emerald-800">
                       Free 20-min Consult
                     </span>
                   </div>
-                  <p className="font-display font-600 text-ink text-[14px] sm:text-[15px] leading-snug">
+                  <p className="font-display font-600 text-ink text-[13.5px] sm:text-[14.5px] leading-snug">
                     1:1 with a real coach
                   </p>
-                  <p className="text-[11.5px] sm:text-[12px] text-ink-secondary mt-0.5">
+                  <p className="text-[11px] sm:text-[11.5px] text-ink-secondary mt-0.5">
                     No forms. No bots. Culturally tailored.
                   </p>
+                </div>
+              </div>
+
+              {/* MOBILE CONTROLLED VERTICAL STACK (< sm) */}
+              <div className="sm:hidden w-full max-w-[420px] mx-auto flex flex-col gap-3.5 select-none pt-1">
+                {/* 1. YOUR GOAL */}
+                <div className="w-full h-[195px] rounded-[22px] overflow-hidden border border-white/25 shadow-sm relative group cursor-pointer">
+                  <img
+                    src="/assets/yl.png"
+                    alt="Active lifestyle and fitness preparation"
+                    className="w-full h-full object-cover object-center"
+                    loading="eager"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/10" />
+                  <div className="absolute inset-0 p-4 flex flex-col justify-between">
+                    <div>
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-black/35 backdrop-blur-md border border-white/20 text-white text-[10.5px] font-600 uppercase tracking-wider">
+                        Your Goal
+                      </span>
+                    </div>
+                    <div>
+                      <h3 className="font-display font-600 text-white text-[15px] leading-snug">
+                        Feel confident for the moments ahead.
+                      </h3>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 2. YOUR FOOD */}
+                <div className="w-full h-[195px] rounded-[22px] overflow-hidden border border-white/25 shadow-sm relative group cursor-pointer">
+                  <img
+                    src="/assets/yf.png"
+                    alt="Traditional South Asian nutrition and joyful meals"
+                    className="w-full h-full object-cover object-center"
+                    loading="eager"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/10" />
+                  <div className="absolute inset-0 p-4 flex flex-col justify-between">
+                    <div>
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-black/35 backdrop-blur-md border border-white/20 text-white text-[10.5px] font-600 uppercase tracking-wider">
+                        Your Food
+                      </span>
+                    </div>
+                    <div>
+                      <h3 className="font-display font-600 text-white text-[15px] leading-snug">
+                        Keep the food you actually love.
+                      </h3>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 3. YOUR LIFE */}
+                <div className="w-full h-[205px] rounded-[22px] overflow-hidden border border-white/25 shadow-sm relative group cursor-pointer">
+                  <img
+                    src="/assets/om5.png"
+                    alt="South Asian everyday lifestyle and celebration"
+                    className="w-full h-full object-cover object-center"
+                    loading="eager"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/10" />
+                  <div className="absolute inset-0 p-4 flex flex-col justify-between">
+                    <div>
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-black/35 backdrop-blur-md border border-white/20 text-white text-[10.5px] font-600 uppercase tracking-wider">
+                        Your Life
+                      </span>
+                    </div>
+                    <div>
+                      <h3 className="font-display font-600 text-white text-[15px] leading-snug">
+                        Build something you can live with.
+                      </h3>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 4. CONSULTATION CARD (Positioned cleanly below YOUR LIFE on mobile, not overlapping) */}
+                <div
+                  onClick={scrollToConsultation}
+                  className="w-full bg-surface-white rounded-2xl p-4 border border-border-subtle shadow-xs flex items-center justify-between gap-3 cursor-pointer group"
+                >
+                  <div className="flex flex-col">
+                    <div className="flex items-center gap-1.5 mb-0.5">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                      <span className="text-[10px] font-700 uppercase tracking-wider text-emerald-800">
+                        Free 20-min Consult
+                      </span>
+                    </div>
+                    <p className="font-display font-600 text-ink text-[14px] leading-snug">
+                      1:1 with a real coach
+                    </p>
+                    <p className="text-[11.5px] text-ink-secondary mt-0.5">
+                      No forms. No bots. Culturally tailored.
+                    </p>
+                  </div>
+                  <div className="w-8 h-8 rounded-full bg-brand-soft/60 flex items-center justify-center text-brand-deep shrink-0 group-hover:bg-brand-primary group-hover:text-white transition-colors">
+                    <span className="text-[15px] font-medium">→</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -426,10 +606,10 @@ export default function SecondLandingPage() {
                 </span>
               </div>
 
-              {/* Primary Headline */}
-              <h1 className="reveal delay-100 mt-4 font-display font-600 text-ink text-[32px] sm:text-[44px] lg:text-[48px] leading-[1.12] tracking-tight text-balance max-w-xl">
-                Your Food Is Part of Your Life.
-                <span className="block mt-1">Your Nutrition Should Be, Too.</span>
+              {/* Primary Headline: Unified Hierarchy & Alignment */}
+              <h1 className="reveal delay-100 mt-4 font-display font-600 text-ink text-[32px] sm:text-[44px] lg:text-[48px] leading-[1.14] tracking-tight max-w-xl">
+                <span>Your Food Is Part of Your Life.</span>
+                <span className="block mt-1 sm:mt-1.5">Your Nutrition Should Be, Too.</span>
               </h1>
 
               {/* Supporting Headline */}
@@ -438,8 +618,8 @@ export default function SecondLandingPage() {
               </h2>
 
               {/* Body Copy */}
-              <div className="reveal delay-300 mt-5 space-y-3.5 text-ink-secondary text-[15.5px] sm:text-[16.5px] leading-[1.68] max-w-xl text-pretty">
-                <p>
+              <div className="reveal delay-300 mt-4 sm:mt-5 space-y-3 sm:space-y-3.5 text-ink-secondary text-[14.5px] sm:text-[16.5px] leading-[1.6] sm:leading-[1.68] max-w-xl text-pretty">
+                <p className="hidden sm:block">
                   Whether you’re preparing for a wedding, engagement, milestone celebration, or another important occasion, you deserve more than a last-minute diet.
                 </p>
                 <p>
@@ -448,39 +628,39 @@ export default function SecondLandingPage() {
               </div>
 
               {/* Primary CTA */}
-              <div className="reveal delay-400 mt-7 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+              <div className="reveal delay-400 mt-6 sm:mt-7 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
                 <button
                   onClick={scrollToConsultation}
-                  className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-brand-deep text-surface-white text-[15.5px] font-500 hover:bg-brand-primary transition-all duration-250 ease-editorial hover:-translate-y-0.5 shadow-xs cursor-pointer"
+                  className="inline-flex items-center justify-center px-8 py-3.5 sm:py-4 rounded-xl bg-brand-deep text-surface-white text-[15px] sm:text-[15.5px] font-500 hover:bg-brand-primary transition-all duration-250 ease-editorial hover:-translate-y-0.5 shadow-xs cursor-pointer"
                 >
                   <span>Book Your Consultation</span>
                 </button>
               </div>
 
               {/* Proof Hierarchy: 3 Key Pillars + Verified Stat */}
-              <div className="reveal delay-500 mt-7 pt-6 border-t border-border-subtle space-y-3.5">
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[13px] sm:text-[13.5px] text-ink font-500">
+              <div className="reveal delay-500 mt-6 sm:mt-7 pt-5 sm:pt-6 border-t border-border-subtle space-y-3 sm:space-y-3.5">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[12.5px] sm:text-[13.5px] text-ink font-500">
                   <span className="inline-flex items-center gap-1.5">
                     <CheckCircle2 size={13.5} className="text-brand-deep shrink-0" />
                     1:1 Personalized Care
                   </span>
-                  <span className="text-accent-warm">·</span>
+                  <span className="text-accent-warm hidden xs:inline">·</span>
                   <span className="inline-flex items-center gap-1.5">
                     <CheckCircle2 size={13.5} className="text-brand-deep shrink-0" />
                     Online Across the U.S.
                   </span>
-                  <span className="text-accent-warm">·</span>
+                  <span className="text-accent-warm hidden xs:inline">·</span>
                   <span className="inline-flex items-center gap-1.5">
                     <CheckCircle2 size={13.5} className="text-brand-deep shrink-0" />
                     South Asian Expertise
                   </span>
                 </div>
 
-                <div className="flex items-baseline gap-3 pt-1">
-                  <span className="font-display font-600 text-brand-deep text-[28px] sm:text-[32px] leading-none shrink-0">
+                <div className="flex items-center sm:items-baseline gap-3 pt-1">
+                  <span className="font-display font-600 text-brand-deep text-[30px] sm:text-[32px] leading-none shrink-0">
                     91%
                   </span>
-                  <p className="text-[13px] sm:text-[13.5px] text-ink-secondary leading-snug">
+                  <p className="text-[12.5px] sm:text-[13.5px] text-ink-secondary leading-snug">
                     of clients report feeling lighter, more energetic, and camera-ready within 4 weeks.
                   </p>
                 </div>
@@ -495,7 +675,7 @@ export default function SecondLandingPage() {
       {/* ============================================================== */}
       <section
         id="how-it-works"
-        className="py-18 lg:py-26 bg-surface-secondary/40 border-b border-border-subtle scroll-mt-20"
+        className="py-10 sm:py-16 lg:py-24 bg-surface-secondary/40 border-b border-border-subtle scroll-mt-20"
       >
         <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
           <div className="grid lg:grid-cols-[1fr_minmax(460px,540px)] gap-12 lg:gap-16 items-start">
@@ -513,51 +693,55 @@ export default function SecondLandingPage() {
                   Let’s Make a Plan That Works for You
                 </h2>
 
-                <div className="reveal delay-200 mt-6 space-y-4 text-ink-secondary text-[15.5px] sm:text-[16.5px] leading-[1.68]">
-                  <p>
+                <div className="reveal delay-200 mt-4 sm:mt-6 space-y-3 sm:space-y-4 text-ink-secondary text-[14.5px] sm:text-[16.5px] leading-[1.6] sm:leading-[1.68]">
+                  <p className="hidden sm:block">
                     When you have an important occasion coming up, it’s easy to feel unsure about where to start.
                   </p>
-                  <p>
+                  <p className="hidden sm:block">
                     You may have tried diets before. You may be wondering what to eat, what to change, or how to make it work around your everyday life.
                   </p>
                   <p>
-                    Your consultation is a chance to talk through all of that with a professional — and find an approach that makes sense for you.
+                    Your consultation is a chance to talk through your goals, food, and timeline with a professional — and find an approach that makes sense for you.
                   </p>
                 </div>
               </div>
 
-              {/* Trust Statistics */}
-              <div className="reveal delay-300 mt-10 pt-8 border-t border-border-subtle">
+              {/* Trust Statistics with Count-Up Animation for 3 Cards (Card 4 Static) */}
+              <div ref={statsSectionRef} className="reveal delay-300 mt-10 pt-8 border-t border-border-subtle">
                 <div className="grid grid-cols-2 gap-7 sm:gap-9">
+                  {/* Card 1: 5000+ */}
                   <div>
-                    <div className="font-display font-500 text-ink text-[34px] sm:text-[42px] leading-none tracking-tight">
-                      5000+
+                    <div className="font-display font-500 text-ink text-[34px] sm:text-[42px] leading-none tracking-tight tabular-nums">
+                      {statsAnimated ? `${countConsultations}+` : '0+'}
                     </div>
                     <div className="text-[13.5px] font-500 text-ink-secondary mt-2">
                       Consultations
                     </div>
                   </div>
 
+                  {/* Card 2: 30+ */}
                   <div>
-                    <div className="font-display font-500 text-ink text-[34px] sm:text-[42px] leading-none tracking-tight">
-                      30+
+                    <div className="font-display font-500 text-ink text-[34px] sm:text-[42px] leading-none tracking-tight tabular-nums">
+                      {statsAnimated ? `${countYears}+` : '0+'}
                     </div>
                     <div className="text-[13.5px] font-500 text-ink-secondary mt-2">
                       Years of Experience
                     </div>
                   </div>
 
+                  {/* Card 3: 1:1 */}
                   <div>
-                    <div className="font-display font-500 text-ink text-[34px] sm:text-[42px] leading-none tracking-tight">
-                      1:1
+                    <div className="font-display font-500 text-ink text-[34px] sm:text-[42px] leading-none tracking-tight tabular-nums">
+                      {statsAnimated ? `${countCare}:1` : '0:1'}
                     </div>
                     <div className="text-[13.5px] font-500 text-ink-secondary mt-2">
                       Personalised Care
                     </div>
                   </div>
 
+                  {/* Card 4: South Asian (STATIC - No Animation) */}
                   <div>
-                    <div className="font-display font-500 text-brand-deep text-[22px] sm:text-[26px] leading-snug font-600">
+                    <div className="font-display text-brand-deep text-[22px] sm:text-[26px] leading-snug font-600">
                       South Asian
                     </div>
                     <div className="text-[13.5px] font-500 text-ink-secondary mt-1">
@@ -811,7 +995,7 @@ export default function SecondLandingPage() {
       {/* SECTION 3: YOUR LIFE DOESN'T HAVE TO GO ON HOLD */}
       {/* 3 Image Feature Cards: Non-overlapping, clean alignment, no text badge */}
       {/* ============================================================== */}
-      <section className="py-20 lg:py-28 bg-surface-primary border-b border-border-subtle">
+      <section className="py-10 sm:py-16 lg:py-24 bg-surface-primary border-b border-border-subtle">
         <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
           <div className="reveal text-left sm:text-center max-w-3xl sm:mx-auto">
             {/* Section Badge 3 */}
@@ -966,14 +1150,14 @@ export default function SecondLandingPage() {
       {/* ============================================================== */}
       <section
         id="outcomes"
-        className="py-20 lg:py-28 relative overflow-hidden bg-[#F5F1EB] border-b border-border-subtle scroll-mt-20"
+        className="py-10 sm:py-16 lg:py-24 relative overflow-hidden bg-[#F5F1EB] border-b border-border-subtle scroll-mt-20"
       >
         {/* Serene soft mist cloud background */}
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_35%_50%,rgba(255,255,255,0.92)_0%,rgba(255,255,255,0)_70%)]" />
 
         <div className="relative mx-auto max-w-[1280px] px-6 lg:px-10">
           {/* Centered Section Header: Section Badge, Title & Description in Middle */}
-          <div className="reveal text-left sm:text-center max-w-3xl sm:mx-auto mb-12 sm:mb-16">
+          <div className="reveal text-left sm:text-center max-w-3xl sm:mx-auto mb-8 sm:mb-16">
             <span className="text-eyebrow text-brand-deep uppercase block">
               Proven Outcomes
             </span>
@@ -991,10 +1175,10 @@ export default function SecondLandingPage() {
           {(() => {
             const currentCase = caseStudies[activeSlide];
             return (
-              <div className="grid lg:grid-cols-[1fr_1.15fr] gap-8 lg:gap-12 items-stretch max-w-5xl mx-auto">
-                {/* Left Side: Image Placeholder for each card (changes simultaneously) */}
+              <div className="grid lg:grid-cols-[1fr_1.15fr] gap-6 lg:gap-10 items-stretch max-w-5xl mx-auto">
+                {/* Left Side: Image Placeholder for each card (reduced height) */}
                 <div className="reveal delay-100 h-full">
-                  <div className="h-full min-h-[360px] sm:min-h-[440px] lg:min-h-full rounded-2xl sm:rounded-3xl overflow-hidden border border-border-subtle shadow-[0_12px_36px_rgba(43,45,36,0.06)] bg-surface-white relative group">
+                  <div className="h-[250px] sm:h-[300px] lg:h-full lg:min-h-[380px] rounded-2xl sm:rounded-3xl overflow-hidden border border-border-subtle shadow-[0_12px_36px_rgba(43,45,36,0.06)] bg-surface-white relative group">
                     <img
                       key={currentCase.id}
                       src={currentCase.image}
@@ -1006,93 +1190,93 @@ export default function SecondLandingPage() {
                   </div>
                 </div>
 
-                {/* Right Side: The Outcome Card */}
+                {/* Right Side: The Outcome Card (compacted height & refined padding) */}
                 <div className="reveal delay-150 h-full">
-                  <div className="bg-surface-white rounded-2xl sm:rounded-3xl border border-border-subtle shadow-[0_12px_36px_rgba(43,45,36,0.06)] p-6 sm:p-8 lg:p-9 h-full flex flex-col justify-between transition-all duration-300">
+                  <div className="bg-surface-white rounded-2xl sm:rounded-3xl border border-border-subtle shadow-[0_12px_36px_rgba(43,45,36,0.06)] p-5 sm:p-6 lg:p-7 h-full flex flex-col justify-between transition-all duration-300">
                     <div>
                       {/* Top Header Row: MEMBER, DIAGNOSIS, and City Badge on Top Right */}
                       <div>
                         <div className="flex items-start justify-between gap-4">
                           <div>
-                            <span className="text-[11px] sm:text-[11.5px] font-700 uppercase tracking-widest text-[#2B2D24]/70 block">
+                            <span className="text-[10.5px] sm:text-[11px] font-700 uppercase tracking-widest text-[#2B2D24]/70 block">
                               MEMBER
                             </span>
-                            <span className="font-display font-600 text-ink text-[17px] sm:text-[19px] block mt-1 leading-snug">
+                            <span className="font-display font-600 text-ink text-[16.5px] sm:text-[18px] block mt-0.5 leading-snug">
                               {currentCase.member}
                             </span>
                           </div>
 
                           {/* City Name as Badge on Top Right */}
-                          <span className="inline-flex items-center px-3 py-1 rounded-full text-[11.5px] sm:text-[12px] font-600 bg-[#F4EFEA] text-brand-deep border border-border-subtle/80 shrink-0">
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] sm:text-[11.5px] font-600 bg-[#F4EFEA] text-brand-deep border border-border-subtle/80 shrink-0">
                             {currentCase.city}
                           </span>
                         </div>
 
-                        <div className="mt-3">
-                          <span className="text-[11px] sm:text-[11.5px] font-700 uppercase tracking-widest text-[#2B2D24]/70 block">
+                        <div className="mt-2 sm:mt-2.5">
+                          <span className="text-[10.5px] sm:text-[11px] font-700 uppercase tracking-widest text-[#2B2D24]/70 block">
                             DIAGNOSIS
                           </span>
-                          <span className="text-[14px] sm:text-[15px] font-500 text-ink block mt-1 leading-snug">
+                          <span className="text-[13.5px] sm:text-[14.5px] font-500 text-ink block mt-0.5 leading-snug">
                             {currentCase.diagnosis}
                           </span>
                         </div>
 
                         {/* Thin divider line under Member / Diagnosis */}
-                        <div className="h-[1px] bg-border-subtle/70 my-4" />
+                        <div className="h-[1px] bg-border-subtle/70 my-2.5 sm:my-3" />
 
                         {/* GOALS */}
                         <div>
-                          <span className="text-[11px] sm:text-[11.5px] font-700 uppercase tracking-widest text-[#2B2D24]/70 block mb-1">
+                          <span className="text-[10.5px] sm:text-[11px] font-700 uppercase tracking-widest text-[#2B2D24]/70 block mb-0.5">
                             GOALS
                           </span>
-                          <p className="text-[13.5px] sm:text-[14px] text-ink-secondary leading-relaxed">
+                          <p className="text-[13px] sm:text-[13.5px] text-ink-secondary leading-relaxed">
                             {currentCase.goal}
                           </p>
                         </div>
                       </div>
 
                       {/* Divider 1 */}
-                      <div className="h-[1px] bg-border-subtle/70 my-4 sm:my-5" />
+                      <div className="h-[1px] bg-border-subtle/70 my-2.5 sm:my-3" />
 
-                      {/* THE STRATEGY (actions replaced with The Strategy & removed 'The Strategy:' in description) */}
+                      {/* THE STRATEGY */}
                       <div>
-                        <span className="text-[11px] sm:text-[11.5px] font-700 uppercase tracking-widest text-[#2B2D24]/70 block mb-1.5">
+                        <span className="text-[10.5px] sm:text-[11px] font-700 uppercase tracking-widest text-[#2B2D24]/70 block mb-0.5">
                           THE STRATEGY
                         </span>
-                        <p className="text-[13.5px] sm:text-[14px] text-ink-secondary leading-relaxed">
+                        <p className="text-[13px] sm:text-[13.5px] text-ink-secondary leading-relaxed">
                           {currentCase.strategy}
                         </p>
                       </div>
 
                       {/* Divider 2 */}
-                      <div className="h-[1px] bg-border-subtle/70 my-4 sm:my-5" />
+                      <div className="h-[1px] bg-border-subtle/70 my-2.5 sm:my-3" />
 
-                      {/* RESULT (wins replaced with Result & removed 'Result:' in description) */}
+                      {/* RESULT */}
                       <div>
-                        <span className="text-[11px] sm:text-[11.5px] font-700 uppercase tracking-widest text-[#2B2D24]/70 block mb-1.5">
+                        <span className="text-[10.5px] sm:text-[11px] font-700 uppercase tracking-widest text-[#2B2D24]/70 block mb-0.5">
                           RESULT
                         </span>
-                        <p className="text-[13.5px] sm:text-[14px] text-ink font-500 leading-relaxed">
+                        <p className="text-[13px] sm:text-[13.5px] text-ink font-500 leading-relaxed">
                           {currentCase.result}
                         </p>
                       </div>
 
                       {/* Divider 3 */}
-                      <div className="h-[1px] bg-border-subtle/70 my-4 sm:my-5" />
+                      <div className="h-[1px] bg-border-subtle/70 my-2.5 sm:my-3" />
                     </div>
 
                     {/* Footer: Dietitian Shared by in Hierarchical Alignment */}
-                    <div className="flex items-center gap-3 pt-1">
+                    <div className="flex items-center gap-3 pt-2">
                       <img
                         src={founderImg}
                         alt="Dr. Hena Nafis"
-                        className="w-9 h-9 rounded-full object-cover object-top ring-1 ring-border-subtle shrink-0"
+                        className="w-8 h-8 rounded-full object-cover object-top ring-1 ring-border-subtle shrink-0"
                       />
                       <div className="flex flex-col justify-center">
-                        <span className="text-[13px] sm:text-[13.5px] font-600 text-ink leading-snug">
+                        <span className="text-[12.5px] sm:text-[13px] font-600 text-ink leading-snug">
                           Shared by Dr. Hena Nafis
                         </span>
-                        <span className="text-[11.5px] sm:text-[12px] text-ink-secondary mt-0.5">
+                        <span className="text-[11px] sm:text-[11.5px] text-ink-secondary mt-0.5">
                           Chief Nutritionist &amp; Registered Dietitian
                         </span>
                       </div>
@@ -1161,7 +1345,7 @@ export default function SecondLandingPage() {
       {/* ============================================================== */}
       <section
         id="why-sa-wellness"
-        className="py-20 lg:py-28 bg-surface-primary border-b border-border-subtle scroll-mt-20"
+        className="py-10 sm:py-16 lg:py-24 bg-surface-primary border-b border-border-subtle scroll-mt-20"
       >
         <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
           <div className="reveal text-left sm:text-center max-w-3xl sm:mx-auto">
@@ -1179,7 +1363,7 @@ export default function SecondLandingPage() {
           </div>
 
           {/* Comparison Table */}
-          <div className="reveal delay-150 mt-14 max-w-4xl mx-auto bg-surface-white rounded-editorial border border-border-subtle overflow-hidden shadow-sm">
+          <div className="reveal delay-150 mt-8 sm:mt-14 max-w-4xl mx-auto bg-surface-white rounded-editorial border border-border-subtle overflow-hidden shadow-sm">
             {/* Header */}
             <div className="grid grid-cols-1 sm:grid-cols-2 border-b border-border-subtle text-[13.5px] font-600">
               <div className="p-4 sm:p-5 text-ink-secondary bg-surface-primary/60">
@@ -1236,17 +1420,17 @@ export default function SecondLandingPage() {
       {/* ============================================================== */}
       <section
         id="about"
-        className="py-20 lg:py-28 bg-surface-secondary/40 border-b border-border-subtle scroll-mt-20"
+        className="py-10 sm:py-16 lg:py-24 bg-surface-secondary/40 border-b border-border-subtle scroll-mt-20"
       >
         <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
-          <div className="grid lg:grid-cols-[0.9fr_1.1fr] gap-12 lg:gap-16 items-center">
+          <div className="grid lg:grid-cols-[0.9fr_1.1fr] gap-8 sm:gap-12 lg:gap-16 items-center">
             {/* Dr. Hena Nafis Image on Left Side - reduced radius on mobile */}
             <div className="relative reveal-scale">
               <div className="overflow-hidden rounded-xl sm:rounded-editorial border border-border-subtle shadow-md bg-surface-white">
                 <img
                   src={founderImg}
                   alt="Dr. Hena Nafis, Founder, SA Wellness"
-                  className="w-full h-[420px] sm:h-[500px] object-cover object-top"
+                  className="w-full h-[380px] sm:h-[500px] object-cover object-top"
                   loading="lazy"
                   width={900}
                   height={600}
@@ -1257,21 +1441,21 @@ export default function SecondLandingPage() {
             {/* Founder Statement and Attribution */}
             <div className="reveal delay-150">
               {/* Section Badge 6 */}
-              <span className="text-eyebrow text-brand-deep uppercase block mb-4">
+              <span className="text-eyebrow text-brand-deep uppercase block mb-3 sm:mb-4">
                 WHO’S BEHIND SA WELLNESS
               </span>
 
-              <div className="pl-5 border-l-2 border-brand-primary">
-                <blockquote className="font-display font-500 text-ink text-[20px] sm:text-[25px] lg:text-[27px] leading-[1.3] text-balance">
+              <div className="pl-4 sm:pl-5 border-l-2 border-brand-primary">
+                <blockquote className="font-display font-500 text-ink text-[19px] sm:text-[25px] lg:text-[27px] leading-[1.3] text-balance">
                   &ldquo;I built SA Wellness to help South Asians take care of their health without feeling like they have to give up the food, culture, and experiences that are part of their lives. I believe nutrition should fit into your life - not take it over.&rdquo;
                 </blockquote>
               </div>
 
-              <div className="mt-7">
-                <div className="font-display font-600 text-ink text-[19px]">
+              <div className="mt-5 sm:mt-7">
+                <div className="font-display font-600 text-ink text-[18px] sm:text-[19px]">
                   Dr. Hena Nafis
                 </div>
-                <div className="text-[14px] text-ink-secondary mt-0.5 font-500">
+                <div className="text-[13.5px] sm:text-[14px] text-ink-secondary mt-0.5 font-500">
                   Founder, SA Wellness
                 </div>
               </div>
@@ -1285,21 +1469,21 @@ export default function SecondLandingPage() {
       {/* ============================================================== */}
       <section
         id="faq"
-        className="py-20 lg:py-28 bg-surface-primary border-b border-border-subtle scroll-mt-20"
+        className="py-10 sm:py-16 lg:py-24 bg-surface-primary border-b border-border-subtle scroll-mt-20"
       >
         <div className="mx-auto max-w-[960px] px-6 lg:px-10">
-          <div className="reveal text-left sm:text-center max-w-2xl sm:mx-auto mb-10 sm:mb-14">
+          <div className="reveal text-left sm:text-center max-w-2xl sm:mx-auto mb-7 sm:mb-14">
             {/* Section Badge 7 */}
             <span className="text-eyebrow text-brand-deep uppercase block">
               Frequently Asked Questions
             </span>
 
-            <h2 className="mt-3 font-display font-600 text-ink text-[28px] sm:text-[38px] leading-[1.16] tracking-tight">
+            <h2 className="mt-3 font-display font-600 text-ink text-[26px] sm:text-[38px] leading-[1.16] tracking-tight">
               A Few Things You May Be Wondering
             </h2>
           </div>
 
-          <div className="space-y-3.5">
+          <div className="space-y-3 sm:space-y-3.5">
             {faqItems.map((item, index) => {
               const isOpen = openFaqIndex === index;
               return (
@@ -1309,10 +1493,10 @@ export default function SecondLandingPage() {
                 >
                   <button
                     onClick={() => setOpenFaqIndex(isOpen ? null : index)}
-                    className="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-4 cursor-pointer"
+                    className="w-full p-4.5 sm:p-6 text-left flex items-center justify-between gap-4 cursor-pointer"
                     aria-expanded={isOpen}
                   >
-                    <span className="font-display font-500 text-ink text-[16px] sm:text-[17px]">
+                    <span className="font-display font-500 text-ink text-[15.5px] sm:text-[17px]">
                       {item.question}
                     </span>
                     <span
@@ -1324,7 +1508,7 @@ export default function SecondLandingPage() {
                     </span>
                   </button>
                   {isOpen && (
-                    <div className="px-5 sm:px-6 pb-6 text-ink-secondary text-[14.5px] leading-relaxed pt-1 border-t border-border-subtle/50">
+                    <div className="px-4.5 sm:px-6 pb-5 sm:pb-6 text-ink-secondary text-[14px] sm:text-[14.5px] leading-relaxed pt-1 border-t border-border-subtle/50">
                       {item.answer}
                     </div>
                   )}
@@ -1334,8 +1518,8 @@ export default function SecondLandingPage() {
           </div>
 
           {/* Small line below FAQ & Book Your Consultation */}
-          <div className="reveal delay-100 mt-12 text-center p-8 rounded-editorial bg-surface-secondary/40 border border-border-subtle">
-            <p className="text-[16px] font-500 text-ink">
+          <div className="reveal delay-100 mt-8 sm:mt-12 text-center p-6 sm:p-8 rounded-editorial bg-surface-secondary/40 border border-border-subtle">
+            <p className="text-[15.5px] sm:text-[16px] font-500 text-ink">
               Still have questions? Start with a conversation.
             </p>
             <div className="mt-4">
