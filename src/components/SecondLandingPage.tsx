@@ -13,6 +13,9 @@ import {
   Utensils,
   Home,
   ArrowRight,
+  MapPin,
+  Lightbulb,
+  BarChart2,
 } from 'lucide-react';
 import founderImg from '../../assets/03lyKqCdFEsXx6Kmt8oSVHMgaA.png';
 
@@ -260,6 +263,7 @@ export default function SecondLandingPage() {
   // Mobile Hero Carousel State
   const [mobileHeroSlide, setMobileHeroSlide] = useState(0);
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const [touchStartY, setTouchStartY] = useState<number | null>(null);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -270,18 +274,24 @@ export default function SecondLandingPage() {
 
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchStartX(e.touches[0].clientX);
+    setTouchStartY(e.touches[0].clientY);
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX === null) return;
+    if (touchStartX === null || touchStartY === null) return;
     const touchEndX = e.changedTouches[0].clientX;
-    const diff = touchStartX - touchEndX;
-    if (diff > 45) {
-      setMobileHeroSlide((prev) => (prev + 1) % 3);
-    } else if (diff < -45) {
-      setMobileHeroSlide((prev) => (prev - 1 + 3) % 3);
+    const touchEndY = e.changedTouches[0].clientY;
+    const diffX = touchStartX - touchEndX;
+    const diffY = touchStartY - touchEndY;
+    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 40) {
+      if (diffX > 0) {
+        setMobileHeroSlide((prev) => (prev + 1) % 3);
+      } else {
+        setMobileHeroSlide((prev) => (prev - 1 + 3) % 3);
+      }
     }
     setTouchStartX(null);
+    setTouchStartY(null);
   };
 
   // Form State
@@ -422,7 +432,7 @@ export default function SecondLandingPage() {
       {/* ============================================================== */}
       <section
         id="top"
-        className="relative pt-[100px] sm:pt-[130px] pb-16 lg:pt-[140px] lg:pb-24 overflow-hidden border-b border-border-subtle"
+        className="relative pt-[112px] sm:pt-[130px] pb-16 lg:pt-[140px] lg:pb-24 overflow-hidden border-b border-border-subtle"
       >
         <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
           <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-10 sm:gap-12 lg:gap-16 items-center">
@@ -454,9 +464,9 @@ export default function SecondLandingPage() {
 
                   <div className="absolute inset-0 p-4.5 sm:p-5 flex flex-col justify-between">
                     <div>
-                      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/40 backdrop-blur-md border border-white/50 text-[#2B2D24] text-[10.5px] sm:text-[11px] font-700 tracking-wider uppercase shadow-2xs">
-                        <Target size={13} className="text-[#2B2D24] shrink-0" />
-                        <span>YOUR GOAL</span>
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/35 backdrop-blur-md border border-white/35 text-white text-[10.5px] sm:text-[11px] font-700 tracking-wider uppercase shadow-2xs">
+                        <Target size={13} className="text-white shrink-0" />
+                        <span className="text-white">YOUR GOAL</span>
                       </div>
                     </div>
                     <div>
@@ -554,7 +564,7 @@ export default function SecondLandingPage() {
               </div>
 
               {/* MOBILE CAROUSEL (< sm): 3 Cards as Swipeable Carousel without Floating Card */}
-              <div className="sm:hidden w-full max-w-[420px] mx-auto select-none pt-1">
+              <div className="sm:hidden w-full max-w-[360px] mx-auto select-none pt-1">
                 {/* Carousel Slider */}
                 <div
                   className="relative overflow-hidden rounded-[26px] shadow-[0_14px_34px_rgba(20,24,18,0.14)] border-[2px] border-white/60 bg-surface-white"
@@ -566,96 +576,80 @@ export default function SecondLandingPage() {
                     style={{ transform: `translateX(-${mobileHeroSlide * 100}%)` }}
                   >
                     {/* Slide 1: YOUR GOAL */}
-                    <div className="w-full shrink-0 relative h-[260px] xs:h-[280px]">
+                    <div className="w-full shrink-0 relative h-[290px]">
                       <img
                         src="/assets/yl.png"
                         alt="Active lifestyle and fitness preparation"
                         className="w-full h-full object-cover object-center"
                         loading="eager"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/10 pointer-events-none" />
-                      <div className="absolute inset-0 p-4.5 flex flex-col justify-between pointer-events-none">
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/10 pointer-events-none" />
+                      <div className="absolute inset-0 p-5 flex flex-col justify-between pointer-events-none">
                         <div>
-                          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/45 backdrop-blur-md border border-white/50 text-[#2B2D24] text-[10.5px] font-700 uppercase tracking-wider shadow-2xs">
-                            <Target size={12} className="text-[#2B2D24]" />
-                            <span>YOUR GOAL</span>
+                          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/35 backdrop-blur-md border border-white/35 text-white text-[10.5px] font-700 uppercase tracking-wider shadow-2xs">
+                            <Target size={12} className="text-white shrink-0" />
+                            <span className="text-white">YOUR GOAL</span>
                           </div>
                         </div>
                         <div>
-                          <h3 className="font-display font-600 text-white text-[16px] leading-snug drop-shadow-xs">
+                          <h3 className="font-display font-600 text-white text-[17px] leading-snug drop-shadow-xs">
                             Feel confident for the moments ahead.
                           </h3>
-                          <div className="w-7 h-[2px] bg-white/80 rounded-full mt-2" />
+                          <div className="w-8 h-[2px] bg-white/85 rounded-full mt-2" />
                         </div>
                       </div>
                     </div>
 
                     {/* Slide 2: YOUR FOOD */}
-                    <div className="w-full shrink-0 relative h-[260px] xs:h-[280px]">
+                    <div className="w-full shrink-0 relative h-[290px]">
                       <img
                         src="/assets/yf.png"
                         alt="Traditional South Asian nutrition and joyful meals"
                         className="w-full h-full object-cover object-center"
                         loading="lazy"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/10 pointer-events-none" />
-                      <div className="absolute inset-0 p-4.5 flex flex-col justify-between pointer-events-none">
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/10 pointer-events-none" />
+                      <div className="absolute inset-0 p-5 flex flex-col justify-between pointer-events-none">
                         <div>
                           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/45 backdrop-blur-md border border-white/50 text-[#2B2D24] text-[10.5px] font-700 uppercase tracking-wider shadow-2xs">
-                            <Utensils size={12} className="text-[#2B2D24]" />
+                            <Utensils size={12} className="text-[#2B2D24] shrink-0" />
                             <span>YOUR FOOD</span>
                           </div>
                         </div>
                         <div>
-                          <h3 className="font-display font-600 text-white text-[16px] leading-snug drop-shadow-xs">
+                          <h3 className="font-display font-600 text-white text-[17px] leading-snug drop-shadow-xs">
                             Keep the food you actually love.
                           </h3>
-                          <div className="w-7 h-[2px] bg-white/80 rounded-full mt-2" />
+                          <div className="w-8 h-[2px] bg-white/85 rounded-full mt-2" />
                         </div>
                       </div>
                     </div>
 
                     {/* Slide 3: YOUR LIFE */}
-                    <div className="w-full shrink-0 relative h-[260px] xs:h-[280px]">
+                    <div className="w-full shrink-0 relative h-[290px]">
                       <img
                         src="/assets/om5.png"
                         alt="South Asian everyday lifestyle and celebration"
                         className="w-full h-full object-cover object-center"
                         loading="lazy"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/10 pointer-events-none" />
-                      <div className="absolute inset-0 p-4.5 flex flex-col justify-between pointer-events-none">
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/10 pointer-events-none" />
+                      <div className="absolute inset-0 p-5 flex flex-col justify-between pointer-events-none">
                         <div>
                           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/45 backdrop-blur-md border border-white/50 text-[#2B2D24] text-[10.5px] font-700 uppercase tracking-wider shadow-2xs">
-                            <Home size={12} className="text-[#2B2D24]" />
+                            <Home size={12} className="text-[#2B2D24] shrink-0" />
                             <span>YOUR LIFE</span>
                           </div>
                         </div>
                         <div>
-                          <h3 className="font-display font-600 text-white text-[16px] leading-snug drop-shadow-xs">
+                          <h3 className="font-display font-600 text-white text-[17px] leading-snug drop-shadow-xs">
                             Build something you can live with.
                           </h3>
-                          <div className="w-7 h-[2px] bg-white/80 rounded-full mt-2" />
+                          <div className="w-8 h-[2px] bg-white/85 rounded-full mt-2" />
                         </div>
                       </div>
                     </div>
                   </div>
-
-                  {/* Left / Right Quick Tap Arrows */}
-                  <button
-                    onClick={() => setMobileHeroSlide((prev) => (prev - 1 + 3) % 3)}
-                    className="absolute left-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/35 backdrop-blur-md text-white flex items-center justify-center hover:bg-black/55 transition-colors cursor-pointer border border-white/25 shadow-xs"
-                    aria-label="Previous card"
-                  >
-                    <span className="text-[14px] leading-none mb-0.5">‹</span>
-                  </button>
-                  <button
-                    onClick={() => setMobileHeroSlide((prev) => (prev + 1) % 3)}
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/35 backdrop-blur-md text-white flex items-center justify-center hover:bg-black/55 transition-colors cursor-pointer border border-white/25 shadow-xs"
-                    aria-label="Next card"
-                  >
-                    <span className="text-[14px] leading-none mb-0.5">›</span>
-                  </button>
                 </div>
 
                 {/* Carousel Pagination Dots */}
@@ -1229,23 +1223,23 @@ export default function SecondLandingPage() {
       {/* ============================================================== */}
       <section
         id="outcomes"
-        className="py-10 sm:py-16 lg:py-24 relative overflow-hidden bg-[#F5F1EB] border-b border-border-subtle scroll-mt-20"
+        className="py-10 sm:py-16 lg:py-20 relative overflow-hidden bg-[#F5F1EB] border-b border-border-subtle scroll-mt-20"
       >
         {/* Serene soft mist cloud background */}
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_35%_50%,rgba(255,255,255,0.92)_0%,rgba(255,255,255,0)_70%)]" />
 
         <div className="relative mx-auto max-w-[1280px] px-6 lg:px-10">
           {/* Centered Section Header: Section Badge, Title & Description in Middle */}
-          <div className="reveal text-left sm:text-center max-w-3xl sm:mx-auto mb-8 sm:mb-16">
+          <div className="reveal text-left sm:text-center max-w-3xl sm:mx-auto mb-7 sm:mb-10">
             <span className="text-eyebrow text-brand-deep uppercase block">
               Proven Outcomes
             </span>
 
-            <h2 className="mt-3 font-display font-600 text-ink text-[28px] sm:text-[38px] lg:text-[42px] leading-[1.16] tracking-tight">
+            <h2 className="mt-3 font-display font-600 text-ink text-[28px] sm:text-[36px] lg:text-[40px] leading-[1.16] tracking-tight">
               Real transformation built around real celebrations.
             </h2>
 
-            <p className="mt-4 text-ink-secondary text-[15px] sm:text-[16px] leading-[1.68] max-w-xl sm:mx-auto">
+            <p className="mt-3.5 text-ink-secondary text-[14.5px] sm:text-[15.5px] leading-[1.65] max-w-xl sm:mx-auto">
               Every occasion is personal. We create evidence-informed nutrition strategies tailored to your celebrations, family foods, and timeline.
             </p>
           </div>
@@ -1254,10 +1248,10 @@ export default function SecondLandingPage() {
           {(() => {
             const currentCase = caseStudies[activeSlide];
             return (
-              <div className="grid lg:grid-cols-[1fr_1.15fr] gap-6 lg:gap-10 items-stretch max-w-5xl mx-auto">
-                {/* Left Side: Image Placeholder for each card (reduced height) */}
+              <div className="grid lg:grid-cols-[1fr_1.15fr] gap-6 lg:gap-8 items-stretch max-w-4xl lg:max-w-[960px] mx-auto">
+                {/* Left Side: Image Placeholder */}
                 <div className="reveal delay-100 h-full">
-                  <div className="h-[250px] sm:h-[300px] lg:h-full lg:min-h-[380px] rounded-2xl sm:rounded-3xl overflow-hidden border border-border-subtle shadow-[0_12px_36px_rgba(43,45,36,0.06)] bg-surface-white relative group">
+                  <div className="h-[280px] sm:h-[340px] lg:h-full rounded-[26px] sm:rounded-[28px] overflow-hidden border border-border-subtle/80 shadow-[0_12px_36px_rgba(43,45,36,0.06)] bg-surface-white relative group">
                     <img
                       key={currentCase.id}
                       src={currentCase.image}
@@ -1265,97 +1259,120 @@ export default function SecondLandingPage() {
                       className="w-full h-full object-cover object-center transition-all duration-500 ease-editorial group-hover:scale-102"
                       loading="lazy"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-ink/20 via-transparent to-transparent pointer-events-none" />
                   </div>
                 </div>
 
-                {/* Right Side: The Outcome Card (compacted height & refined padding) */}
+                {/* Right Side: The Outcome Card matching attached design */}
                 <div className="reveal delay-150 h-full">
-                  <div className="bg-surface-white rounded-2xl sm:rounded-3xl border border-border-subtle shadow-[0_12px_36px_rgba(43,45,36,0.06)] p-5 sm:p-6 lg:p-7 h-full flex flex-col justify-between transition-all duration-300">
+                  <div className="bg-surface-white rounded-[26px] sm:rounded-[28px] border border-border-subtle/80 shadow-[0_12px_36px_rgba(43,45,36,0.06)] p-6 sm:p-7 lg:px-7.5 lg:py-6 h-full flex flex-col justify-between transition-all duration-300">
                     <div>
-                      {/* Top Header Row: MEMBER, DIAGNOSIS, and City Badge on Top Right */}
-                      <div>
-                        <div className="flex items-start justify-between gap-4">
-                          <div>
-                            <span className="text-[10.5px] sm:text-[11px] font-700 uppercase tracking-widest text-[#2B2D24]/70 block">
-                              MEMBER
-                            </span>
-                            <span className="font-display font-600 text-ink text-[16.5px] sm:text-[18px] block mt-0.5 leading-snug">
-                              {currentCase.member}
-                            </span>
-                          </div>
-
-                          {/* City Name as Badge on Top Right */}
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] sm:text-[11.5px] font-600 bg-[#F4EFEA] text-brand-deep border border-border-subtle/80 shrink-0">
-                            {currentCase.city}
-                          </span>
-                        </div>
-
-                        <div className="mt-2 sm:mt-2.5">
-                          <span className="text-[10.5px] sm:text-[11px] font-700 uppercase tracking-widest text-[#2B2D24]/70 block">
-                            DIAGNOSIS
-                          </span>
-                          <span className="text-[13.5px] sm:text-[14.5px] font-500 text-ink block mt-0.5 leading-snug">
-                            {currentCase.diagnosis}
-                          </span>
-                        </div>
-
-                        {/* Thin divider line under Member / Diagnosis */}
-                        <div className="h-[1px] bg-border-subtle/70 my-2.5 sm:my-3" />
-
-                        {/* GOALS */}
+                      {/* Header Row: MEMBER, Name, and City Badge with MapPin */}
+                      <div className="flex items-start justify-between gap-4">
                         <div>
-                          <span className="text-[10.5px] sm:text-[11px] font-700 uppercase tracking-widest text-[#2B2D24]/70 block mb-0.5">
-                            GOALS
+                          <span className="text-[10.5px] font-700 uppercase tracking-widest text-[#7C7A72] block">
+                            MEMBER
                           </span>
-                          <p className="text-[13px] sm:text-[13.5px] text-ink-secondary leading-relaxed">
-                            {currentCase.goal}
-                          </p>
+                          <h3 className="font-display font-600 text-ink text-[22px] sm:text-[26px] lg:text-[27px] leading-tight mt-0.5">
+                            {currentCase.member}
+                          </h3>
+                        </div>
+
+                        {/* City Badge with MapPin */}
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F3EFE9] text-ink text-[11.5px] sm:text-[12px] font-500 border border-border-subtle/60 shrink-0 mt-1">
+                          <MapPin size={12.5} className="text-[#6E7065] shrink-0" />
+                          <span>{currentCase.city}</span>
                         </div>
                       </div>
 
-                      {/* Divider 1 */}
-                      <div className="h-[1px] bg-border-subtle/70 my-2.5 sm:my-3" />
+                      {/* Detail Rows Container */}
+                      <div className="mt-4 sm:mt-5 space-y-0">
+                        {/* Row 1: DIAGNOSIS */}
+                        <div className="flex items-start gap-3.5 sm:gap-4 py-1">
+                          <div className="w-9 h-9 rounded-full bg-[#EFEAE2] text-[#55574C] flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+                            <Calendar size={15.5} strokeWidth={1.9} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <span className="text-[10px] sm:text-[10.5px] font-700 uppercase tracking-wider text-[#7C7A72] block leading-none mb-1">
+                              DIAGNOSIS
+                            </span>
+                            <p className="text-[14px] sm:text-[14.5px] font-500 text-ink leading-snug">
+                              {currentCase.diagnosis}
+                            </p>
+                          </div>
+                        </div>
 
-                      {/* THE STRATEGY */}
-                      <div>
-                        <span className="text-[10.5px] sm:text-[11px] font-700 uppercase tracking-widest text-[#2B2D24]/70 block mb-0.5">
-                          THE STRATEGY
-                        </span>
-                        <p className="text-[13px] sm:text-[13.5px] text-ink-secondary leading-relaxed">
-                          {currentCase.strategy}
-                        </p>
+                        {/* Divider 1 */}
+                        <div className="h-[1px] bg-[#EDE7DF] my-2.5 sm:my-3" />
+
+                        {/* Row 2: GOALS */}
+                        <div className="flex items-start gap-3.5 sm:gap-4 py-1">
+                          <div className="w-9 h-9 rounded-full bg-[#EFEAE2] text-[#55574C] flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+                            <Target size={15.5} strokeWidth={1.9} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <span className="text-[10px] sm:text-[10.5px] font-700 uppercase tracking-wider text-[#7C7A72] block leading-none mb-1">
+                              GOALS
+                            </span>
+                            <p className="text-[12.5px] sm:text-[13px] text-[#55534C] leading-normal">
+                              {currentCase.goal}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Divider 2 */}
+                        <div className="h-[1px] bg-[#EDE7DF] my-2.5 sm:my-3" />
+
+                        {/* Row 3: THE STRATEGY */}
+                        <div className="flex items-start gap-3.5 sm:gap-4 py-1">
+                          <div className="w-9 h-9 rounded-full bg-[#EFEAE2] text-[#55574C] flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+                            <Lightbulb size={15.5} strokeWidth={1.9} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <span className="text-[10px] sm:text-[10.5px] font-700 uppercase tracking-wider text-[#7C7A72] block leading-none mb-1">
+                              THE STRATEGY
+                            </span>
+                            <p className="text-[12.5px] sm:text-[13px] text-[#55534C] leading-normal">
+                              {currentCase.strategy}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Divider 3 */}
+                        <div className="h-[1px] bg-[#EDE7DF] my-2.5 sm:my-3" />
+
+                        {/* Row 4: RESULT */}
+                        <div className="flex items-start gap-3.5 sm:gap-4 py-1">
+                          <div className="w-9 h-9 rounded-full bg-[#EFEAE2] text-[#55574C] flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+                            <BarChart2 size={15.5} strokeWidth={1.9} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <span className="text-[10px] sm:text-[10.5px] font-700 uppercase tracking-wider text-[#7C7A72] block leading-none mb-1">
+                              RESULT
+                            </span>
+                            <p className="text-[12.5px] sm:text-[13px] text-ink font-500 leading-normal">
+                              {currentCase.result}
+                            </p>
+                          </div>
+                        </div>
                       </div>
-
-                      {/* Divider 2 */}
-                      <div className="h-[1px] bg-border-subtle/70 my-2.5 sm:my-3" />
-
-                      {/* RESULT */}
-                      <div>
-                        <span className="text-[10.5px] sm:text-[11px] font-700 uppercase tracking-widest text-[#2B2D24]/70 block mb-0.5">
-                          RESULT
-                        </span>
-                        <p className="text-[13px] sm:text-[13.5px] text-ink font-500 leading-relaxed">
-                          {currentCase.result}
-                        </p>
-                      </div>
-
-                      {/* Divider 3 */}
-                      <div className="h-[1px] bg-border-subtle/70 my-2.5 sm:my-3" />
                     </div>
 
-                    {/* Footer: Dietitian Shared by in Hierarchical Alignment */}
-                    <div className="flex items-center gap-3 pt-2">
+                    {/* Bottom Founder Box with Avatar and Vertical Divider */}
+                    <div className="mt-4 sm:mt-4.5 rounded-2xl bg-[#F5F0E9] border border-[#E9E2D8] px-4 py-3 flex items-center gap-3.5 sm:gap-4">
                       <img
                         src={founderImg}
                         alt="Dr. Hena Nafis"
-                        className="w-8 h-8 rounded-full object-cover object-top ring-1 ring-border-subtle shrink-0"
+                        className="w-10 h-10 sm:w-11 sm:h-11 rounded-full object-cover object-top ring-1 ring-border-subtle shrink-0"
                       />
-                      <div className="flex flex-col justify-center">
-                        <span className="text-[12.5px] sm:text-[13px] font-600 text-ink leading-snug">
-                          Shared by Dr. Hena Nafis
+                      <div className="h-8 w-[1px] bg-[#DFD8CE] shrink-0" />
+                      <div className="flex flex-col justify-center min-w-0">
+                        <span className="text-[9.5px] sm:text-[10px] font-700 uppercase tracking-wider text-[#7C7A72] block leading-none">
+                          SHARED BY
                         </span>
-                        <span className="text-[11px] sm:text-[11.5px] text-ink-secondary mt-0.5">
+                        <span className="font-display font-600 text-ink text-[13.5px] sm:text-[14px] leading-snug mt-1">
+                          Dr. Hena Nafis
+                        </span>
+                        <span className="text-[11px] sm:text-[11.5px] text-[#66635B] leading-none mt-0.5">
                           Chief Nutritionist &amp; Registered Dietitian
                         </span>
                       </div>
@@ -1367,7 +1384,7 @@ export default function SecondLandingPage() {
           })()}
 
           {/* Carousel Controls (dots, progress bar, play/pause button) */}
-          <div className="max-w-xl mx-auto mt-8 flex items-center justify-between gap-4 px-2">
+          <div className="max-w-xl mx-auto mt-6 sm:mt-7 flex items-center justify-between gap-4 px-2">
             {/* Dots */}
             <div className="flex items-center gap-2">
               {caseStudies.map((_, i) => (
@@ -1408,7 +1425,7 @@ export default function SecondLandingPage() {
           </div>
 
           {/* Centered Book Your Consultation Button */}
-          <div className="mt-10 text-center reveal">
+          <div className="mt-8 text-center reveal">
             <button
               onClick={scrollToConsultation}
               className="inline-flex items-center justify-center px-8 py-3.5 rounded-xl bg-brand-deep text-surface-white text-[15px] font-500 hover:bg-brand-primary transition-all duration-250 ease-editorial hover:-translate-y-0.5 shadow-xs cursor-pointer"
