@@ -51,7 +51,7 @@ const caseStudies: CaseStudy[] = [
     result:
       'Heavy bridal lengha fit effortlessly with zero waistline tightness; sustained full energy through late-night functions.',
     image: '/assets/too.png',
-    mobileImage: 'https://images.pexels.com/photos/38551352/pexels-photo-38551352.jpeg',
+    mobileImage: '/assets/gb.png',
     alt: 'Bridal & Sangeet Prep client celebration',
   },
   {
