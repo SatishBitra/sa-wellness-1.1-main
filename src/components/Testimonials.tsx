@@ -25,7 +25,7 @@ const featuredTestimonial: FeaturedTestimonial = {
   name: 'Dr. Sourav Majumdar',
   role: 'Physician',
   location: 'Palo Alto, CA',
-  image: 'blob:https://chatgpt.com/dcea65e1-be1d-4366-b03b-dd5e9b57a916',
+  image: 'https://images.pexels.com/photos/6740511/pexels-photo-6740511.jpeg',
   avatar: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=300&fit=crop',
 };
 
