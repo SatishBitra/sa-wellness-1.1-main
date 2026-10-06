@@ -704,7 +704,8 @@ export default function AssessmentPage({ onGoHome, onBookConsultation }: Assessm
                     </div>
                   </div>
                 </div>
-              )}
+              </div>
+            )}
 
               {/* MINI-SECTION 2: BODY MEASUREMENTS & VITALS */}
               {currentSubStep === 2 && (
@@ -1516,6 +1517,11 @@ export default function AssessmentPage({ onGoHome, onBookConsultation }: Assessm
                   <span className="text-[13px] font-700 text-brand-deep block">
                     Metabolic Risk Profile Report
                   </span>
+                  {fullName.trim() && (
+                    <span className="text-[12px] font-600 text-ink block">
+                      Patient: {fullName.trim()}
+                    </span>
+                  )}
                   <span className="text-[11px] text-ink-secondary block">
                     Report Date: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
                   </span>
@@ -1533,7 +1539,7 @@ export default function AssessmentPage({ onGoHome, onBookConsultation }: Assessm
                     </div>
 
                     <h2 className="font-display font-600 text-ink text-[28px] sm:text-[36px] leading-[1.12]">
-                      Your Metabolic Health Profile
+                      {fullName.trim() ? `${fullName.trim()}'s Metabolic Health Profile` : 'Your Metabolic Health Profile'}
                     </h2>
 
                     <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2.5">
