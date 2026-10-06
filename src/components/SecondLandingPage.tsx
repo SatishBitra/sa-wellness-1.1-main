@@ -7,8 +7,8 @@ import {
   Leaf,
   User,
   Calendar,
-  Pause,
-  Play,
+  ChevronLeft,
+  ChevronRight,
   Target,
   Utensils,
   Home,
@@ -222,6 +222,7 @@ export default function SecondLandingPage() {
   const [statsAnimated, setStatsAnimated] = useState(false);
 
   useEffect(() => {
+    if (!isReady) return;
     const node = statsSectionRef.current;
     if (!node) return;
 
@@ -247,52 +248,21 @@ export default function SecondLandingPage() {
 
     observer.observe(node);
     window.addEventListener('scroll', handleCheck, { passive: true });
+    // Check immediately and on a short delay to account for layout settling
     handleCheck();
+    const t = setTimeout(handleCheck, 250);
 
     return () => {
+      clearTimeout(t);
       observer.disconnect();
       window.removeEventListener('scroll', handleCheck);
     };
-  }, []);
+  }, [isReady]);
 
   // Snappy durations: ~650ms, ~550ms, ~400ms for swift visual resolution
   const countConsultations = useCountUp(5000, 650, statsAnimated);
   const countYears = useCountUp(30, 550, statsAnimated);
   const countCare = useCountUp(1, 400, statsAnimated);
-
-  // Mobile Hero Carousel State
-  const [mobileHeroSlide, setMobileHeroSlide] = useState(0);
-  const [touchStartX, setTouchStartX] = useState<number | null>(null);
-  const [touchStartY, setTouchStartY] = useState<number | null>(null);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setMobileHeroSlide((prev) => (prev + 1) % 3);
-    }, 4500);
-    return () => clearInterval(timer);
-  }, []);
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setTouchStartX(e.touches[0].clientX);
-    setTouchStartY(e.touches[0].clientY);
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX === null || touchStartY === null) return;
-    const touchEndX = e.changedTouches[0].clientX;
-    const touchEndY = e.changedTouches[0].clientY;
-    const diffX = touchStartX - touchEndX;
-    const diffY = touchStartY - touchEndY;
-    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 40) {
-      if (diffX > 0) {
-        setMobileHeroSlide((prev) => (prev + 1) % 3);
-      } else {
-        setMobileHeroSlide((prev) => (prev - 1 + 3) % 3);
-      }
-    }
-    setTouchStartX(null);
-    setTouchStartY(null);
-  };
 
   // Form State
   const [formData, setFormData] = useState<FormDataState>({
@@ -306,38 +276,45 @@ export default function SecondLandingPage() {
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [formStatus, setFormStatus] = useState<FormStatus>('idle');
 
-  // Outcomes Carousel State
+  // Proven Outcomes Carousel State (Manual Controls & Hand Swipe - No auto-scroll)
   const [activeSlide, setActiveSlide] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [progress, setProgress] = useState(0);
+  const [outcomesTouchStartX, setOutcomesTouchStartX] = useState<number | null>(null);
+  const [outcomesTouchStartY, setOutcomesTouchStartY] = useState<number | null>(null);
 
-  useEffect(() => {
-    if (!isPlaying) return;
+  const handlePrevSlide = () => {
+    setActiveSlide((prev) => (prev === 0 ? caseStudies.length - 1 : prev - 1));
+  };
 
-    const intervalTime = 50;
-    const totalDuration = 6000;
-    const increment = (intervalTime / totalDuration) * 100;
-
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          setActiveSlide((curr) => (curr + 1) % caseStudies.length);
-          return 0;
-        }
-        return prev + increment;
-      });
-    }, intervalTime);
-
-    return () => clearInterval(interval);
-  }, [isPlaying]);
+  const handleNextSlide = () => {
+    setActiveSlide((prev) => (prev + 1) % caseStudies.length);
+  };
 
   const handleSelectSlide = (index: number) => {
     setActiveSlide(index);
-    setProgress(0);
   };
 
-  const handleTogglePlay = () => {
-    setIsPlaying((prev) => !prev);
+  const handleOutcomesTouchStart = (e: React.TouchEvent) => {
+    setOutcomesTouchStartX(e.touches[0].clientX);
+    setOutcomesTouchStartY(e.touches[0].clientY);
+  };
+
+  const handleOutcomesTouchEnd = (e: React.TouchEvent) => {
+    if (outcomesTouchStartX === null || outcomesTouchStartY === null) return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
+    const diffX = outcomesTouchStartX - touchEndX;
+    const diffY = outcomesTouchStartY - touchEndY;
+
+    // Trigger swipe when horizontal swipe dominates and exceeds threshold
+    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 40) {
+      if (diffX > 0) {
+        handleNextSlide();
+      } else {
+        handlePrevSlide();
+      }
+    }
+    setOutcomesTouchStartX(null);
+    setOutcomesTouchStartY(null);
   };
 
   // Subtle skeleton loader / fade-in transition on initial page mount/switch
@@ -436,23 +413,22 @@ export default function SecondLandingPage() {
       >
         <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
           <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-10 sm:gap-12 lg:gap-16 items-center">
-            {/* Visual Column: Editorial 3-Card Collage + Floating Consultation Layer */}
+            {/* Visual Column: Editorial 3-Card Collage + Floating Consultation Layer (Top on mobile, Right on desktop) */}
             <div className="relative reveal-scale order-1 lg:order-2 w-full flex justify-center lg:justify-end">
-              {/* DESKTOP & TABLET COMPOSITION (sm and above) */}
-              <div className="hidden sm:block relative w-full max-w-[530px] sm:max-w-[560px] lg:max-w-[580px] h-[570px] sm:h-[600px] lg:h-[610px] select-none">
-                {/* Organic botanical & blob shapes from screenshot */}
-                <div className="absolute -top-4 -right-4 w-[280px] h-[280px] bg-[#788863]/30 rounded-[58%_42%_62%_38%/42%_58%_42%_58%] pointer-events-none" />
-                <div className="absolute top-10 left-8 w-[350px] h-[350px] bg-[#EFE8DD] rounded-[50%_50%_42%_58%/56%_44%_56%_44%] pointer-events-none" />
-                <div className="absolute -bottom-4 -left-4 w-[320px] h-[290px] bg-[#71805D]/30 rounded-[52%_48%_40%_60%/40%_60%_50%_50%] pointer-events-none" />
-                <div className="absolute bottom-4 right-0 w-[240px] h-[200px] bg-[#EBE3D5] rounded-[55%_45%_60%_40%/45%_55%_45%_55%] pointer-events-none" />
+              <div className="relative w-full max-w-[360px] xs:max-w-[420px] sm:max-w-[560px] lg:max-w-[580px] h-[480px] xs:h-[530px] sm:h-[600px] lg:h-[610px] select-none mx-auto lg:mr-0">
+                {/* Organic botanical & blob shapes */}
+                <div className="absolute -top-4 -right-4 w-[200px] xs:w-[240px] sm:w-[280px] h-[200px] xs:h-[240px] sm:h-[280px] bg-[#788863]/30 rounded-[58%_42%_62%_38%/42%_58%_42%_58%] pointer-events-none" />
+                <div className="absolute top-8 xs:top-10 left-4 xs:left-8 w-[240px] xs:w-[290px] sm:w-[350px] h-[240px] xs:h-[290px] sm:h-[350px] bg-[#EFE8DD] rounded-[50%_50%_42%_58%/56%_44%_56%_44%] pointer-events-none" />
+                <div className="absolute -bottom-4 -left-4 w-[220px] xs:w-[260px] sm:w-[320px] h-[200px] xs:h-[240px] sm:h-[290px] bg-[#71805D]/30 rounded-[52%_48%_40%_60%/40%_60%_50%_50%] pointer-events-none" />
+                <div className="absolute bottom-4 right-0 w-[180px] xs:w-[210px] sm:w-[240px] h-[150px] xs:h-[180px] sm:h-[200px] bg-[#EBE3D5] rounded-[55%_45%_60%_40%/45%_55%_45%_55%] pointer-events-none" />
                 {/* Delicate botanical outline on left */}
-                <svg className="absolute -left-6 top-20 w-32 h-44 opacity-25 text-[#9A8B78] pointer-events-none" viewBox="0 0 100 140" fill="none" stroke="currentColor" strokeWidth="1.2">
+                <svg className="hidden xs:block absolute -left-6 top-20 w-32 h-44 opacity-25 text-[#9A8B78] pointer-events-none" viewBox="0 0 100 140" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M50 140 Q 50 70 45 10 M 45 40 Q 25 30 20 20 M 47 60 Q 70 50 75 40 M 48 80 Q 25 70 20 60 M 49 100 Q 75 90 80 80" />
                 </svg>
 
                 {/* ================= TOP ROW ================= */}
                 {/* Card 1: YOUR GOAL (Upper Left, Depth Level 1, tilted -4deg) */}
-                <div className="absolute top-1 left-1 w-[53%] sm:w-[52%] h-[340px] sm:h-[355px] lg:h-[365px] z-10 -rotate-[4deg] rounded-[28px] overflow-hidden border-[2px] border-white/60 shadow-[0_18px_38px_rgba(20,24,18,0.16)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_22px_45px_rgba(20,24,18,0.20)] group cursor-pointer">
+                <div className="absolute top-1 left-1 w-[53%] sm:w-[52%] h-[280px] xs:h-[315px] sm:h-[355px] lg:h-[365px] z-10 -rotate-[4deg] rounded-[24px] sm:rounded-[28px] overflow-hidden border-[2px] border-white/60 shadow-[0_18px_38px_rgba(20,24,18,0.16)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_22px_45px_rgba(20,24,18,0.20)] group cursor-pointer">
                   <img
                     src="/assets/yl.png"
                     alt="Active lifestyle and fitness preparation"
@@ -462,15 +438,15 @@ export default function SecondLandingPage() {
                   {/* Subtle dark bottom gradient for text contrast */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/10" />
 
-                  <div className="absolute inset-0 p-4.5 sm:p-5 flex flex-col justify-between">
+                  <div className="absolute inset-0 p-3.5 xs:p-4.5 sm:p-5 flex flex-col justify-between">
                     <div>
-                      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/35 backdrop-blur-md border border-white/35 text-white text-[10.5px] sm:text-[11px] font-700 tracking-wider uppercase shadow-2xs">
-                        <Target size={13} className="text-white shrink-0" />
+                      <div className="inline-flex items-center gap-1.5 px-2.5 xs:px-3 py-1 rounded-full bg-black/35 backdrop-blur-md border border-white/35 text-white text-[9.5px] xs:text-[10.5px] sm:text-[11px] font-700 tracking-wider uppercase shadow-2xs">
+                        <Target size={12} className="text-white shrink-0" />
                         <span className="text-white">YOUR GOAL</span>
                       </div>
                     </div>
                     <div>
-                      <h3 className="font-display font-600 text-white text-[16px] sm:text-[17.5px] leading-snug drop-shadow-xs">
+                      <h3 className="font-display font-600 text-white text-[14px] xs:text-[15.5px] sm:text-[17.5px] leading-snug drop-shadow-xs">
                         Feel confident for the moments ahead.
                       </h3>
                       <div className="w-7 h-[2px] bg-white/80 rounded-full mt-2" />
@@ -479,7 +455,7 @@ export default function SecondLandingPage() {
                 </div>
 
                 {/* Card 2: YOUR FOOD (Upper Right, Depth Level 2, tilted +3.5deg, overlaps YOUR GOAL) */}
-                <div className="absolute top-8 sm:top-10 right-0 w-[52%] sm:w-[51%] h-[300px] sm:h-[315px] lg:h-[325px] z-20 rotate-[3.5deg] rounded-[28px] overflow-hidden border-[2px] border-white/60 shadow-[0_18px_38px_rgba(20,24,18,0.18)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_22px_45px_rgba(20,24,18,0.22)] group cursor-pointer">
+                <div className="absolute top-6 xs:top-8 sm:top-10 right-0 w-[52%] sm:w-[51%] h-[250px] xs:h-[280px] sm:h-[315px] lg:h-[325px] z-20 rotate-[3.5deg] rounded-[24px] sm:rounded-[28px] overflow-hidden border-[2px] border-white/60 shadow-[0_18px_38px_rgba(20,24,18,0.18)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_22px_45px_rgba(20,24,18,0.22)] group cursor-pointer">
                   <img
                     src="/assets/yf.png"
                     alt="Traditional South Asian nutrition and joyful meals"
@@ -489,15 +465,15 @@ export default function SecondLandingPage() {
                   {/* Subtle dark bottom gradient for text contrast */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/10" />
 
-                  <div className="absolute inset-0 p-4.5 sm:p-5 flex flex-col justify-between">
+                  <div className="absolute inset-0 p-3.5 xs:p-4.5 sm:p-5 flex flex-col justify-between">
                     <div>
-                      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/45 backdrop-blur-md border border-white/50 text-[#2B2D24] text-[10.5px] sm:text-[11px] font-700 tracking-wider uppercase shadow-2xs">
-                        <Utensils size={13} className="text-[#2B2D24] shrink-0" />
+                      <div className="inline-flex items-center gap-1.5 px-2.5 xs:px-3 py-1 rounded-full bg-white/45 backdrop-blur-md border border-white/50 text-[#2B2D24] text-[9.5px] xs:text-[10.5px] sm:text-[11px] font-700 tracking-wider uppercase shadow-2xs">
+                        <Utensils size={12} className="text-[#2B2D24] shrink-0" />
                         <span>YOUR FOOD</span>
                       </div>
                     </div>
                     <div>
-                      <h3 className="font-display font-600 text-white text-[16px] sm:text-[17.5px] leading-snug drop-shadow-xs">
+                      <h3 className="font-display font-600 text-white text-[14px] xs:text-[15.5px] sm:text-[17.5px] leading-snug drop-shadow-xs">
                         Keep the food you actually love.
                       </h3>
                       <div className="w-7 h-[2px] bg-white/80 rounded-full mt-2" />
@@ -507,7 +483,7 @@ export default function SecondLandingPage() {
 
                 {/* ================= BOTTOM CARD ================= */}
                 {/* Card 3: YOUR LIFE (Grounding Anchor, tilted -2.5deg) */}
-                <div className="absolute bottom-2 left-1 sm:left-2 w-[70%] sm:w-[72%] h-[235px] sm:h-[250px] lg:h-[255px] z-10 -rotate-[2.5deg] rounded-[28px] overflow-hidden border-[2px] border-white/60 shadow-[0_16px_36px_rgba(20,24,18,0.16)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_42px_rgba(20,24,18,0.20)] group cursor-pointer">
+                <div className="absolute bottom-2 left-1 sm:left-2 w-[72%] h-[195px] xs:h-[220px] sm:h-[250px] lg:h-[255px] z-10 -rotate-[2.5deg] rounded-[24px] sm:rounded-[28px] overflow-hidden border-[2px] border-white/60 shadow-[0_16px_36px_rgba(20,24,18,0.16)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_42px_rgba(20,24,18,0.20)] group cursor-pointer">
                   <img
                     src="/assets/om5.png"
                     alt="South Asian everyday lifestyle and celebration"
@@ -517,15 +493,15 @@ export default function SecondLandingPage() {
                   {/* Subtle dark bottom gradient for text contrast */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/10" />
 
-                  <div className="absolute inset-0 p-4.5 sm:p-5 flex flex-col justify-between">
+                  <div className="absolute inset-0 p-3.5 xs:p-4.5 sm:p-5 flex flex-col justify-between">
                     <div>
-                      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/45 backdrop-blur-md border border-white/50 text-[#2B2D24] text-[10.5px] sm:text-[11px] font-700 tracking-wider uppercase shadow-2xs">
-                        <Home size={13} className="text-[#2B2D24] shrink-0" />
+                      <div className="inline-flex items-center gap-1.5 px-2.5 xs:px-3 py-1 rounded-full bg-white/45 backdrop-blur-md border border-white/50 text-[#2B2D24] text-[9.5px] xs:text-[10.5px] sm:text-[11px] font-700 tracking-wider uppercase shadow-2xs">
+                        <Home size={12} className="text-[#2B2D24] shrink-0" />
                         <span>YOUR LIFE</span>
                       </div>
                     </div>
                     <div className="max-w-[62%]">
-                      <h3 className="font-display font-600 text-white text-[15.5px] sm:text-[17px] leading-snug drop-shadow-xs">
+                      <h3 className="font-display font-600 text-white text-[13.5px] xs:text-[15px] sm:text-[17px] leading-snug drop-shadow-xs">
                         Build something you can live with.
                       </h3>
                       <div className="w-7 h-[2px] bg-white/80 rounded-full mt-2" />
@@ -534,138 +510,31 @@ export default function SecondLandingPage() {
                 </div>
 
                 {/* ================= FLOATING CONSULTATION CARD ================= */}
-                {/* MOVED UPSIDE ON THE YOUR LIFE CARD (Depth Level 4, rotate-0, clean horizontal placement) */}
                 <div
                   onClick={scrollToConsultation}
-                  className="absolute bottom-12 sm:bottom-16 lg:bottom-18 right-0 sm:-right-2 lg:-right-4 w-[265px] sm:w-[285px] lg:w-[295px] z-30 bg-white rounded-[24px] p-4 sm:p-4.5 border border-border-subtle/80 shadow-[0_20px_45px_rgba(43,45,36,0.16)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_26px_50px_rgba(43,45,36,0.22)] cursor-pointer group"
+                  className="absolute bottom-8 xs:bottom-12 sm:bottom-16 lg:bottom-18 right-0 sm:-right-2 lg:-right-4 w-[230px] xs:w-[260px] sm:w-[285px] lg:w-[295px] z-30 bg-white rounded-[22px] sm:rounded-[24px] p-3.5 xs:p-4 sm:p-4.5 border border-border-subtle/80 shadow-[0_20px_45px_rgba(43,45,36,0.16)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_26px_50px_rgba(43,45,36,0.22)] cursor-pointer group"
                 >
                   <div className="flex items-center gap-1.5 mb-1.5">
                     <span className="w-2.5 h-2.5 rounded-full bg-[#1B704C] shrink-0" />
-                    <span className="text-[10.5px] sm:text-[11px] font-700 uppercase tracking-wider text-[#1B704C]">
+                    <span className="text-[9.5px] xs:text-[10.5px] sm:text-[11px] font-700 uppercase tracking-wider text-[#1B704C]">
                       FREE 20-MIN CONSULT
                     </span>
                   </div>
 
-                  <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center justify-between gap-2.5 xs:gap-3">
                     <div>
-                      <p className="font-display font-600 text-ink text-[15px] sm:text-[16px] leading-snug">
+                      <p className="font-display font-600 text-ink text-[13.5px] xs:text-[15px] sm:text-[16px] leading-snug">
                         1:1 with a real coach
                       </p>
-                      <p className="text-[11.5px] sm:text-[12px] text-ink-secondary mt-1 leading-snug">
+                      <p className="text-[11px] xs:text-[11.5px] sm:text-[12px] text-ink-secondary mt-0.5 xs:mt-1 leading-snug">
                         No forms. No bots.<br />Culturally tailored.
                       </p>
                     </div>
 
-                    <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#EDE7DF] text-[#3E4233] flex items-center justify-center shrink-0 shadow-2xs group-hover:bg-[#DFD7CB] transition-colors">
-                      <ArrowRight size={18} className="text-[#3E4233]" />
+                    <div className="w-9 h-9 xs:w-11 xs:h-11 sm:w-12 sm:h-12 rounded-full bg-[#EDE7DF] text-[#3E4233] flex items-center justify-center shrink-0 shadow-2xs group-hover:bg-[#DFD7CB] transition-colors">
+                      <ArrowRight size={16} className="text-[#3E4233] sm:w-[18px] sm:h-[18px]" />
                     </div>
                   </div>
-                </div>
-              </div>
-
-              {/* MOBILE CAROUSEL (< sm): 3 Cards as Swipeable Carousel without Floating Card */}
-              <div className="sm:hidden w-full max-w-[360px] mx-auto select-none pt-1">
-                {/* Carousel Slider */}
-                <div
-                  className="relative overflow-hidden rounded-[26px] shadow-[0_14px_34px_rgba(20,24,18,0.14)] border-[2px] border-white/60 bg-surface-white"
-                  onTouchStart={handleTouchStart}
-                  onTouchEnd={handleTouchEnd}
-                >
-                  <div
-                    className="flex transition-transform duration-500 ease-editorial"
-                    style={{ transform: `translateX(-${mobileHeroSlide * 100}%)` }}
-                  >
-                    {/* Slide 1: YOUR GOAL */}
-                    <div className="w-full shrink-0 relative h-[290px]">
-                      <img
-                        src="/assets/yl.png"
-                        alt="Active lifestyle and fitness preparation"
-                        className="w-full h-full object-cover object-center"
-                        loading="eager"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/10 pointer-events-none" />
-                      <div className="absolute inset-0 p-5 flex flex-col justify-between pointer-events-none">
-                        <div>
-                          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/35 backdrop-blur-md border border-white/35 text-white text-[10.5px] font-700 uppercase tracking-wider shadow-2xs">
-                            <Target size={12} className="text-white shrink-0" />
-                            <span className="text-white">YOUR GOAL</span>
-                          </div>
-                        </div>
-                        <div>
-                          <h3 className="font-display font-600 text-white text-[17px] leading-snug drop-shadow-xs">
-                            Feel confident for the moments ahead.
-                          </h3>
-                          <div className="w-8 h-[2px] bg-white/85 rounded-full mt-2" />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Slide 2: YOUR FOOD */}
-                    <div className="w-full shrink-0 relative h-[290px]">
-                      <img
-                        src="/assets/yf.png"
-                        alt="Traditional South Asian nutrition and joyful meals"
-                        className="w-full h-full object-cover object-center"
-                        loading="lazy"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/10 pointer-events-none" />
-                      <div className="absolute inset-0 p-5 flex flex-col justify-between pointer-events-none">
-                        <div>
-                          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/45 backdrop-blur-md border border-white/50 text-[#2B2D24] text-[10.5px] font-700 uppercase tracking-wider shadow-2xs">
-                            <Utensils size={12} className="text-[#2B2D24] shrink-0" />
-                            <span>YOUR FOOD</span>
-                          </div>
-                        </div>
-                        <div>
-                          <h3 className="font-display font-600 text-white text-[17px] leading-snug drop-shadow-xs">
-                            Keep the food you actually love.
-                          </h3>
-                          <div className="w-8 h-[2px] bg-white/85 rounded-full mt-2" />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Slide 3: YOUR LIFE */}
-                    <div className="w-full shrink-0 relative h-[290px]">
-                      <img
-                        src="/assets/om5.png"
-                        alt="South Asian everyday lifestyle and celebration"
-                        className="w-full h-full object-cover object-center"
-                        loading="lazy"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/10 pointer-events-none" />
-                      <div className="absolute inset-0 p-5 flex flex-col justify-between pointer-events-none">
-                        <div>
-                          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/45 backdrop-blur-md border border-white/50 text-[#2B2D24] text-[10.5px] font-700 uppercase tracking-wider shadow-2xs">
-                            <Home size={12} className="text-[#2B2D24] shrink-0" />
-                            <span>YOUR LIFE</span>
-                          </div>
-                        </div>
-                        <div>
-                          <h3 className="font-display font-600 text-white text-[17px] leading-snug drop-shadow-xs">
-                            Build something you can live with.
-                          </h3>
-                          <div className="w-8 h-[2px] bg-white/85 rounded-full mt-2" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Carousel Pagination Dots */}
-                <div className="flex items-center justify-center gap-2 mt-3.5">
-                  {[0, 1, 2].map((idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setMobileHeroSlide(idx)}
-                      className={`h-2 transition-all duration-300 rounded-full cursor-pointer ${
-                        mobileHeroSlide === idx
-                          ? 'w-7 bg-brand-deep'
-                          : 'w-2 bg-border-subtle hover:bg-ink-secondary/40'
-                      }`}
-                      aria-label={`Go to slide ${idx + 1}`}
-                    />
-                  ))}
                 </div>
               </div>
             </div>
@@ -1244,137 +1113,273 @@ export default function SecondLandingPage() {
             </p>
           </div>
 
-          {/* 2-Column Layout: Left Side Image Placeholder & Right Side Outcome Card */}
+          {/* Proven Outcomes Card: Combined Single Card on Mobile, 2-Column on Desktop with Hand Swipe */}
           {(() => {
             const currentCase = caseStudies[activeSlide];
             return (
-              <div className="grid lg:grid-cols-[1fr_1.15fr] gap-6 lg:gap-8 items-stretch max-w-4xl lg:max-w-[960px] mx-auto">
-                {/* Left Side: Image Placeholder */}
-                <div className="reveal delay-100 h-full">
-                  <div className="h-[280px] sm:h-[340px] lg:h-full rounded-[26px] sm:rounded-[28px] overflow-hidden border border-border-subtle/80 shadow-[0_12px_36px_rgba(43,45,36,0.06)] bg-surface-white relative group">
+              <div
+                className="select-none"
+                onTouchStart={handleOutcomesTouchStart}
+                onTouchEnd={handleOutcomesTouchEnd}
+              >
+                {/* ================= MOBILE COMBINED CARD (< lg) ================= */}
+                {/* Combines the image at the top and below text content into ONE seamless card */}
+                <div className="block lg:hidden bg-surface-white rounded-[26px] border border-border-subtle/80 shadow-[0_12px_36px_rgba(43,45,36,0.06)] overflow-hidden transition-all duration-300 max-w-xl mx-auto">
+                  {/* Top: Combined Case Study Image */}
+                  <div className="relative h-[220px] sm:h-[260px] w-full bg-surface-secondary overflow-hidden border-b border-border-subtle/60">
                     <img
-                      key={currentCase.id}
+                      key={`mob-${currentCase.id}`}
                       src={currentCase.image}
                       alt={currentCase.alt}
-                      className="w-full h-full object-cover object-center transition-all duration-500 ease-editorial group-hover:scale-102"
+                      className="w-full h-full object-cover object-center transition-all duration-500 ease-editorial"
                       loading="lazy"
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
                   </div>
-                </div>
 
-                {/* Right Side: The Outcome Card matching attached design */}
-                <div className="reveal delay-150 h-full">
-                  <div className="bg-surface-white rounded-[26px] sm:rounded-[28px] border border-border-subtle/80 shadow-[0_12px_36px_rgba(43,45,36,0.06)] p-6 sm:p-7 lg:px-7.5 lg:py-6 h-full flex flex-col justify-between transition-all duration-300">
+                  {/* Bottom: The Outcome Content */}
+                  <div className="p-5 sm:p-6 flex flex-col justify-between">
                     {/* Header Row: MEMBER, Name, and City Badge with MapPin */}
-                    <div className="shrink-0">
-                      <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <div className="flex items-start justify-between gap-3">
                         <div>
-                          <span className="text-[10px] sm:text-[10.5px] font-700 uppercase tracking-widest text-[#7C7A72] block">
+                          <span className="text-[10px] font-700 uppercase tracking-widest text-[#7C7A72] block">
                             MEMBER
                           </span>
-                          <h3 className="font-display font-600 text-ink text-[22px] sm:text-[26px] lg:text-[27px] leading-tight mt-0.5">
+                          <h3 className="font-display font-600 text-ink text-[21px] sm:text-[24px] leading-tight mt-0.5">
                             {currentCase.member}
                           </h3>
                         </div>
 
                         {/* City Badge with MapPin */}
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F3EFE9] text-ink text-[11.5px] sm:text-[12px] font-500 border border-border-subtle/60 shrink-0 mt-1">
-                          <MapPin size={12.5} className="text-[#6E7065] shrink-0" />
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F3EFE9] text-ink text-[11.5px] font-500 border border-border-subtle/60 shrink-0 mt-1">
+                          <MapPin size={12} className="text-[#6E7065] shrink-0" />
                           <span>{currentCase.city}</span>
                         </div>
                       </div>
                     </div>
 
-                    {/* Center Detail Rows: Evenly distributed with balanced gaps and paddings */}
-                    <div className="flex-1 flex flex-col justify-between my-3 sm:my-4 py-0.5">
+                    {/* Center Detail Rows */}
+                    <div className="my-3.5 space-y-2.5">
                       {/* Row 1: DIAGNOSIS */}
-                      <div className="flex items-center gap-3.5 sm:gap-4 py-1.5 sm:py-2">
-                        <div className="w-9 h-9 rounded-full bg-[#EFEAE2] text-[#55574C] flex items-center justify-center shrink-0 shadow-2xs">
-                          <Calendar size={15.5} strokeWidth={1.9} />
+                      <div className="flex items-center gap-3 py-1">
+                        <div className="w-8 h-8 rounded-full bg-[#EFEAE2] text-[#55574C] flex items-center justify-center shrink-0 shadow-2xs">
+                          <Calendar size={14.5} strokeWidth={1.9} />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <span className="text-[10px] sm:text-[10.5px] font-700 uppercase tracking-wider text-[#7C7A72] block leading-none mb-1">
+                          <span className="text-[9.5px] font-700 uppercase tracking-wider text-[#7C7A72] block leading-none mb-1">
                             DIAGNOSIS
                           </span>
-                          <p className="text-[14px] sm:text-[14.5px] font-500 text-ink leading-snug">
+                          <p className="text-[13.5px] font-500 text-ink leading-snug">
                             {currentCase.diagnosis}
                           </p>
                         </div>
                       </div>
 
-                      {/* Divider 1 */}
                       <div className="h-[1px] bg-[#EDE7DF] w-full" />
 
                       {/* Row 2: GOALS */}
-                      <div className="flex items-center gap-3.5 sm:gap-4 py-1.5 sm:py-2">
-                        <div className="w-9 h-9 rounded-full bg-[#EFEAE2] text-[#55574C] flex items-center justify-center shrink-0 shadow-2xs">
-                          <Target size={15.5} strokeWidth={1.9} />
+                      <div className="flex items-center gap-3 py-1">
+                        <div className="w-8 h-8 rounded-full bg-[#EFEAE2] text-[#55574C] flex items-center justify-center shrink-0 shadow-2xs">
+                          <Target size={14.5} strokeWidth={1.9} />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <span className="text-[10px] sm:text-[10.5px] font-700 uppercase tracking-wider text-[#7C7A72] block leading-none mb-1">
+                          <span className="text-[9.5px] font-700 uppercase tracking-wider text-[#7C7A72] block leading-none mb-1">
                             GOALS
                           </span>
-                          <p className="text-[12.5px] sm:text-[13px] text-[#55534C] leading-normal">
+                          <p className="text-[12.5px] text-[#55534C] leading-normal">
                             {currentCase.goal}
                           </p>
                         </div>
                       </div>
 
-                      {/* Divider 2 */}
                       <div className="h-[1px] bg-[#EDE7DF] w-full" />
 
                       {/* Row 3: THE STRATEGY */}
-                      <div className="flex items-center gap-3.5 sm:gap-4 py-1.5 sm:py-2">
-                        <div className="w-9 h-9 rounded-full bg-[#EFEAE2] text-[#55574C] flex items-center justify-center shrink-0 shadow-2xs">
-                          <Lightbulb size={15.5} strokeWidth={1.9} />
+                      <div className="flex items-center gap-3 py-1">
+                        <div className="w-8 h-8 rounded-full bg-[#EFEAE2] text-[#55574C] flex items-center justify-center shrink-0 shadow-2xs">
+                          <Lightbulb size={14.5} strokeWidth={1.9} />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <span className="text-[10px] sm:text-[10.5px] font-700 uppercase tracking-wider text-[#7C7A72] block leading-none mb-1">
+                          <span className="text-[9.5px] font-700 uppercase tracking-wider text-[#7C7A72] block leading-none mb-1">
                             THE STRATEGY
                           </span>
-                          <p className="text-[12.5px] sm:text-[13px] text-[#55534C] leading-normal">
+                          <p className="text-[12.5px] text-[#55534C] leading-normal">
                             {currentCase.strategy}
                           </p>
                         </div>
                       </div>
 
-                      {/* Divider 3 */}
                       <div className="h-[1px] bg-[#EDE7DF] w-full" />
 
                       {/* Row 4: RESULT */}
-                      <div className="flex items-center gap-3.5 sm:gap-4 py-1.5 sm:py-2">
-                        <div className="w-9 h-9 rounded-full bg-[#EFEAE2] text-[#55574C] flex items-center justify-center shrink-0 shadow-2xs">
-                          <BarChart2 size={15.5} strokeWidth={1.9} />
+                      <div className="flex items-center gap-3 py-1">
+                        <div className="w-8 h-8 rounded-full bg-[#EFEAE2] text-[#55574C] flex items-center justify-center shrink-0 shadow-2xs">
+                          <BarChart2 size={14.5} strokeWidth={1.9} />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <span className="text-[10px] sm:text-[10.5px] font-700 uppercase tracking-wider text-[#7C7A72] block leading-none mb-1">
+                          <span className="text-[9.5px] font-700 uppercase tracking-wider text-[#7C7A72] block leading-none mb-1">
                             RESULT
                           </span>
-                          <p className="text-[12.5px] sm:text-[13px] text-ink font-500 leading-normal">
+                          <p className="text-[12.5px] text-ink font-500 leading-normal">
                             {currentCase.result}
                           </p>
                         </div>
                       </div>
                     </div>
 
-                    {/* Bottom Founder Box with Avatar and Vertical Divider */}
-                    <div className="shrink-0 rounded-2xl bg-[#F5F0E9] border border-[#E9E2D8] px-4 py-3 sm:py-3.5 flex items-center gap-3.5 sm:gap-4">
+                    {/* Bottom Founder Box with Avatar */}
+                    <div className="rounded-2xl bg-[#F5F0E9] border border-[#E9E2D8] px-3.5 py-3 flex items-center gap-3 mt-1">
                       <img
                         src={founderImg}
                         alt="Dr. Hena Nafis"
-                        className="w-10 h-10 sm:w-11 sm:h-11 rounded-full object-cover object-top ring-1 ring-border-subtle shrink-0"
+                        className="w-9 h-9 rounded-full object-cover object-top ring-1 ring-border-subtle shrink-0"
                       />
-                      <div className="h-8 w-[1px] bg-[#DFD8CE] shrink-0" />
+                      <div className="h-7 w-[1px] bg-[#DFD8CE] shrink-0" />
                       <div className="flex flex-col justify-center min-w-0">
-                        <span className="text-[9.5px] sm:text-[10px] font-700 uppercase tracking-wider text-[#7C7A72] block leading-none">
+                        <span className="text-[9px] font-700 uppercase tracking-wider text-[#7C7A72] block leading-none">
                           SHARED BY
                         </span>
-                        <span className="font-display font-600 text-ink text-[13.5px] sm:text-[14px] leading-snug mt-1">
+                        <span className="font-display font-600 text-ink text-[13px] leading-snug mt-0.5">
                           Dr. Hena Nafis
                         </span>
-                        <span className="text-[11px] sm:text-[11.5px] text-[#66635B] leading-none mt-0.5">
+                        <span className="text-[10.5px] text-[#66635B] leading-none mt-0.5">
                           Chief Nutritionist &amp; Registered Dietitian
                         </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* ================= DESKTOP 2-COLUMN LAYOUT (lg and above) ================= */}
+                <div className="hidden lg:grid lg:grid-cols-[1fr_1.15fr] gap-6 lg:gap-8 items-stretch max-w-4xl lg:max-w-[960px] mx-auto">
+                  {/* Left Side: Image Placeholder */}
+                  <div className="reveal delay-100 h-full">
+                    <div className="h-full min-h-[460px] rounded-[26px] sm:rounded-[28px] overflow-hidden border border-border-subtle/80 shadow-[0_12px_36px_rgba(43,45,36,0.06)] bg-surface-white relative group">
+                      <img
+                        key={currentCase.id}
+                        src={currentCase.image}
+                        alt={currentCase.alt}
+                        className="w-full h-full object-cover object-center transition-all duration-500 ease-editorial group-hover:scale-102"
+                        loading="lazy"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Right Side: The Outcome Card matching attached design */}
+                  <div className="reveal delay-150 h-full">
+                    <div className="bg-surface-white rounded-[26px] sm:rounded-[28px] border border-border-subtle/80 shadow-[0_12px_36px_rgba(43,45,36,0.06)] p-6 sm:p-7 lg:px-7.5 lg:py-6 h-full flex flex-col justify-between transition-all duration-300">
+                      {/* Header Row: MEMBER, Name, and City Badge with MapPin */}
+                      <div className="shrink-0">
+                        <div className="flex items-start justify-between gap-4">
+                          <div>
+                            <span className="text-[10px] sm:text-[10.5px] font-700 uppercase tracking-widest text-[#7C7A72] block">
+                              MEMBER
+                            </span>
+                            <h3 className="font-display font-600 text-ink text-[22px] sm:text-[26px] lg:text-[27px] leading-tight mt-0.5">
+                              {currentCase.member}
+                            </h3>
+                          </div>
+
+                          {/* City Badge with MapPin */}
+                          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F3EFE9] text-ink text-[11.5px] sm:text-[12px] font-500 border border-border-subtle/60 shrink-0 mt-1">
+                            <MapPin size={12.5} className="text-[#6E7065] shrink-0" />
+                            <span>{currentCase.city}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Center Detail Rows: Evenly distributed with balanced gaps and paddings */}
+                      <div className="flex-1 flex flex-col justify-between my-3 sm:my-4 py-0.5">
+                        {/* Row 1: DIAGNOSIS */}
+                        <div className="flex items-center gap-3.5 sm:gap-4 py-1.5 sm:py-2">
+                          <div className="w-9 h-9 rounded-full bg-[#EFEAE2] text-[#55574C] flex items-center justify-center shrink-0 shadow-2xs">
+                            <Calendar size={15.5} strokeWidth={1.9} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <span className="text-[10px] sm:text-[10.5px] font-700 uppercase tracking-wider text-[#7C7A72] block leading-none mb-1">
+                              DIAGNOSIS
+                            </span>
+                            <p className="text-[14px] sm:text-[14.5px] font-500 text-ink leading-snug">
+                              {currentCase.diagnosis}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Divider 1 */}
+                        <div className="h-[1px] bg-[#EDE7DF] w-full" />
+
+                        {/* Row 2: GOALS */}
+                        <div className="flex items-center gap-3.5 sm:gap-4 py-1.5 sm:py-2">
+                          <div className="w-9 h-9 rounded-full bg-[#EFEAE2] text-[#55574C] flex items-center justify-center shrink-0 shadow-2xs">
+                            <Target size={15.5} strokeWidth={1.9} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <span className="text-[10px] sm:text-[10.5px] font-700 uppercase tracking-wider text-[#7C7A72] block leading-none mb-1">
+                              GOALS
+                            </span>
+                            <p className="text-[12.5px] sm:text-[13px] text-[#55534C] leading-normal">
+                              {currentCase.goal}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Divider 2 */}
+                        <div className="h-[1px] bg-[#EDE7DF] w-full" />
+
+                        {/* Row 3: THE STRATEGY */}
+                        <div className="flex items-center gap-3.5 sm:gap-4 py-1.5 sm:py-2">
+                          <div className="w-9 h-9 rounded-full bg-[#EFEAE2] text-[#55574C] flex items-center justify-center shrink-0 shadow-2xs">
+                            <Lightbulb size={15.5} strokeWidth={1.9} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <span className="text-[10px] sm:text-[10.5px] font-700 uppercase tracking-wider text-[#7C7A72] block leading-none mb-1">
+                              THE STRATEGY
+                            </span>
+                            <p className="text-[12.5px] sm:text-[13px] text-[#55534C] leading-normal">
+                              {currentCase.strategy}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Divider 3 */}
+                        <div className="h-[1px] bg-[#EDE7DF] w-full" />
+
+                        {/* Row 4: RESULT */}
+                        <div className="flex items-center gap-3.5 sm:gap-4 py-1.5 sm:py-2">
+                          <div className="w-9 h-9 rounded-full bg-[#EFEAE2] text-[#55574C] flex items-center justify-center shrink-0 shadow-2xs">
+                            <BarChart2 size={15.5} strokeWidth={1.9} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <span className="text-[10px] sm:text-[10.5px] font-700 uppercase tracking-wider text-[#7C7A72] block leading-none mb-1">
+                              RESULT
+                            </span>
+                            <p className="text-[12.5px] sm:text-[13px] text-ink font-500 leading-normal">
+                              {currentCase.result}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Bottom Founder Box with Avatar and Vertical Divider */}
+                      <div className="shrink-0 rounded-2xl bg-[#F5F0E9] border border-[#E9E2D8] px-4 py-3 sm:py-3.5 flex items-center gap-3.5 sm:gap-4">
+                        <img
+                          src={founderImg}
+                          alt="Dr. Hena Nafis"
+                          className="w-10 h-10 sm:w-11 sm:h-11 rounded-full object-cover object-top ring-1 ring-border-subtle shrink-0"
+                        />
+                        <div className="h-8 w-[1px] bg-[#DFD8CE] shrink-0" />
+                        <div className="flex flex-col justify-center min-w-0">
+                          <span className="text-[9.5px] sm:text-[10px] font-700 uppercase tracking-wider text-[#7C7A72] block leading-none">
+                            SHARED BY
+                          </span>
+                          <span className="font-display font-600 text-ink text-[13.5px] sm:text-[14px] leading-snug mt-1">
+                            Dr. Hena Nafis
+                          </span>
+                          <span className="text-[11px] sm:text-[11.5px] text-[#66635B] leading-none mt-0.5">
+                            Chief Nutritionist &amp; Registered Dietitian
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1383,44 +1388,47 @@ export default function SecondLandingPage() {
             );
           })()}
 
-          {/* Carousel Controls (dots, progress bar, play/pause button) */}
-          <div className="max-w-xl mx-auto mt-6 sm:mt-7 flex items-center justify-between gap-4 px-2">
-            {/* Dots */}
-            <div className="flex items-center gap-2">
-              {caseStudies.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => handleSelectSlide(i)}
-                  className={`transition-all duration-300 rounded-full cursor-pointer ${
-                    activeSlide === i
-                      ? 'w-6 h-2.5 bg-ink'
-                      : 'w-2.5 h-2.5 bg-ink/25 hover:bg-ink/50'
-                  }`}
-                  aria-label={`Go to slide ${i + 1}`}
-                />
-              ))}
-            </div>
-
-            {/* Smooth Progress Bar */}
-            <div className="flex-1 h-1.5 bg-ink/10 rounded-full overflow-hidden mx-2 sm:mx-4">
-              <div
-                className="h-full bg-ink/80 rounded-full transition-all duration-75 ease-linear"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-
-            {/* Play / Pause Toggle Button */}
+          {/* Carousel Controls: Left & Right Buttons, Dots, and Slide Indicator (Auto-scroll removed) */}
+          <div className="max-w-xl mx-auto mt-6 sm:mt-7 flex items-center justify-between gap-4 px-2 select-none">
+            {/* Left Button */}
             <button
-              onClick={handleTogglePlay}
-              className="w-8 h-8 rounded-full bg-surface-white border border-border-subtle/80 flex items-center justify-center text-ink hover:bg-surface-secondary transition-colors cursor-pointer shadow-2xs shrink-0"
-              aria-label={isPlaying ? 'Pause auto-play' : 'Resume auto-play'}
-              title={isPlaying ? 'Pause' : 'Play'}
+              onClick={handlePrevSlide}
+              className="w-10 h-10 rounded-full bg-surface-white border border-border-subtle shadow-xs hover:bg-surface-secondary flex items-center justify-center text-ink hover:text-brand-deep active:scale-95 transition-all cursor-pointer"
+              aria-label="Previous outcome"
+              title="Previous"
             >
-              {isPlaying ? (
-                <Pause size={13} className="fill-ink text-ink" />
-              ) : (
-                <Play size={13} className="fill-ink text-ink ml-0.5" />
-              )}
+              <ChevronLeft size={20} />
+            </button>
+
+            {/* Center: Pagination Dots & Counter */}
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                {caseStudies.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => handleSelectSlide(i)}
+                    className={`transition-all duration-300 rounded-full cursor-pointer ${
+                      activeSlide === i
+                        ? 'w-7 h-2.5 bg-brand-deep'
+                        : 'w-2.5 h-2.5 bg-border-subtle hover:bg-ink-secondary/40'
+                    }`}
+                    aria-label={`Go to slide ${i + 1}`}
+                  />
+                ))}
+              </div>
+              <span className="text-[12px] font-500 text-ink-secondary hidden xs:inline tabular-nums">
+                {activeSlide + 1} / {caseStudies.length}
+              </span>
+            </div>
+
+            {/* Right Button */}
+            <button
+              onClick={handleNextSlide}
+              className="w-10 h-10 rounded-full bg-surface-white border border-border-subtle shadow-xs hover:bg-surface-secondary flex items-center justify-center text-ink hover:text-brand-deep active:scale-95 transition-all cursor-pointer"
+              aria-label="Next outcome"
+              title="Next"
+            >
+              <ChevronRight size={20} />
             </button>
           </div>
 
