@@ -16,7 +16,7 @@ import {
   Lightbulb,
   BarChart2,
   Plus,
-  Sparkles,
+  Heart,
   PartyPopper,
 } from 'lucide-react';
 import founderImg from '../../assets/03lyKqCdFEsXx6Kmt8oSVHMgaA.png';
@@ -447,7 +447,7 @@ export default function SecondLandingPage() {
                   <div className="absolute inset-0 p-3.5 xs:p-4.5 sm:p-5 flex flex-col justify-between">
                     <div>
                       <div className="inline-flex items-center gap-1.5 px-2.5 xs:px-3 py-1 rounded-full bg-black/35 backdrop-blur-md border border-white/35 text-white text-[9.5px] xs:text-[10.5px] sm:text-[11px] font-700 tracking-wider uppercase shadow-2xs">
-                        <Sparkles size={12} className="text-white shrink-0" />
+                        <Heart size={12} className="text-white shrink-0" />
                         <span className="text-white">YOUR WEDDING</span>
                       </div>
                     </div>
