@@ -436,8 +436,8 @@ export default function SecondLandingPage() {
                 {/* Card 1: YOUR GOAL (Upper Left, Depth Level 1, tilted -4deg) */}
                 <div className="absolute top-1 left-1 w-[53%] sm:w-[52%] h-[280px] xs:h-[315px] sm:h-[355px] lg:h-[365px] z-10 -rotate-[4deg] rounded-[24px] sm:rounded-[28px] overflow-hidden border-[2px] border-white/60 shadow-[0_18px_38px_rgba(20,24,18,0.16)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_22px_45px_rgba(20,24,18,0.20)] group cursor-pointer">
                   <img
-                    src="/assets/occasion-hero-wedding.jpg"
-                    alt="South Asian bride getting ready for her wedding celebration"
+                    src="/assets/occasion-hero-modern-wedding.jpg"
+                    alt="South Asian wedding couple in a tailored suit and modern lehenga at a U.S. venue"
                     className="w-full h-full object-cover object-center transition-transform duration-500 ease-editorial group-hover:scale-103"
                     loading="eager"
                   />
@@ -463,8 +463,8 @@ export default function SecondLandingPage() {
                 {/* Card 2: YOUR FOOD (Upper Right, Depth Level 2, tilted +3.5deg, overlaps YOUR GOAL) */}
                 <div className="absolute top-6 xs:top-8 sm:top-10 right-0 w-[52%] sm:w-[51%] h-[250px] xs:h-[280px] sm:h-[315px] lg:h-[325px] z-20 rotate-[3.5deg] rounded-[24px] sm:rounded-[28px] overflow-hidden border-[2px] border-white/60 shadow-[0_18px_38px_rgba(20,24,18,0.18)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_22px_45px_rgba(20,24,18,0.22)] group cursor-pointer">
                   <img
-                    src="/assets/occasion-hero-buffet.jpg"
-                    alt="Premium wedding buffet with international dishes and polished chafing dishes"
+                    src="/assets/occasion-hero-balanced-food.jpg"
+                    alt="Balanced meal with South Asian favorites, vegetables, and fresh fruit"
                     className="w-full h-full object-cover object-center transition-transform duration-500 ease-editorial group-hover:scale-103"
                     loading="eager"
                   />
@@ -480,7 +480,7 @@ export default function SecondLandingPage() {
                     </div>
                     <div>
                       <h3 className="font-display font-600 text-white text-[14px] xs:text-[15.5px] sm:text-[17.5px] leading-snug drop-shadow-xs">
-                        A celebration of flavors, beautifully served.
+                        Your plan can include foods you love.
                       </h3>
                       <div className="w-7 h-[2px] bg-white/80 rounded-full mt-2" />
                     </div>
@@ -491,8 +491,8 @@ export default function SecondLandingPage() {
                 {/* Card 3: YOUR LIFE (Grounding Anchor, tilted -2.5deg) */}
                 <div className="absolute bottom-2 left-1 sm:left-2 w-[72%] h-[195px] xs:h-[220px] sm:h-[250px] lg:h-[255px] z-10 -rotate-[2.5deg] rounded-[24px] sm:rounded-[28px] overflow-hidden border-[2px] border-white/60 shadow-[0_16px_36px_rgba(20,24,18,0.16)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_42px_rgba(20,24,18,0.20)] group cursor-pointer">
                   <img
-                    src="/assets/occasion-hero-family.jpg"
-                    alt="Family and friends celebrating together at a South Asian wedding"
+                    src="/assets/occasion-hero-sangeet.jpg"
+                    alt="South Asian couple and friends dancing at a sangeet in a U.S. ballroom"
                     className="w-full h-full object-cover object-center transition-transform duration-500 ease-editorial group-hover:scale-103"
                     loading="eager"
                   />
@@ -508,7 +508,7 @@ export default function SecondLandingPage() {
                     </div>
                     <div className="max-w-[62%]">
                       <h3 className="font-display font-600 text-white text-[13.5px] xs:text-[15px] sm:text-[17px] leading-snug drop-shadow-xs">
-                        Be present for the celebration.
+                        Celebrate every moment together.
                       </h3>
                       <div className="w-7 h-[2px] bg-white/80 rounded-full mt-2" />
                     </div>
