@@ -11,12 +11,13 @@ import {
   ChevronRight,
   Target,
   Utensils,
-  Home,
   ArrowRight,
   MapPin,
   Lightbulb,
   BarChart2,
   Plus,
+  Sparkles,
+  PartyPopper,
 } from 'lucide-react';
 import founderImg from '../../assets/03lyKqCdFEsXx6Kmt8oSVHMgaA.png';
 
@@ -435,8 +436,8 @@ export default function SecondLandingPage() {
                 {/* Card 1: YOUR GOAL (Upper Left, Depth Level 1, tilted -4deg) */}
                 <div className="absolute top-1 left-1 w-[53%] sm:w-[52%] h-[280px] xs:h-[315px] sm:h-[355px] lg:h-[365px] z-10 -rotate-[4deg] rounded-[24px] sm:rounded-[28px] overflow-hidden border-[2px] border-white/60 shadow-[0_18px_38px_rgba(20,24,18,0.16)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_22px_45px_rgba(20,24,18,0.20)] group cursor-pointer">
                   <img
-                    src="/assets/yl.png"
-                    alt="Active lifestyle and fitness preparation"
+                    src="/assets/occasion-hero-wedding.jpg"
+                    alt="South Asian bride getting ready for her wedding celebration"
                     className="w-full h-full object-cover object-center transition-transform duration-500 ease-editorial group-hover:scale-103"
                     loading="eager"
                   />
@@ -446,13 +447,13 @@ export default function SecondLandingPage() {
                   <div className="absolute inset-0 p-3.5 xs:p-4.5 sm:p-5 flex flex-col justify-between">
                     <div>
                       <div className="inline-flex items-center gap-1.5 px-2.5 xs:px-3 py-1 rounded-full bg-black/35 backdrop-blur-md border border-white/35 text-white text-[9.5px] xs:text-[10.5px] sm:text-[11px] font-700 tracking-wider uppercase shadow-2xs">
-                        <Target size={12} className="text-white shrink-0" />
-                        <span className="text-white">YOUR GOAL</span>
+                        <Sparkles size={12} className="text-white shrink-0" />
+                        <span className="text-white">YOUR WEDDING</span>
                       </div>
                     </div>
                     <div>
                       <h3 className="font-display font-600 text-white text-[14px] xs:text-[15.5px] sm:text-[17.5px] leading-snug drop-shadow-xs">
-                        Feel confident for the moments ahead.
+                        Feel confident for every moment.
                       </h3>
                       <div className="w-7 h-[2px] bg-white/80 rounded-full mt-2" />
                     </div>
@@ -462,8 +463,8 @@ export default function SecondLandingPage() {
                 {/* Card 2: YOUR FOOD (Upper Right, Depth Level 2, tilted +3.5deg, overlaps YOUR GOAL) */}
                 <div className="absolute top-6 xs:top-8 sm:top-10 right-0 w-[52%] sm:w-[51%] h-[250px] xs:h-[280px] sm:h-[315px] lg:h-[325px] z-20 rotate-[3.5deg] rounded-[24px] sm:rounded-[28px] overflow-hidden border-[2px] border-white/60 shadow-[0_18px_38px_rgba(20,24,18,0.18)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_22px_45px_rgba(20,24,18,0.22)] group cursor-pointer">
                   <img
-                    src="/assets/yf.png"
-                    alt="Traditional South Asian nutrition and joyful meals"
+                    src="/assets/occasion-hero-buffet.jpg"
+                    alt="Premium wedding buffet with international dishes and polished chafing dishes"
                     className="w-full h-full object-cover object-center transition-transform duration-500 ease-editorial group-hover:scale-103"
                     loading="eager"
                   />
@@ -479,7 +480,7 @@ export default function SecondLandingPage() {
                     </div>
                     <div>
                       <h3 className="font-display font-600 text-white text-[14px] xs:text-[15.5px] sm:text-[17.5px] leading-snug drop-shadow-xs">
-                        Keep the food you actually love.
+                        A celebration of flavors, beautifully served.
                       </h3>
                       <div className="w-7 h-[2px] bg-white/80 rounded-full mt-2" />
                     </div>
@@ -490,8 +491,8 @@ export default function SecondLandingPage() {
                 {/* Card 3: YOUR LIFE (Grounding Anchor, tilted -2.5deg) */}
                 <div className="absolute bottom-2 left-1 sm:left-2 w-[72%] h-[195px] xs:h-[220px] sm:h-[250px] lg:h-[255px] z-10 -rotate-[2.5deg] rounded-[24px] sm:rounded-[28px] overflow-hidden border-[2px] border-white/60 shadow-[0_16px_36px_rgba(20,24,18,0.16)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_42px_rgba(20,24,18,0.20)] group cursor-pointer">
                   <img
-                    src="/assets/om5.png"
-                    alt="South Asian everyday lifestyle and celebration"
+                    src="/assets/occasion-hero-family.jpg"
+                    alt="Family and friends celebrating together at a South Asian wedding"
                     className="w-full h-full object-cover object-center transition-transform duration-500 ease-editorial group-hover:scale-103"
                     loading="eager"
                   />
@@ -501,13 +502,13 @@ export default function SecondLandingPage() {
                   <div className="absolute inset-0 p-3.5 xs:p-4.5 sm:p-5 flex flex-col justify-between">
                     <div>
                       <div className="inline-flex items-center gap-1.5 px-2.5 xs:px-3 py-1 rounded-full bg-white/45 backdrop-blur-md border border-white/50 text-[#2B2D24] text-[9.5px] xs:text-[10.5px] sm:text-[11px] font-700 tracking-wider uppercase shadow-2xs">
-                        <Home size={12} className="text-[#2B2D24] shrink-0" />
-                        <span>YOUR LIFE</span>
+                        <PartyPopper size={12} className="text-[#2B2D24] shrink-0" />
+                        <span>YOUR OCCASION</span>
                       </div>
                     </div>
                     <div className="max-w-[62%]">
                       <h3 className="font-display font-600 text-white text-[13.5px] xs:text-[15px] sm:text-[17px] leading-snug drop-shadow-xs">
-                        Build something you can live with.
+                        Be present for the celebration.
                       </h3>
                       <div className="w-7 h-[2px] bg-white/80 rounded-full mt-2" />
                     </div>
@@ -549,28 +550,28 @@ export default function SecondLandingPage() {
               {/* Eyebrow */}
               <div className="reveal">
                 <span className="text-eyebrow text-brand-deep uppercase tracking-wider">
-                  Occasion &amp; Milestone Wellness Care
+                  Wedding &amp; Occasion Wellness Care
                 </span>
               </div>
 
               {/* Primary Headline: Unified Hierarchy & Alignment */}
               <h1 className="reveal delay-100 mt-4 font-display font-600 text-ink text-[32px] sm:text-[44px] lg:text-[48px] leading-[1.14] tracking-tight max-w-xl">
-                <span>Your Food Is Part of Your Life.</span>
-                <span className="block mt-1 sm:mt-1.5">Your Nutrition Should Be, Too.</span>
+                <span>Feel Your Best for the</span>
+                <span className="block mt-1 sm:mt-1.5">Moments That Matter.</span>
               </h1>
 
               {/* Supporting Headline */}
               <h2 className="reveal delay-200 mt-4 font-display font-500 text-brand-deep text-[20px] sm:text-[23px] lg:text-[25px] leading-snug">
-                Say Hello to Empathetic, Cultural Wellness Care.
+                Personalised nutrition for weddings and every celebration.
               </h2>
 
               {/* Body Copy */}
               <div className="reveal delay-300 mt-4 sm:mt-5 space-y-3 sm:space-y-3.5 text-ink-secondary text-[14.5px] sm:text-[16.5px] leading-[1.6] sm:leading-[1.68] max-w-xl text-pretty">
                 <p className="hidden sm:block">
-                  Whether you’re preparing for a wedding, engagement, milestone celebration, or another important occasion, you deserve more than a last-minute diet.
+                  Whether you’re preparing for a wedding, engagement, anniversary, or milestone celebration, you deserve support that fits your life—not a last-minute diet.
                 </p>
                 <p>
-                  Get personalised nutrition and wellness guidance based on your health, lifestyle, food, goals, and the time you have before your event.
+                  Get culturally informed guidance for your health, goals, favorite foods, and timeline—so you can feel confident and enjoy the occasion.
                 </p>
               </div>
 
